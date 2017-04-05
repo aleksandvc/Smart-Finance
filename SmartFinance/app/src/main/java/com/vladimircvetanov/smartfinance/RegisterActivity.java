@@ -42,13 +42,15 @@ public class RegisterActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUp();
+               if(signUp()){
+                   startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+               }
 
             }
         });
     }
 
-    private void signUp() {
+    private boolean signUp() {
         String username = userEmail.getText().toString();
         String pass = userPass.getText().toString();
         String confirm = confirmPass.getText().toString();
@@ -56,33 +58,33 @@ public class RegisterActivity extends AppCompatActivity {
        long id = adapter.insertData(username,pass);
         if(id < 0 ){
             Message.message(this,"No such user!");
-            return ;
+            return false ;
         }
         if(username.isEmpty()){
             userEmail.setError("Empty email");
             userEmail.requestFocus();
-            return;
+            return false;
         }
         if(pass.isEmpty()){
             userPass.setError("Empty password");
             userPass.requestFocus();
-            return;
+            return false;
         }
         if(confirm.isEmpty()){
             confirmPass.setError("Empty confirmation");
             confirmPass.requestFocus();
-            return;
+            return false;
         }
         if(!pass.equals(confirm)){
 
             confirmPass.setError("Different passwords");
             confirmPass.setText("");
             confirmPass.requestFocus();
-            return;
+            return false;
         }
         Message.message(this,"User registered!");
-        startActivity(new Intent(RegisterActivity.this,MainActivity.class));
 
+        return true;
 
 
     }
