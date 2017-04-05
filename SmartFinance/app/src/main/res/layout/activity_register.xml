@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@color/colorDark"
     tools:context="com.vladimircvetanov.smartfinance.LoginActivity"
-    android:weightSum="1">
+    >
 
     <ImageView
         android:layout_width="96dp"
@@ -19,14 +19,14 @@
     <ImageView
         android:layout_width="231dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/smartfinance"
+        android:src="@drawable/registration"
         android:layout_gravity="center"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:weightSum="1">
+        >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -35,11 +35,10 @@
             android:layout_gravity="center"
             android:background="@color/colorWhite"/>
         <EditText
-            android:id="@+id/loggin_email_insert"
+            android:id="@+id/register_email_insert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="e-mail                "
-            android:maxLength="30"
+            android:hint="e-mail                            "
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="30sp"
@@ -59,13 +58,12 @@
             android:layout_gravity="center"
             android:background="@color/colorWhite"/>
         <EditText
-            android:id="@+id/loggin_pass_insert"
+            android:id="@+id/register_pass_insert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="password   "
-            android:maxLength="30"
-            android:inputType="textPassword"
+            android:hint="password        "
             android:textColor="@color/colorWhite"
+            android:inputType="textPassword"
             android:textColorHint="@color/colorWhite"
             android:textSize="30sp"
             android:layout_marginLeft="10dp"/>
@@ -73,44 +71,52 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/whitelocked"
+            android:layout_gravity="center"
+            android:background="@color/colorWhite"/>
+        <EditText
+            android:id="@+id/register_confirm_insert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="confirm password"
+            android:inputType="textPassword"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:textSize="30sp"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center">
 
         <Button
-            android:id="@+id/loggin_loggin_button"
-            android:layout_marginTop="10dp"
+            android:id="@+id/register_reg_button"
             android:layout_width="187dp"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="Register"
             android:background="@drawable/shadow"
             android:textSize="20sp"
             android:textColor="@color/colorWhite"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="20sp"
-            android:text="- - OR - -"
-            android:layout_gravity="center"
-            android:textColor="@color/colorWhite"/>
+
         <Button
-            android:id="@+id/loggin_signup_button"
+            android:id="@+id/register_cancel_button"
             android:layout_width="187dp"
             android:layout_height="wrap_content"
-            android:text="Sign UP"
+            android:text="Cancel"
             android:layout_marginTop="10dp"
             android:background="@drawable/shadow"
             android:textSize="20sp"
             android:textColor="@color/colorWhite"/>
 
     </LinearLayout>
-
-
-   <ImageView
-       android:layout_marginTop="10dp"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:src="@mipmap/moresignupoptions"
-       />
 
 </LinearLayout>
