@@ -1,6 +1,7 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,14 +51,28 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void logIn() {
-        String email = userEmail.getText().toString();
-        String pass = userPass.getText().toString();
-        if(adapter.getUser(email,pass)){
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            Toast.makeText(this, "Successful logged in.", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(this, "Wrong email or password!", Toast.LENGTH_SHORT).show();
-        }
+         String email = userEmail.getText().toString();
+         String pass = userPass.getText().toString();
+       final boolean flag = adapter.getUser(email,pass);
+        new AsyncTask<Void,Void,Void>(){
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                if(flag){
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(flag){
+                    Message.message(LoginActivity.this,"Successful logged in.");
+                } else{
+                    Message.message(LoginActivity.this,"Wrong email or password.");
+                }
+            }
+        }.execute();
     }
 }
