@@ -8,11 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-<<<<<<< HEAD
+
     <style name="ThemeOverlay.CustomTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:colorBackground">@color/colorGreen</item>
         <item name="android:textColor">@color/colorDark</item>
-=======
+</style>
 
 
     <style name="transaction_numpad_row">
@@ -28,7 +28,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:textSize">@dimen/all_text_size_huge</item>
         <item name="android:textAlignment">center</item>
->>>>>>> d9ebaca1f5f63ca204231dc115678469cba0f06f
+
     </style>
 
 </resources>

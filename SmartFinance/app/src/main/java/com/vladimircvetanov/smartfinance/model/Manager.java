@@ -9,15 +9,6 @@ import java.util.TreeMap;
 public class Manager {
 
     private static Manager instance = null;
-<<<<<<< HEAD
-    public interface IType {}
-
-    public enum Category implements IType {VEHICLE, CLOTHES, HEALTH, TRAVEL, SPORT, FOOD, TRANSPORT, PHONE, HOUSE, ENTERTAINMENT}
-    public enum Type {INCOMING, EXPENSE}
-    private HashMap<Type, HashMap<IType, TreeMap<Date, Double>>> logs;
-
-=======
-
     /**
      * Marker interface for (e) Manager.Category and (e) Account.Type
      */
@@ -35,21 +26,17 @@ public class Manager {
 
     private HashMap<Type, HashMap<IType, TreeMap<Date, Double>>> logs;
 
->>>>>>> d9ebaca1f5f63ca204231dc115678469cba0f06f
+
     private Manager() {
         logs = new HashMap<>();
         logs.put(Type.INCOMING, new HashMap<IType, TreeMap<Date, Double>>());
         logs.put(Type.EXPENSE, new HashMap<IType, TreeMap<Date, Double>>());
-<<<<<<< HEAD
-    }
-
-=======
-
         populateITypes();
     }
 
 
->>>>>>> d9ebaca1f5f63ca204231dc115678469cba0f06f
+
+
     public static Manager getInstance() {
         if (instance == null) {
             instance = new Manager();

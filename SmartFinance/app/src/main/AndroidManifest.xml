@@ -17,18 +17,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-<<<<<<< HEAD
         <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>/
-=======
-        <activity android:name=".MainActivity"></activity>
+        </activity>
         <activity android:name=".TransactionActivity"/>
->>>>>>> d9ebaca1f5f63ca204231dc115678469cba0f06f
+
     </application>
 
 </manifest>
