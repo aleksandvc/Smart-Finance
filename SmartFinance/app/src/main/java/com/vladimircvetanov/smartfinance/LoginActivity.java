@@ -51,14 +51,15 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void logIn() {
-         String email = userEmail.getText().toString();
-         String pass = userPass.getText().toString();
-       final boolean flag = adapter.getUser(email,pass);
+       final   String email = userEmail.getText().toString();
+       final  String pass = userPass.getText().toString();
+        final boolean[] flag = new boolean[1];
         new AsyncTask<Void,Void,Void>(){
 
             @Override
             protected Void doInBackground(Void... params) {
-                if(flag){
+                flag[0] = adapter.getUser(email,pass);
+                if(flag[0]){
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
 
@@ -67,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(flag){
+                if(flag[0]){
                     Message.message(LoginActivity.this,"Successful logged in.");
                 } else{
                     Message.message(LoginActivity.this,"Wrong email or password.");
