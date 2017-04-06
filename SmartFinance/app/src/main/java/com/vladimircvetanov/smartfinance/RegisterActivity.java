@@ -1,6 +1,7 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -51,41 +52,58 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean signUp() {
-        String username = userEmail.getText().toString();
-        String pass = userPass.getText().toString();
-        String confirm = confirmPass.getText().toString();
-
-       long id = adapter.insertData(username,pass);
-        if(id < 0 ){
-            Message.message(this,"No such user!");
-            return false ;
-        }
-        if(username.isEmpty()){
+        final String username = userEmail.getText().toString();
+        final String pass = userPass.getText().toString();
+        final String confirm = confirmPass.getText().toString();
+        boolean flag;
+        if (username.isEmpty()) {
             userEmail.setError("Empty email");
             userEmail.requestFocus();
             return false;
         }
-        if(pass.isEmpty()){
+        if (pass.isEmpty()) {
             userPass.setError("Empty password");
             userPass.requestFocus();
             return false;
+
         }
-        if(confirm.isEmpty()){
+        if (confirm.isEmpty()) {
             confirmPass.setError("Empty confirmation");
             confirmPass.requestFocus();
             return false;
+
         }
-        if(!pass.equals(confirm)){
+        if (!pass.equals(confirm)) {
 
             confirmPass.setError("Different passwords");
             confirmPass.setText("");
             confirmPass.requestFocus();
             return false;
+
         }
-        Message.message(this,"User registered!");
 
-        return true;
+        flag = true;
+        new AsyncTask<Boolean, Void, Boolean>() {
+
+            @Override
+            protected void onPreExecute() {
+
+                Message.message(RegisterActivity.this, "User registered!");
+
+            }
+
+            @Override
+            protected Boolean doInBackground(Boolean... params) {
+
+                long id = adapter.insertData(username, pass);
+
+                return true;
+            }
 
 
+
+        }.execute();
+
+        return flag;
     }
 }

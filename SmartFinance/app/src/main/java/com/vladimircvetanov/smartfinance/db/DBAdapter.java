@@ -6,7 +6,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
+import android.widget.Toast;
 
+import com.vladimircvetanov.smartfinance.LoginActivity;
+import com.vladimircvetanov.smartfinance.MainActivity;
 import com.vladimircvetanov.smartfinance.message.Message;
 
 /**
@@ -52,34 +56,46 @@ public class DBAdapter {
      * @param password
      * @return long id if the method was successful and -1 if it fails
      */
-    public long insertData(String username,String password){
-        /**
-         *  A reference from inner class is used to create a Database object.
-         */
-        SQLiteDatabase db = helper.getWritableDatabase();
+    public long insertData(final String username,final String password){
 
-        /**
-         * An instance of ContentValues class is created. To insert data the reference takes a key and a value.
-         * We specify the key as the column name. The value is the data we want ot put inside.
-         */
-        ContentValues values = new ContentValues();
+        final long[] id = new long[1];
 
-        /**
-         * Two columns are inserted;
-         */
-        values.put(DbHelper.COLUMN_USERNAME,username);
-        values.put(DbHelper.COLUMN_PASSWORD,password);
+        new AsyncTask<Long,Void,Void>(){
+            @Override
+            protected Void doInBackground(Long... params) {
 
-        /**
-         * The insert method with three parameters(String TableName,String NullColumnHack,ContentValues values)
-         * is called on the SQL object of the class.
-         * It returns the ID of the inserted row or -1 if the operation fails.
-         */
-        long id = db.insert(DbHelper.TABLE_NAME,null,values);
+                /**
+                 *  A reference from inner class is used to create a Database object.
+                 */
+                SQLiteDatabase db = helper.getWritableDatabase();
 
-        return id;
+                /**
+                 * An instance of ContentValues class is created. To insert data the reference takes a key and a value.
+                 * We specify the key as the column name. The value is the data we want ot put inside.
+                 */
+                ContentValues values = new ContentValues();
+
+                /**
+                 * Two columns are inserted;
+                 */
+                values.put(DbHelper.COLUMN_USERNAME,username);
+                values.put(DbHelper.COLUMN_PASSWORD,password);
+
+                /**
+                 * The insert method with three parameters(String TableName,String NullColumnHack,ContentValues values)
+                 * is called on the SQL object of the class.
+                 * It returns the ID of the inserted row or -1 if the operation fails.
+                 */
+                id[0] = db.insert(DbHelper.TABLE_NAME,null,values);
+
+                return null;
+
+            }
+
+        }.execute();
+            return id[0];
     }
-    private  String getData(String username){
+    private  String getData(final String username){
 
         /**
          *  A reference from inner class is used to create a Database object.
@@ -92,6 +108,11 @@ public class DBAdapter {
         String[] columns = {DbHelper.COLUMN_USERNAME,DbHelper.COLUMN_PASSWORD};
 
         /**
+         * object which contains username and password of the user.
+         */
+        StringBuffer buffer = new StringBuffer();
+
+        /**
          * A call to the query method. Cursor object returned by the query method.
          * The cursor object's reference is the control which let's us move from the top to the bottom
          * of the table's result sets.
@@ -102,10 +123,6 @@ public class DBAdapter {
          */
         Cursor cursor = db.query(DbHelper.TABLE_NAME,columns,DbHelper.COLUMN_USERNAME + " = '" + username + "'",null,null,null,null);
 
-        /**
-         * object which contains username and password of the user.
-         */
-        StringBuffer buffer = new StringBuffer();
 
         while(cursor.moveToNext()){
             int index1 = cursor.getColumnIndex(DbHelper.COLUMN_USERNAME);
@@ -116,6 +133,7 @@ public class DBAdapter {
 
             buffer.append(personUsername + " " + personPass + "\n");
         }
+
         return buffer.toString();
 
     }
@@ -128,6 +146,7 @@ public class DBAdapter {
      */
     public  boolean getUser(String username,String password){
         String details = username + " " + password + "\n";
+
         if(details.equals(getData(username))){
             return true;
         }

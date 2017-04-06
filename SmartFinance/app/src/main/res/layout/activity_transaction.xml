@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context="com.vladimircvetanov.smartfinance.TransactionActivity">
+
+
+    <include layout="@layout/appbar"
+        android:id="@+id/appbar"/>
+
+
+    <TextView
+        android:id="@+id/transaction_date_display"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/appbar"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/all_view_spacing_standard"
+
+        android:focusable="false"
+        android:inputType="date"
+        android:textColor="@color/colorOrange"
+
+        android:textSize="@dimen/all_text_size_standard" />
+
+
+    <RadioGroup
+        android:id="@+id/transaction_radio"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/appbar"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/transaction_radio_expense"
+            android:button="@drawable/transaction_radio_expense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <RadioButton
+            android:id="@+id/transaction_radio_income"
+            android:button="@drawable/transaction_radio_income"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/transaction_number_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transaction_date_display"
+        android:layout_margin="@dimen/all_view_spacing_standard"
+        android:background="@color/colorOrange"
+        android:padding="@dimen/all_text_size_tiny"
+
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/transaction_number_display_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:maxLength="9"
+            android:maxLines="1"
+            android:text="0"
+            android:textSize="@dimen/all_text_size_huge" />
+
+        <ImageButton
+            android:id="@+id/transaction_number_display_backspace"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/colorOrange"
+            android:layout_marginLeft="@dimen/all_view_spacing_small"
+            android:src="@drawable/ic_action_backspace" />
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/transaction_category_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transaction_number_display"
+        android:layout_margin="@dimen/all_view_spacing_standard"
+        android:animateLayoutChanges="true"
+        android:spinnerMode="dialog"
+        android:theme="@style/Theme.AppCompat.Light"
+        android:pointerIcon="cell"/>
+
+    <LinearLayout
+        android:id="@+id/transaction_numpad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/transaction_category_spinner"
+        android:orientation="vertical">
+
+        <LinearLayout style="@style/transaction_numpad_row">
+            <Button
+                android:id="@+id/transaction_numpad_7"
+                style="@style/transaction_numpad_button"
+                android:text="7" />
+            <Button
+                android:id="@+id/transaction_numpad_8"
+                style="@style/transaction_numpad_button"
+                android:text="8" />
+            <Button
+                android:id="@+id/transaction_numpad_9"
+                style="@style/transaction_numpad_button"
+                android:text="9" />
+            <Button
+                android:id="@+id/transaction_numpad_plus"
+                style="@style/transaction_numpad_button"
+                android:text="+" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/transaction_numpad_row">
+            <Button
+                android:id="@+id/transaction_numpad_4"
+                style="@style/transaction_numpad_button"
+                android:text="4" />
+            <Button
+                android:id="@+id/transaction_numpad_5"
+                style="@style/transaction_numpad_button"
+                android:text="5" />
+            <Button
+                android:id="@+id/transaction_numpad_6"
+                style="@style/transaction_numpad_button"
+                android:text="6" />
+            <Button
+                android:id="@+id/transaction_numpad_minus"
+                style="@style/transaction_numpad_button"
+                android:text="-" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/transaction_numpad_row">
+            <Button
+                android:id="@+id/transaction_numpad_1"
+                style="@style/transaction_numpad_button"
+                android:text="1" />
+            <Button
+                android:id="@+id/transaction_numpad_2"
+                style="@style/transaction_numpad_button"
+                android:text="2" />
+            <Button
+                android:id="@+id/transaction_numpad_3"
+                style="@style/transaction_numpad_button"
+                android:text="3" />
+            <Button
+                android:id="@+id/transaction_numpad_multiply"
+                style="@style/transaction_numpad_button"
+                android:text="x" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/transaction_numpad_row">
+            <Button
+                android:id="@+id/transaction_numpad_decimal"
+                style="@style/transaction_numpad_button"
+                android:text="." />
+            <Button
+                android:id="@+id/transaction_numpad_0"
+                style="@style/transaction_numpad_button"
+                android:text="0" />
+            <Button
+                android:id="@+id/transaction_numpad_equals"
+                style="@style/transaction_numpad_button"
+                android:text="=" />
+            <Button
+                android:id="@+id/transaction_numpad_divide"
+                style="@style/transaction_numpad_button"
+                android:text="÷" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
