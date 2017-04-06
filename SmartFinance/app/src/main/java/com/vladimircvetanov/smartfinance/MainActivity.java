@@ -3,16 +3,50 @@ package com.vladimircvetanov.smartfinance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+<<<<<<< HEAD
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+=======
 import android.view.View;
 import android.widget.Button;
+>>>>>>> d9ebaca1f5f63ca204231dc115678469cba0f06f
 
 public class MainActivity extends AppCompatActivity {
+
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_currency:
+                return true;
+            case R.id.item_settings:
+                return true;
+            case R.id.item_logout:
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+=======
         //I've added buttons to currently extant activities for ease of navigation during development.
         //Add and remove buttons as needed.
         //                                      ~Simo
@@ -42,5 +76,6 @@ public class MainActivity extends AppCompatActivity {
         toRegister.setOnClickListener(onClickListener);
         toTransaction.setOnClickListener(onClickListener);
 
+>>>>>>> d9ebaca1f5f63ca204231dc115678469cba0f06f
     }
 }

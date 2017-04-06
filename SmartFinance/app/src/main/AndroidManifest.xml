@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/smartfinance_icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,8 +17,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
+<<<<<<< HEAD
+        <activity android:name=".MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>/
+=======
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".TransactionActivity"/>
+>>>>>>> d9ebaca1f5f63ca204231dc115678469cba0f06f
     </application>
 
 </manifest>

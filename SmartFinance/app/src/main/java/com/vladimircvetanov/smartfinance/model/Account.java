@@ -1,15 +1,11 @@
 package com.vladimircvetanov.smartfinance.model;
 
-/**
- * Created by vladimircvetanov on 04.04.17.
- */
-
 public class Account {
-    public enum Type implements Manager.IType{CREDIT_CARD,DEBIT_CARD};
+
+    public enum Type implements Manager.IType {CREDIT_CARD, DEBIT_CARD, CASH}
     private Type type;
     private String name;
     private double sum;
-
 
     public Account(Type type, String name, double sum) {
         this.type = type;
@@ -27,7 +23,6 @@ public class Account {
         if (Double.compare(account.sum, sum) != 0) return false;
         if (type != account.type) return false;
         return name != null ? name.equals(account.name) : account.name == null;
-
     }
 
     @Override
