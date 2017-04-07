@@ -10,15 +10,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.vladimircvetanov.smartfinance.session.Session;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

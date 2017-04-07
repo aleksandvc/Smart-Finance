@@ -31,9 +31,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/mail"
+            android:src="@android:drawable/ic_dialog_email"
             android:layout_gravity="center"
-            android:background="@color/colorWhite"/>
+            />
         <EditText
             android:id="@+id/register_email_insert"
             android:layout_width="wrap_content"
@@ -42,6 +42,7 @@
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
+            android:maxLength="20"
             android:maxLines="1"
             android:layout_marginLeft="10dp"
             android:layout_weight="1.55" />
@@ -67,6 +68,7 @@
             android:inputType="textPassword"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
+            android:maxLength="20"
             android:maxLines="1"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
@@ -91,6 +93,7 @@
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
+            android:maxLength="20"
             android:maxLines="1"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
