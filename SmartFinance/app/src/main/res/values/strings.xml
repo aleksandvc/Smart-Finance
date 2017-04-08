@@ -7,4 +7,9 @@
     <string name="currency">Currency</string>
     <string name="settings">Settings</string>
     <string name="log_out">Log out</string>
+
+
+    <string name="submit">submit</string>
+    <string name="transaction_success">Transaction sucessful!</string>
+    <string name="transaction_failure">Transaction failed!</string>
 </resources>

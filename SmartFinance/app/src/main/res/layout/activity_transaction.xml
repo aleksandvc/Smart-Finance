@@ -101,6 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/transaction_category_spinner"
+        android:layout_above="@+id/transaction_submit_btn"
         android:orientation="vertical">
 
         <LinearLayout style="@style/transaction_numpad_row">
@@ -180,5 +181,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/transaction_submit_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/submit"
+        android:textSize="@dimen/all_text_size_large" />
 
 </RelativeLayout>

@@ -2,6 +2,8 @@ package com.vladimircvetanov.smartfinance.model;
 
 import android.util.Log;
 
+import org.joda.time.LocalDate;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -24,13 +26,13 @@ public class Manager {
      */
     public enum Type {INCOMING, EXPENSE}
 
-    private HashMap<Type, HashMap<IType, TreeMap<Date, Double>>> logs;
+    private HashMap<Type, HashMap<IType, TreeMap<LocalDate, Double>>> logs;
 
 
     private Manager() {
         logs = new HashMap<>();
-        logs.put(Type.INCOMING, new HashMap<IType, TreeMap<Date, Double>>());
-        logs.put(Type.EXPENSE, new HashMap<IType, TreeMap<Date, Double>>());
+        logs.put(Type.INCOMING, new HashMap<IType, TreeMap<LocalDate, Double>>());
+        logs.put(Type.EXPENSE, new HashMap<IType, TreeMap<LocalDate, Double>>());
         populateITypes();
     }
 
@@ -54,16 +56,16 @@ public class Manager {
      * @param sum       amount of money. If Type is Type.INCOMING, sum <u>must</u> be non-negative!
      * @return <i>true</i> if entry is successfully added.
      */
-    public boolean addLogEntry(Type direction, IType section, Date date, Double sum) {
+    public static boolean addLogEntry(Type direction, IType section, LocalDate date, Double sum) {
 
         if (direction == Type.INCOMING && sum < 0) return false;
 
         try {
-            logs.get(direction).get(section).put(date, sum);
+            getInstance().logs.get(direction).get(section).put(date, sum);
         } catch (NullPointerException e) {
             // HashMap.get(Key) returns null if key doesn't exist
             // => if 'direction' || 'section' aren't present in 'logs' a NullPointer will pop.
-            Log.e(this.getClass().getName(), e.getMessage());
+            Log.e(getInstance().getClass().getName(), e.getMessage());
             return false;
         }
         return true;
@@ -77,14 +79,14 @@ public class Manager {
      */
     private void populateITypes() {
         IType[] incomeSections = Category.values();
-        HashMap<IType, TreeMap<Date, Double>> incomeLog = logs.get(Type.INCOMING);
+        HashMap<IType, TreeMap<LocalDate, Double>> incomeLog = logs.get(Type.INCOMING);
         for (int i = 0; i < incomeSections.length; i++)
-            incomeLog.put(incomeSections[i], new TreeMap<Date, Double>());
+            incomeLog.put(incomeSections[i], new TreeMap<LocalDate, Double>());
 
         IType[] expenseSections = Account.Type.values();
-        HashMap<IType, TreeMap<Date, Double>> expenseLog = logs.get(Type.EXPENSE);
+        HashMap<IType, TreeMap<LocalDate, Double>> expenseLog = logs.get(Type.EXPENSE);
         for (int i = 0; i < expenseSections.length; i++)
-            expenseLog.put(expenseSections[i], new TreeMap<Date, Double>());
+            expenseLog.put(expenseSections[i], new TreeMap<LocalDate, Double>());
     }
 
 }

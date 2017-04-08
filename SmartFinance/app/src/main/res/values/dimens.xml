@@ -17,4 +17,6 @@
     <dimen name="all_text_size_huge">36dp</dimen>
     <dimen name="all_text_size_enormous">64dp</dimen>
 
+    <dimen name="dropdown_list_preferred_item_height">46dp</dimen>
+
 </resources>

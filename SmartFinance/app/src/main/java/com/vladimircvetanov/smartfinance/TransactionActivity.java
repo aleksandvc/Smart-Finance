@@ -5,11 +5,13 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.icu.text.NumberFormat;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
 import org.joda.time.LocalDate;
@@ -27,6 +30,10 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 public class TransactionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+
+    private Manager.Type direction;
+    private Manager.IType expenseCategory;
+    private Manager.IType incomeAccount;
 
     private TextView dateDisplay;
     private LocalDate date;
@@ -38,6 +45,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     private ImageButton backspace;
     private Spinner categorySpinner;
 
+    private View numDisplayBase;
+
     private Button[] numButtons;
 
     private Button equals;
@@ -46,6 +55,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     private Button plus;
     private Button minus;
     private Button decimal;
+
+    private Button submitButton;
 
     //Counts how far past the decimal point the input number is. Used to block input past 2 decimal positions
     private int decimalPosition = BEFORE_DECIMAL;
@@ -69,7 +80,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
      */
     private boolean operationPrimed = false;
 
-    //
+    //Previous input. Stored for executing currentOperation.
     private Double storedNumber = 0.0;
 
     @Override
@@ -81,29 +92,23 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         Toolbar tb = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(tb);
 
+        //------Initializations------------------//
+        numDisplayBase = findViewById(R.id.transaction_number_display);
+
+        submitButton = (Button) findViewById(R.id.transaction_submit_btn);
+
         directionRadio = (RadioGroup) findViewById(R.id.transaction_radio);
+        directionRadio.check(R.id.transaction_radio_expense);
 
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
         numDisplay = (TextView) findViewById(R.id.transaction_number_display_text);
         backspace = (ImageButton) findViewById(R.id.transaction_number_display_backspace);
         categorySpinner = (Spinner) findViewById(R.id.transaction_category_spinner);
 
-        ArrayAdapter<Manager.IType> categoryAdapter = new ArrayAdapter<Manager.IType>(this,android.R.layout.simple_spinner_dropdown_item,Manager.Category.values());
-        categorySpinner.setAdapter(categoryAdapter);
-
-
-        //Show the current date in a "d MMMM, YYYY" format.
-        date = LocalDate.now();
-        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
-        dateDisplay.setText(date.toString(dateFormat));
-
-
         //Seeing as they act almost identically, put all numeric buttons in an array for easier manipulation.
         numButtons = new Button[10];
-        for (int i = 0; i <= 9; i++) {
-            int resID = getResources().getIdentifier("transaction_numpad_" + i, "id", getPackageName());
-            numButtons[i] = (Button) findViewById(resID);
-        }
+        for (int i = 0; i <= 9; i++)
+            numButtons[i] = (Button) findViewById(getResources().getIdentifier("transaction_numpad_" + i, "id", getPackageName()));
 
         equals = (Button) findViewById(R.id.transaction_numpad_equals);
         divide = (Button) findViewById(R.id.transaction_numpad_divide);
@@ -111,8 +116,27 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         plus = (Button) findViewById(R.id.transaction_numpad_plus);
         minus = (Button) findViewById(R.id.transaction_numpad_minus);
         decimal = (Button) findViewById(R.id.transaction_numpad_decimal);
+        //---------------------------------------//
 
 
+        //Made separate adapters for Expense and Income items, as it should be cheaper switching adapters, rather than switching the data each time if the user changes mode often.
+        final ArrayAdapter<Manager.IType> categoryAdapter = new ArrayAdapter<Manager.IType>(this,R.layout.spinner_transaction_category,Manager.Category.values());
+        final ArrayAdapter<Manager.IType> accountAdapter = new ArrayAdapter<Manager.IType>(this,R.layout.spinner_transaction_category,Account.Type.values());
+        categorySpinner.setAdapter(categoryAdapter);
+
+        direction = Manager.Type.EXPENSE;
+        expenseCategory = (Manager.Category) categorySpinner.getSelectedItem();
+
+        //Show the current date in a "d MMMM, YYYY" format.
+        date = LocalDate.now();
+        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
+        dateDisplay.setText(date.toString(dateFormat));
+
+
+        /**
+         * On arithmetic button pressed -> execute stored {@link TransactionActivity#currentOperation}
+         *                              -> save new currentOperation
+         */
         Button.OnClickListener arithmeticListener = new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +145,15 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                 if (currentOperation != OPERATION_NONE)operationPrimed = false;
             }
         };
+        equals.setOnClickListener(arithmeticListener);
+        divide.setOnClickListener(arithmeticListener);
+        multiply.setOnClickListener(arithmeticListener);
+        plus.setOnClickListener(arithmeticListener);
+        minus.setOnClickListener(arithmeticListener);
+
+        /**
+         * Handles input from the numeric buttons and the decimal-point button.
+         */
         Button.OnClickListener numberListener = new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,23 +177,15 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
                 numDisplay.append(((Button) v).getText().toString());
                 if (decimalPosition != BEFORE_DECIMAL) decimalPosition++;
-
             }
         };
-
-
-
-        equals.setOnClickListener(arithmeticListener);
-        divide.setOnClickListener(arithmeticListener);
-        multiply.setOnClickListener(arithmeticListener);
-        plus.setOnClickListener(arithmeticListener);
-        minus.setOnClickListener(arithmeticListener);
-
         for (int i = 0; i < numButtons.length; i++)
             numButtons[i].setOnClickListener(numberListener);
         decimal.setOnClickListener(numberListener);
 
-
+        /**
+         * Deletes a single digit (or the dec. point)
+         */
         backspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +200,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             }
         });
 
+
+
         dateDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,9 +214,70 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                 datePicker.show(getSupportFragmentManager(),"testTag");
             }
         });
+        directionRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                //TODO !IMPORTANT! - this block is brimming with possible exceptions. Might need TOTAL re-vamping.
+                int pos;
+                switch (checkedId){
+                    case R.id.transaction_radio_expense:
+                        numDisplay.setBackgroundResource(R.color.colorOrange);
+                        backspace.setBackgroundResource(R.color.colorOrange);
+                        numDisplayBase.setBackgroundResource(R.color.colorOrange);
 
+                        direction = Manager.Type.EXPENSE;
+                        categorySpinner.setAdapter(categoryAdapter);
+                        pos = categoryAdapter.getPosition(expenseCategory);
+                        categorySpinner.setSelection(pos);
+                        break;
+                    case R.id.transaction_radio_income:
+                        numDisplay.setBackgroundResource(R.color.colorGreen);
+                        backspace.setBackgroundResource(R.color.colorGreen);
+                        numDisplayBase.setBackgroundResource(R.color.colorGreen);
+
+                        direction = Manager.Type.INCOMING;
+                        categorySpinner.setAdapter(accountAdapter);
+                        pos = accountAdapter.getPosition(incomeAccount);
+                        categorySpinner.setSelection(pos);
+                        break;
+                }
+            }
+        });
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Manager.IType categoryOrAccount = (Manager.IType) categorySpinner.getItemAtPosition(position);
+                switch (direction){
+                    case EXPENSE:
+                        expenseCategory = categoryOrAccount;
+                        break;
+                    case INCOMING:
+                        incomeAccount = categoryOrAccount;
+                        break;
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {Log.wtf("onNothingSelected","This is a VERY temporary log. Seriously, if you are reading this, I probably forgot to remove it. Woops. Sorry :) ~Simo");}
+        });
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO - validation
+                //TODO - user-friendly feedback.
+                Manager.IType cat = direction.equals(Manager.Type.EXPENSE) ? expenseCategory : incomeAccount;
+                if(Manager.addLogEntry(direction,cat,date,Double.valueOf(numDisplay.getText().toString()))){
+                    Message.message(TransactionActivity.this,getString(R.string.transaction_success));
+                    startActivity(new Intent(TransactionActivity.this,MainActivity.class));
+                } else {
+                    Message.message(TransactionActivity.this,getString(R.string.transaction_failure));
+                }
+            }
+        });
     }
 
+    /**
+     * Executes stored arithmetic operation.
+     */
     private void calculate() {
         double currNumber = Double.valueOf(numDisplay.getText().toString());
 
@@ -220,6 +308,9 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
 
     @Override
+    /**
+     * Handles selection from the DatePickerFragment.
+     */
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         date = new LocalDate(year,month+1,dayOfMonth);
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
