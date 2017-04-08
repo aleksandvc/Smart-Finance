@@ -7,7 +7,7 @@ public class User {
     private String email;
     private String password;
     private int imageId;
-    private HashSet<Account> accounts;
+//    private HashSet<Account> accounts;
 
     public User(String email, String password) {
         if (email != null && !email.isEmpty()) {
@@ -16,7 +16,7 @@ public class User {
         if (password != null && !password.isEmpty()) {
             this.password = password;
         }
-        accounts = new HashSet<>();
+//        accounts = new HashSet<>();
     }
 
     public String getEmail() {

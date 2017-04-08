@@ -85,22 +85,31 @@
             android:src="@drawable/ic_action_backspace" />
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/transaction_category_spinner"
+
+    <LinearLayout
+        android:id="@+id/transaction_section_selection_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/transaction_submit_btn"
         android:layout_below="@id/transaction_number_display"
-        android:layout_margin="@dimen/all_view_spacing_standard"
-        android:animateLayoutChanges="true"
-        android:spinnerMode="dialog"
-        android:theme="@style/Theme.AppCompat.Light"
-        android:pointerIcon="cell"/>
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please select a section:"/>
+        <ListView
+            android:id="@+id/transaction_section_selection"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        </LinearLayout>
 
     <LinearLayout
         android:id="@+id/transaction_numpad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/transaction_category_spinner"
+        android:layout_below="@id/transaction_number_display"
         android:layout_above="@+id/transaction_submit_btn"
         android:orientation="vertical">
 
@@ -187,7 +196,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/submit"
+        android:text="@string/transaction_select_section"
         android:textSize="@dimen/all_text_size_large" />
 
 </RelativeLayout>
