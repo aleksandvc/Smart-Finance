@@ -17,4 +17,7 @@
     <string name="transaction_failure">Transaction failed!</string>
     <string name="transaction_add_to">add to</string>
     <string name="transaction_select_section">select section</string>
+    <string name="transaction_input_note">add note ...</string>
+    <string name="income">income</string>
+    <string name="expense">expense</string>
 </resources>

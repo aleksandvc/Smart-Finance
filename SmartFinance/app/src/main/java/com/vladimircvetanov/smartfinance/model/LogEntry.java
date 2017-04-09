@@ -2,6 +2,7 @@ package com.vladimircvetanov.smartfinance.model;
 
 import org.joda.time.LocalDate;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Comparator;
 /**
  * Class representing a single entry in an account or an expense category.
  */
-public class LogEntry {
+public class LogEntry implements Serializable{
 
     private LocalDate date;
     private double sum;

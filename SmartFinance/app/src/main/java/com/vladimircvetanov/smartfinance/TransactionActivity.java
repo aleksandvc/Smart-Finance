@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioGroup;
@@ -34,10 +35,13 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     private Manager.Type selectedType;
     private Section selectedSection;
 
-    private ListView sectionSelection;
+    private ListView sectionList;
 
     private TextView dateDisplay;
     private LocalDate date;
+
+    private EditText noteInput;
+
 
     //Selection between income and expense;
     private RadioGroup directionRadio;
@@ -99,10 +103,12 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         TEMPORARY_METHOD();
 
         //==============================Initializations============================================================//
-        sectionSelection = (ListView) findViewById(R.id.transaction_section_selection);
-        final ArrayAdapter<Section> incomeAdapter = new ArrayAdapter<Section>(this,R.layout.spinner_transaction_category,Manager.getSections(Manager.Type.INCOMING));
-        final ArrayAdapter<Section> expenseAdapter = new ArrayAdapter<Section>(this,R.layout.spinner_transaction_category,Manager.getSections(Manager.Type.EXPENSE));
-        sectionSelection.setAdapter(expenseAdapter);
+        sectionList = (ListView) findViewById(R.id.transaction_section_selection);
+        final ArrayAdapter<Section> incomeAdapter = new ArrayAdapter<Section>(this, R.layout.spinner_transaction_category, Manager.getSections(Manager.Type.INCOMING));
+        final ArrayAdapter<Section> expenseAdapter = new ArrayAdapter<Section>(this, R.layout.spinner_transaction_category, Manager.getSections(Manager.Type.EXPENSE));
+        sectionList.setAdapter(expenseAdapter);
+
+        noteInput = (EditText) findViewById(R.id.transaction_note_input);
 
         numDisplayBase = findViewById(R.id.transaction_number_display);
         numpad = findViewById(R.id.transaction_numpad);
@@ -253,8 +259,18 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                         numDisplayBase.setBackgroundResource(R.color.colorOrange);
                         dateDisplay.setTextColor(ContextCompat.getColor(TransactionActivity.this, R.color.colorOrange));
 
+                        for (int i = 0; i < numButtons.length; i++)
+                            numButtons[i].setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
+                        decimal.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
+                        equals.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
+                        plus.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
+                        minus.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
+                        multiply.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
+                        divide.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
+
+
                         selectedType = Manager.Type.EXPENSE;
-                        sectionSelection.setAdapter(expenseAdapter);
+                        sectionList.setAdapter(expenseAdapter);
                         break;
                     case R.id.transaction_radio_income:
                         numDisplay.setBackgroundResource(R.color.colorGreen);
@@ -262,8 +278,18 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                         numDisplayBase.setBackgroundResource(R.color.colorGreen);
                         dateDisplay.setTextColor(ContextCompat.getColor(TransactionActivity.this, R.color.colorGreen));
 
+                        for (int i = 0; i < numButtons.length; i++)
+                            numButtons[i].setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
+                        decimal.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
+                        equals.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
+                        plus.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
+                        minus.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
+                        multiply.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
+                        divide.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
+
+
                         selectedType = Manager.Type.INCOMING;
-                        sectionSelection.setAdapter(incomeAdapter);
+                        sectionList.setAdapter(incomeAdapter);
                         break;
                 }
                 if (startedWithSection) {
@@ -277,14 +303,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             @Override
             public void onClick(View v) {
                 if (startedWithSection) {
-                    double sum = Double.parseDouble(numDisplay.getText().toString());
-                    LogEntry entry = new LogEntry(date, sum, "TEST_NOTE", selectedType, new Section("S", Manager.Type.EXPENSE, 1,true));
-                    if (Manager.addLogEntry(entry)) {
-                        Message.message(TransactionActivity.this, getString(R.string.transaction_success));
-                        startActivity(new Intent(TransactionActivity.this, MainActivity.class));
-                    } else {
-                        Message.message(TransactionActivity.this, getString(R.string.transaction_failure));
-                    }
+                    createEntry(selectedSection);
                 } else {
                     numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                         @Override
@@ -297,20 +316,11 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             }
         });
 
-        sectionSelection.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        sectionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedSection = (Section) sectionSelection.getAdapter().getItem(position);
-                double sum = Double.parseDouble(numDisplay.getText().toString());
-
-                LogEntry entry = new LogEntry(date, sum, "TEST_NOTE", selectedType, selectedSection);
-
-                if (Manager.addLogEntry(entry)) {
-                    Message.message(TransactionActivity.this, getString(R.string.transaction_success));
-                    startActivity(new Intent(TransactionActivity.this, MainActivity.class));
-                } else {
-                    Message.message(TransactionActivity.this, getString(R.string.transaction_failure));
-                }
+                selectedSection = (Section) sectionList.getAdapter().getItem(position);
+                createEntry(selectedSection);
             }
         });
         //=========================================================================================================//
@@ -318,25 +328,46 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     }
 
     /**
+     * Creates a LogEntry with the note, sum, type and date selected in the Activity and a passed Section.
+     *
+     * @param s Section for the LogEntry.
+     */
+    private void createEntry(Section s) {
+        double sum = Double.parseDouble(numDisplay.getText().toString());
+        String note = noteInput.getText().toString();
+
+        LogEntry entry = new LogEntry(date, sum, note, selectedType, selectedSection);
+
+        if (Manager.addLogEntry(entry)) {
+            Message.message(TransactionActivity.this, getString(R.string.transaction_success));
+            startActivity(new Intent(TransactionActivity.this, MainActivity.class));
+        } else {
+            Message.message(TransactionActivity.this, getString(R.string.transaction_failure));
+        }
+    }
+
+    //TODO !!!! V !!!!
+
+    /**
      * This method only exists for testing purposes.
      * It populates the remodeled masterLog (named log in master branch) collection in the Manager class.
      */
     private void TEMPORARY_METHOD() {
-        Manager.getInstance().addSection(new Section("TEST 1", Manager.Type.EXPENSE,R.mipmap.ic_launcher,false));
-        Manager.getInstance().addSection(new Section("TEST 2", Manager.Type.EXPENSE,R.mipmap.ic_launcher,false));
-        Manager.getInstance().addSection(new Section("TEST 3", Manager.Type.EXPENSE,R.mipmap.ic_launcher,false));
-        Manager.getInstance().addSection(new Section("TEST 4", Manager.Type.EXPENSE,R.mipmap.ic_launcher,false));
-        Manager.getInstance().addSection(new Section("TEST 5", Manager.Type.EXPENSE,R.mipmap.ic_launcher,false));
-        Manager.getInstance().addSection(new Section("TEST 6", Manager.Type.EXPENSE,R.mipmap.ic_launcher,false));
-        Manager.getInstance().addSection(new Section("TEST 7", Manager.Type.EXPENSE,R.mipmap.ic_launcher,false));
-        Manager.getInstance().addSection(new Section("TEST 8", Manager.Type.EXPENSE,R.mipmap.ic_launcher,false));
-        Manager.getInstance().addSection(new Section("TEST 9", Manager.Type.INCOMING,R.mipmap.ic_launcher_round,true));
-        Manager.getInstance().addSection(new Section("TEST A", Manager.Type.INCOMING,R.mipmap.ic_launcher_round,true));
-        Manager.getInstance().addSection(new Section("TEST B", Manager.Type.INCOMING,R.mipmap.ic_launcher_round,true));
-        Manager.getInstance().addSection(new Section("TEST C", Manager.Type.INCOMING,R.mipmap.ic_launcher_round,true));
-        Manager.getInstance().addSection(new Section("TEST D", Manager.Type.INCOMING,R.mipmap.ic_launcher_round,true));
-        Manager.getInstance().addSection(new Section("TEST E", Manager.Type.INCOMING,R.mipmap.ic_launcher_round,true));
-        Manager.getInstance().addSection(new Section("TEST F", Manager.Type.INCOMING,R.mipmap.ic_launcher_round,true));
+        Manager.getInstance().addSection(new Section("TEST 1", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
+        Manager.getInstance().addSection(new Section("TEST 2", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
+        Manager.getInstance().addSection(new Section("TEST 3", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
+        Manager.getInstance().addSection(new Section("TEST 4", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
+        Manager.getInstance().addSection(new Section("TEST 5", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
+        Manager.getInstance().addSection(new Section("TEST 6", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
+        Manager.getInstance().addSection(new Section("TEST 7", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
+        Manager.getInstance().addSection(new Section("TEST 8", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
+        Manager.getInstance().addSection(new Section("TEST 9", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
+        Manager.getInstance().addSection(new Section("TEST A", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
+        Manager.getInstance().addSection(new Section("TEST B", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
+        Manager.getInstance().addSection(new Section("TEST C", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
+        Manager.getInstance().addSection(new Section("TEST D", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
+        Manager.getInstance().addSection(new Section("TEST E", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
+        Manager.getInstance().addSection(new Section("TEST F", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
     }
 
     /**

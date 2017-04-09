@@ -36,6 +36,7 @@
         android:orientation="horizontal">
 
         <RadioButton
+            android:text="@string/expense"
             android:id="@+id/transaction_radio_expense"
             android:button="@drawable/transaction_radio_expense"
             android:layout_width="wrap_content"
@@ -47,6 +48,8 @@
             android:layout_weight="1"/>
 
         <RadioButton
+            android:text="@string/income"
+            android:layoutDirection="rtl"
             android:id="@+id/transaction_radio_income"
             android:button="@drawable/transaction_radio_income"
             android:layout_width="wrap_content"
@@ -86,12 +89,26 @@
     </LinearLayout>
 
 
+    <EditText
+        android:id="@+id/transaction_note_input"
+        android:allowUndo="true"
+        android:cursorVisible="false"
+        android:maxLines="5"
+        android:maxLength="256"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transaction_number_display"
+        android:layout_marginLeft="@dimen/all_view_spacing_standard"
+        android:layout_marginRight="@dimen/all_view_spacing_standard"
+        android:hint="@string/transaction_input_note" />
+
+
     <LinearLayout
         android:id="@+id/transaction_section_selection_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/transaction_submit_btn"
-        android:layout_below="@id/transaction_number_display"
+        android:layout_below="@id/transaction_note_input"
         android:orientation="vertical"
         android:visibility="gone">
         <TextView
@@ -109,7 +126,7 @@
         android:id="@+id/transaction_numpad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/transaction_number_display"
+        android:layout_below="@id/transaction_note_input"
         android:layout_above="@+id/transaction_submit_btn"
         android:orientation="vertical">
 
@@ -184,6 +201,7 @@
                 style="@style/transaction_numpad_button"
                 android:text="=" />
             <Button
+                android:theme="@style/ThemeOverlay.CustomTheme"
                 android:id="@+id/transaction_numpad_divide"
                 style="@style/transaction_numpad_button"
                 android:text="÷" />
@@ -196,6 +214,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/orange_button_9"
         android:text="@string/transaction_select_section"
         android:textSize="@dimen/all_text_size_large" />
 
