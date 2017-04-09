@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorDark"
-    tools:context="com.vladimircvetanov.smartfinance.LoginActivity"
-    >
+    tools:context="com.vladimircvetanov.smartfinance.LoginActivity">
 
     <ImageView
         android:layout_width="96dp"
@@ -25,8 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center"
-        >
+        android:layout_gravity="center">
 
         <ImageView
             android:layout_width="wrap_content"

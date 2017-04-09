@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,38 +9,49 @@
         layout="@layout/toolbar"
         android:id="@+id/toolbar" />
 
-    <fragment
-        android:id="@+id/pie_chart_fragment"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        tools:context=".MainActivity" >
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-=======
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.vladimircvetanov.smartfinance.MainActivity">
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pie_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp" />
 
-    <Button
-        android:id="@+id/temp_to_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="toLogIn"/>
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/temp_to_register"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="toRegister"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/temp_to_transaction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="toTransaction"/>
->>>>>>> d9ebaca1f5f63ca204231dc115678469cba0f06f
+        <Button
+            android:id="@+id/temp_to_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="toLogIn"/>
+
+        <Button
+            android:id="@+id/temp_to_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="toRegister"/>
+
+        <Button
+            android:id="@+id/temp_to_transaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="toTransaction"/>
+    </LinearLayout>
 
 </LinearLayout>

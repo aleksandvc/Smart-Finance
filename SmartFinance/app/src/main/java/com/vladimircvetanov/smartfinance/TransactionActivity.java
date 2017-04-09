@@ -1,14 +1,10 @@
 package com.vladimircvetanov.smartfinance;
 
-
 import android.app.DatePickerDialog;
-import android.content.Intent;
-import android.icu.text.NumberFormat;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
-import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
 import org.joda.time.LocalDate;
@@ -61,7 +56,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     private static final char OPERATION_MULTIPLY = 'x';
     private static final char OPERATION_DIVIDE = '÷';
 
-
     /**
      * Flag tracking if there is an operation waiting for execution. Basically: true if there has been numeric input after setting an operation.
      * If <i>true</i>, pressing an operation button will execute standing arithmetic operation and reset to false.
@@ -78,8 +72,9 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         setContentView(R.layout.activity_transaction);
 
         //Set Toolbar, because our overlords at Google are taking <b>forever</b> to compat-ize the Appbar properly...
-        Toolbar tb = (Toolbar) findViewById(R.id.appbar);
-        setSupportActionBar(tb);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         directionRadio = (RadioGroup) findViewById(R.id.transaction_radio);
 
@@ -90,7 +85,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
         ArrayAdapter<Manager.IType> categoryAdapter = new ArrayAdapter<Manager.IType>(this,android.R.layout.simple_spinner_dropdown_item,Manager.Category.values());
         categorySpinner.setAdapter(categoryAdapter);
-
 
         //Show the current date in a "d MMMM, YYYY" format.
         date = LocalDate.now();
@@ -148,8 +142,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             }
         };
 
-
-
         equals.setOnClickListener(arithmeticListener);
         divide.setOnClickListener(arithmeticListener);
         multiply.setOnClickListener(arithmeticListener);
@@ -159,7 +151,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         for (int i = 0; i < numButtons.length; i++)
             numButtons[i].setOnClickListener(numberListener);
         decimal.setOnClickListener(numberListener);
-
 
         backspace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,7 +208,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
         decimalPosition = numText.contains(".") ? (numText.length() - 1) - numText.lastIndexOf(".") : BEFORE_DECIMAL;
     }
-
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

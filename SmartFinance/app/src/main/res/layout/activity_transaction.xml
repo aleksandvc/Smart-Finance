@@ -7,8 +7,8 @@
     tools:context="com.vladimircvetanov.smartfinance.TransactionActivity">
 
 
-    <include layout="@layout/appbar"
-        android:id="@+id/appbar"/>
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
 
 
     <TextView
@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_below="@id/appbar"
+        android:layout_below="@id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/all_view_spacing_standard"
 
@@ -32,7 +32,7 @@
         android:id="@+id/transaction_radio"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_below="@id/appbar"
+        android:layout_below="@id/toolbar"
         android:orientation="horizontal">
 
         <RadioButton

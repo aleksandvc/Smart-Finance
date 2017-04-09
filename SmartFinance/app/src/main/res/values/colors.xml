@@ -7,5 +7,6 @@
     <color name="colorWhite">#f9fafc</color>
     <color name="colorGreen">#FF009999</color>
     <color name="colorOrange">#FFFCB2A1</color>
-
+    <color name="colorTransparent">#00ffffff</color>
+    <color name="colorLightGreen">#b26cb4b4</color>
 </resources>

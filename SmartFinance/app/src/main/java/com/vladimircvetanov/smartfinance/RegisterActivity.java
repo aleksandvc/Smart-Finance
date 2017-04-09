@@ -2,8 +2,8 @@ package com.vladimircvetanov.smartfinance;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,8 +18,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText confirmPass;
     private Button signUp;
     private Button cancel;
-
     private DBAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
