@@ -92,7 +92,6 @@
     <EditText
         android:id="@+id/transaction_note_input"
         android:allowUndo="true"
-        android:cursorVisible="false"
         android:maxLines="5"
         android:maxLength="256"
         android:layout_width="match_parent"
@@ -107,9 +106,9 @@
         android:id="@+id/transaction_section_selection_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/transaction_submit_btn"
         android:layout_below="@id/transaction_note_input"
         android:orientation="vertical"
+        android:layout_marginLeft="@dimen/all_view_spacing_standard"
         android:visibility="gone">
         <TextView
             android:layout_width="match_parent"
@@ -127,7 +126,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/transaction_note_input"
-        android:layout_above="@+id/transaction_submit_btn"
         android:orientation="vertical">
 
         <LinearLayout style="@style/transaction_numpad_row">
@@ -207,15 +205,16 @@
                 android:text="÷" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/transaction_submit_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/orange_button_9"
+            android:text="@string/transaction_select_section"
+            android:textSize="@dimen/all_text_size_large" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/transaction_submit_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/orange_button_9"
-        android:text="@string/transaction_select_section"
-        android:textSize="@dimen/all_text_size_large" />
+
 
 </RelativeLayout>

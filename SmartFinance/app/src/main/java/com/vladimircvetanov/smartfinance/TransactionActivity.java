@@ -2,7 +2,9 @@ package com.vladimircvetanov.smartfinance;
 
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
@@ -42,7 +44,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
     private EditText noteInput;
 
-
     //Selection between income and expense;
     private RadioGroup directionRadio;
 
@@ -80,7 +81,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
     /**
      * Flag tracking if there is an operation waiting for execution. Basically: true if there has been numeric input after setting an operation.
-     * If <i>true</i>, pressing an operation button will execute standing arithmetic operation and reset to false.
+     * If <i>true</i>, pressing an operation button will execute the standing arithmetic operation and reset this to false.
      * If <i>false</i>, standing operation can be changed at will until a number is pressed.
      */
     private boolean operationPrimed = false;
@@ -104,6 +105,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
         //==============================Initializations============================================================//
         sectionList = (ListView) findViewById(R.id.transaction_section_selection);
+        //Made separate adapters for Expense and Income items, as it should be cheaper switching adapters, rather than switching the data each time the user changes Manager.Type.
         final ArrayAdapter<Section> incomeAdapter = new ArrayAdapter<Section>(this, R.layout.spinner_transaction_category, Manager.getSections(Manager.Type.INCOMING));
         final ArrayAdapter<Section> expenseAdapter = new ArrayAdapter<Section>(this, R.layout.spinner_transaction_category, Manager.getSections(Manager.Type.EXPENSE));
         sectionList.setAdapter(expenseAdapter);
@@ -135,10 +137,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         decimal = (Button) findViewById(R.id.transaction_numpad_decimal);
         //=========================================================================================================//
 
-
-//        //Made separate adapters for Expense and Income items, as it should be cheaper switching adapters, rather than switching the data each time if the user changes mode often.
-//        final ArrayAdapter<Section> expenseAdapter = new ArrayAdapter<Section>(this, R.layout.spinner_transaction_category, Manager.getSections(Manager.Type.EXPENSE));
-//        final ArrayAdapter<Section> incomeAdapter = new ArrayAdapter<Section>(this, R.layout.spinner_transaction_category, Manager.getSections(Manager.Type.EXPENSE));
+        noteInput.clearFocus();
 
         //TODO - dynamically link with corresponding RadioGroup, to avoid errors in case of future change of default selection.
         selectedType = Manager.Type.EXPENSE;
@@ -225,14 +224,15 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         backspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Get currently displayed String representation and its length
                 String displayText = numDisplay.getText().toString();
                 int length = displayText.length();
 
-                if (decimalPosition != BEFORE_DECIMAL) decimalPosition--;
-
                 //if the 'display' is a single digit long, replaces it with a 0.
                 //else removes last number
-                numDisplay.setText(length <= 1 ? "0" : displayText.substring(0, --length));
+                numDisplay.setText(displayText.matches("^-.{0,1}$") ? "0" : displayText.substring(0, --length));
+                //If las digit was after the decimal point, move tracker one step back.
+                if (decimalPosition != BEFORE_DECIMAL) decimalPosition--;
             }
         });
 
@@ -254,39 +254,13 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
                     case R.id.transaction_radio_expense:
-                        numDisplay.setBackgroundResource(R.color.colorOrange);
-                        backspace.setBackgroundResource(R.color.colorOrange);
-                        numDisplayBase.setBackgroundResource(R.color.colorOrange);
-                        dateDisplay.setTextColor(ContextCompat.getColor(TransactionActivity.this, R.color.colorOrange));
-
-                        for (int i = 0; i < numButtons.length; i++)
-                            numButtons[i].setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
-                        decimal.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
-                        equals.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
-                        plus.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
-                        minus.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
-                        multiply.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
-                        divide.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.orange_button_9));
-
+                        colorizeUI(TransactionActivity.this, R.color.colorOrange, R.drawable.orange_button_9);
 
                         selectedType = Manager.Type.EXPENSE;
                         sectionList.setAdapter(expenseAdapter);
                         break;
                     case R.id.transaction_radio_income:
-                        numDisplay.setBackgroundResource(R.color.colorGreen);
-                        backspace.setBackgroundResource(R.color.colorGreen);
-                        numDisplayBase.setBackgroundResource(R.color.colorGreen);
-                        dateDisplay.setTextColor(ContextCompat.getColor(TransactionActivity.this, R.color.colorGreen));
-
-                        for (int i = 0; i < numButtons.length; i++)
-                            numButtons[i].setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
-                        decimal.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
-                        equals.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
-                        plus.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
-                        minus.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
-                        multiply.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
-                        divide.setBackground(ContextCompat.getDrawable(TransactionActivity.this, R.drawable.green_button_9));
-
+                        colorizeUI(TransactionActivity.this, R.color.colorGreen, R.drawable.green_button_9);
 
                         selectedType = Manager.Type.INCOMING;
                         sectionList.setAdapter(incomeAdapter);
@@ -302,17 +276,18 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (startedWithSection) {
+                if (startedWithSection)
                     createEntry(selectedSection);
-                } else {
+                else
                     numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                         @Override
                         public void run() {
                             numpad.setVisibility(View.GONE);
+                            findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
                             findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
+                            isNumpadDown = true;
                         }
                     });
-                }
             }
         });
 
@@ -328,8 +303,32 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     }
 
     /**
+     * Changes the colours and background of UI elements for the TransactionActivity.
+     * @param c Activity Context.
+     * @param colourID
+     * @param ninePatchID
+     */
+    private void colorizeUI(Context c, int colourID, int ninePatchID) {
+        numDisplay.setBackgroundResource(colourID);
+        backspace.setBackgroundResource(colourID);
+        numDisplayBase.setBackgroundResource(colourID);
+        dateDisplay.setTextColor(ContextCompat.getColor(c, colourID));
+
+        for (int i = 0; i < numButtons.length; i++)
+            numButtons[i].setBackgroundResource(ninePatchID);
+
+        decimal.setBackgroundResource(ninePatchID);
+        equals.setBackgroundResource(ninePatchID);
+        plus.setBackgroundResource(ninePatchID);
+        minus.setBackgroundResource(ninePatchID);
+        multiply.setBackgroundResource(ninePatchID);
+        divide.setBackgroundResource(ninePatchID);
+
+        submitButton.setBackgroundResource(ninePatchID);
+    }
+
+    /**
      * Creates a LogEntry with the note, sum, type and date selected in the Activity and a passed Section.
-     *
      * @param s Section for the LogEntry.
      */
     private void createEntry(Section s) {
@@ -347,7 +346,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     }
 
     //TODO !!!! V !!!!
-
     /**
      * This method only exists for testing purposes.
      * It populates the remodeled masterLog (named log in master branch) collection in the Manager class.
@@ -410,6 +408,22 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         date = new LocalDate(year, month + 1, dayOfMonth);
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isNumpadDown)
+            findViewById(R.id.transaction_section_selection_layout).animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.transaction_section_selection_layout).setVisibility(View.GONE);
+                    numpad.setAlpha(1F);
+                    numpad.setVisibility(View.VISIBLE);
+                    isNumpadDown = false;
+                }
+            });
+        else
+          super.onBackPressed();
     }
 }
 
