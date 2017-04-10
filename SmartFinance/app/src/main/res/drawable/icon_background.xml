@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="ring" >
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
 
-    <solid android:color="@color/colorTransparent" />
+    <solid
+        android:color="#ffffff" />
+
+    <size
+        android:width="250dp"
+        android:height="250dp" />
 
     <stroke
-        android:width="0.5dip"
-        android:color="@color/colorGreen" />
+        android:width="3dp"
+        android:color="@color/colorGreen"
+        android:elevation="2dp" />
 
-    <padding
-        android:bottom="2dp"
-        android:left="2dp"
-        android:right="2dp"
-        android:top="2dp" />
 </shape>

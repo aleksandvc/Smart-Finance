@@ -8,5 +8,6 @@
     <color name="colorGreen">#FF009999</color>
     <color name="colorOrange">#FFFCB2A1</color>
     <color name="colorTransparent">#00ffffff</color>
-    <color name="colorLightGreen">#b26cb4b4</color>
+    <color name="colorLightOrange">#facbc1</color>
+    <color name="colorLightGreen">#62a7a7</color>
 </resources>

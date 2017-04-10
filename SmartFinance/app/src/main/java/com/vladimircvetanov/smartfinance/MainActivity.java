@@ -9,11 +9,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.RadioButton;
+import android.widget.ImageView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -132,9 +130,10 @@ public class MainActivity extends AppCompatActivity {
     private void drawFavouriteIcons() {
         int counter = 0;
         for (final Category category : favouriteCategories) {
-            final RadioButton icon = new RadioButton(MainActivity.this);
-            icon.setButtonDrawable(category.getIcon());
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            final ImageView icon = new ImageView(MainActivity.this);
+            icon.setImageResource(category.getIcon());
+            icon.setPadding(30, 30, 30, 30);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(140, 140);
             lp.gravity = Gravity.CENTER;
             icon.setLayoutParams(lp);
 
@@ -151,15 +150,11 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
                     intent.putExtra("category", category.getName());
                     startActivity(intent);
-                    // pieChart.setCenterText(category.getName() + "\n" + category.getTotalAmount());
-                }
-            });
 
-            icon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     pieChart.setCenterText(category.getName() + "\n" + category.getTotalAmount());
-                    pieChart.setHoleColor(R.color.colorLightGreen);
+                    pieChart.setHoleColor(getResources().getColor(R.color.colorOrange));
+                    //icon.setBorderColor(getResources().getColor(R.color.colorWhite));
+                    icon.setBackground(getResources().getDrawable(R.drawable.icon_background));
                 }
             });
         }
