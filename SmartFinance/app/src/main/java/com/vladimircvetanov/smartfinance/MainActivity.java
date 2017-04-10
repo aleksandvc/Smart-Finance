@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.item_logout:
                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                MainActivity.this.finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
