@@ -61,27 +61,31 @@ public class MainActivity extends AppCompatActivity {
         Button toLogIn = (Button) findViewById(R.id.temp_to_login);
         Button toRegister = (Button) findViewById(R.id.temp_to_register);
         Button toTransaction = (Button) findViewById(R.id.temp_to_transaction);
+        Button toProfile = (Button) findViewById(R.id.temp_to_profile);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.temp_to_login:
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    break;
-                case R.id.temp_to_register:
-                    startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-                    break;
-                case R.id.temp_to_transaction:
-                    startActivity(new Intent(MainActivity.this, TransactionActivity.class));
-                    break;
-            }
+                switch (v.getId()) {
+                    case R.id.temp_to_login:
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        break;
+                    case R.id.temp_to_register:
+                        startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                        break;
+                    case R.id.temp_to_transaction:
+                        startActivity(new Intent(MainActivity.this, TransactionActivity.class));
+                        break;
+                    case R.id.temp_to_profile:
+                        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                        break;
+                }
             }
         };
         toLogIn.setOnClickListener(onClickListener);
         toRegister.setOnClickListener(onClickListener);
         toTransaction.setOnClickListener(onClickListener);
-        //end of temp code
+        toProfile.setOnClickListener(onClickListener);
     }
 
     @Override
@@ -148,12 +152,11 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
-                    intent.putExtra("category", section.getName());
+                    intent.putExtra(getString(R.string.EXTRA_SECTION), section);
                     startActivity(intent);
 
                     pieChart.setCenterText(section.getName() + "\n" + section.getSum());
                     pieChart.setHoleColor(getResources().getColor(R.color.colorOrange));
-                    //icon.setBorderColor(getResources().getColor(R.color.colorWhite));
                     icon.setBackground(getResources().getDrawable(R.drawable.icon_background));
                 }
             });

@@ -173,11 +173,11 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
          * On arithmetic button pressed -> execute stored {@link TransactionActivity#currentOperation}
          *                              -> save new currentOperation
          */
-        Button.OnClickListener arithmeticListener = new Button.OnClickListener() {
+        View.OnClickListener arithmeticListener = new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (operationPrimed && currentOperation != OPERATION_NONE) calculate();
-                currentOperation = ((Button) v).getText().charAt(0);
+                currentOperation = ((TextView) v).getText().charAt(0);
                 if (currentOperation != OPERATION_NONE) operationPrimed = false;
             }
         };
@@ -190,7 +190,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         /**
          * Handles input from the numeric buttons and the decimal-point button.
          */
-        Button.OnClickListener numberListener = new Button.OnClickListener() {
+        View.OnClickListener numberListener = new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Block input if maximal number of digits after decimal point has been reached.
@@ -211,7 +211,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
                 if (numDisplay.getText().toString().equals("0")) numDisplay.setText("");
 
-                numDisplay.append(((Button) v).getText().toString());
+                numDisplay.append(((TextView) v).getText().toString());
                 if (decimalPosition != BEFORE_DECIMAL) decimalPosition++;
             }
         };

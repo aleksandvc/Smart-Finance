@@ -24,50 +24,56 @@
         android:layout_gravity="center"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:weightSum="1">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_dialog_email"
-            android:layout_gravity="center" />
+            android:gravity="center"
+            android:layout_marginLeft="10dp"/>
 
         <EditText
             android:id="@+id/loggin_email_insert"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="6"
             android:layout_height="wrap_content"
-            android:hint="e-mail                "
-            android:maxLength="20"
+            android:hint="e-mail"
             android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1.55" />
+            android:layout_marginLeft="10dp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@mipmap/whitelocked"
             android:layout_gravity="center" />
 
         <EditText
             android:id="@+id/loggin_pass_insert"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="6"
             android:layout_height="wrap_content"
-            android:hint="password   "
+            android:hint="password"
             android:maxLength="20"
             android:maxLines="1"
             android:inputType="textPassword"
