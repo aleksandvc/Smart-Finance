@@ -1,5 +1,6 @@
 package com.vladimircvetanov.smartfinance;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,9 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private static final int SELECT_IMAGE = 12 ;
     private ImageView userPic;
     private Button changePic;
     private EditText changeEmail;
@@ -26,18 +31,19 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        userPic = (ImageView)findViewById(R.id.profile_user_pic);
-        changePic = (Button)findViewById(R.id.profile_changepic_button);
-        changeEmail=(EditText)findViewById(R.id.profile_email_change);
-        changePass = (EditText)findViewById(R.id.profile_pass_change);
-        editChanges = (Button)findViewById(R.id.profile_edit_button);
+        userPic = (ImageView) findViewById(R.id.profile_user_pic);
+        changePic = (Button) findViewById(R.id.profile_changepic_button);
+        changeEmail = (EditText) findViewById(R.id.profile_email_change);
+        changePass = (EditText) findViewById(R.id.profile_pass_change);
+        editChanges = (Button) findViewById(R.id.profile_edit_button);
 
         View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , 1);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE);
             }
         };
 
@@ -46,23 +52,25 @@ public class ProfileActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch(requestCode) {
-            case 0:
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    userPic.setImageURI(selectedImage);
-                }
+        if (requestCode == SELECT_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (imageReturnedIntent != null) {
+                    try {
 
-                break;
-            case 1:
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    userPic.setImageURI(selectedImage);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageReturnedIntent.getData());
+
+                        userPic.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-                break;
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+            }
         }
     }
-};
+}
 
 
 
