@@ -23,6 +23,7 @@ public class Section implements Serializable, Comparable<Section> {
     private boolean isFavourite;
     private Manager.Type type;
 
+    private double sum;
     private ArrayList<LogEntry> log;
 
     /**
@@ -41,6 +42,7 @@ public class Section implements Serializable, Comparable<Section> {
         if (iconID == -1)
             throw new IllegalArgumentException();
 
+        this.sum = 0.0;
         this.name = name;
         this.type = type;
         this.iconID = iconID;
@@ -109,11 +111,14 @@ public class Section implements Serializable, Comparable<Section> {
         return type;
     }
 
+    public double getSum(){ return sum; }
+
     public List<LogEntry> getLog() {
         return Collections.unmodifiableList(log);
     }
 
     public boolean addLogEntry(LogEntry entry) {
+        sum += entry.getSum();
         return this.log.add(entry);
     }
 }

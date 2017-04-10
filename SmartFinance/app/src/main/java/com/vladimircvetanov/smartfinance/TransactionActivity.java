@@ -230,7 +230,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
                 //if the 'display' is a single digit long, replaces it with a 0.
                 //else removes last number
-                numDisplay.setText(displayText.matches("^-.{0,1}$") ? "0" : displayText.substring(0, --length));
+                numDisplay.setText(displayText.matches("^-?[0-9]$") ? "0" : displayText.substring(0, --length));
                 //If las digit was after the decimal point, move tracker one step back.
                 if (decimalPosition != BEFORE_DECIMAL) decimalPosition--;
             }
