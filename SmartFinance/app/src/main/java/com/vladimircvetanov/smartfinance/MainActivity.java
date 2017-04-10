@@ -19,7 +19,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.vladimircvetanov.smartfinance.model.Category;
+import com.vladimircvetanov.smartfinance.model.Section;
 import com.vladimircvetanov.smartfinance.model.User;
 
 import java.util.ArrayList;
@@ -129,9 +129,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void drawFavouriteIcons() {
         int counter = 0;
-        for (final Category category : favouriteCategories) {
+        for (final Section section : favouriteCategories) {
             final ImageView icon = new ImageView(MainActivity.this);
-            icon.setImageResource(category.getIcon());
+            icon.setImageResource(section.getIconID());
             icon.setPadding(30, 30, 30, 30);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(140, 140);
             lp.gravity = Gravity.CENTER;
@@ -148,10 +148,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
-                    intent.putExtra("category", category.getName());
+                    intent.putExtra("category", section.getName());
                     startActivity(intent);
 
-                    pieChart.setCenterText(category.getName() + "\n" + category.getTotalAmount());
+                    pieChart.setCenterText(section.getName() + "\n" + section.getSum());
                     pieChart.setHoleColor(getResources().getColor(R.color.colorOrange));
                     //icon.setBorderColor(getResources().getColor(R.color.colorWhite));
                     icon.setBackground(getResources().getDrawable(R.drawable.icon_background));

@@ -1,35 +1,35 @@
 package com.vladimircvetanov.smartfinance.model;
 
-import android.util.Log;
-
-import java.util.Date;
 import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.HashSet;
 
 public class Manager {
 
-    private static Manager instance = null;
     /**
-     * Marker interface for (e) Manager.Category and (e) Account.Type
+     * Temporary implementation for testing purposes.
      */
-    public interface IType {}
-
-    /**
-     * Expense categories;
-     */
-    public enum Category implements IType {VEHICLE, CLOTHES, HEALTH, TRAVEL, SPORT, FOOD, TRANSPORT, PHONE, HOUSE, ENTERTAINMENT}
+    public void addSection(Section section) {
+        getInstance().masterLog.get(section.getType()).add(section);
+    }
 
     /**
      * Transaction types.
      */
-    public enum Type {INCOMING, EXPENSE}
-    private HashMap<Type, HashMap<IType, TreeMap<Date, Double>>> logs;
+    public enum Type {
+        INCOMING, EXPENSE
+    }
+
+    private static Manager instance = null;
+
+    /**
+     * A collection that maintains a list of all Sections (both Income and Expense) and distributes input accordingly.
+     */
+    private HashMap<Type, HashSet<Section>> masterLog;
 
     private Manager() {
-        logs = new HashMap<>();
-        logs.put(Type.INCOMING, new HashMap<IType, TreeMap<Date, Double>>());
-        logs.put(Type.EXPENSE, new HashMap<IType, TreeMap<Date, Double>>());
-        populateITypes();
+        masterLog = new HashMap<>();
+        masterLog.put(Type.EXPENSE, new HashSet<Section>());
+        masterLog.put(Type.INCOMING, new HashSet<Section>());
     }
 
     public static Manager getInstance() {
@@ -40,43 +40,46 @@ public class Manager {
     }
 
     /**
-     * Adds an entry, corresponding to a User expense or income, into the financial {@link Manager#logs}.
+     * Adds an entry, corresponding to a User expense or income, into the financial {@link Manager#masterLog}.
      *
-     * @param direction income or expense.
-     * @param section   appropriate IType enum value.
-     * @param date      date on which transaction should happen.
-     * @param sum       amount of money. If Type is Type.INCOMING, sum <u>must</u> be non-negative!
-     * @return <i>true</i> if entry is successfully added.
+     * @param type    income or expense.
+     * @param section appropriate ISection enum value.
+     * @param entry   LogEntry which to insert.
+     * @return <i>true</i> only if entry is successfully added.
      */
-    public boolean addLogEntry(Type direction, IType section, Date date, Double sum) {
-
-        if (direction == Type.INCOMING && sum < 0) return false;
-
-        try {
-            logs.get(direction).get(section).put(date, sum);
-        } catch (NullPointerException e) {
-            // HashMap.get(Key) returns null if key doesn't exist
-            // => if 'direction' || 'section' aren't present in 'logs' a NullPointer will pop.
-            Log.e(this.getClass().getName(), e.getMessage());
+    public static boolean addLogEntry(Type type, Section section, LogEntry entry) {
+        if (type == null || section == null || entry == null || !getInstance().masterLog.get(type).contains(section))
             return false;
-        }
-        return true;
+
+        HashSet<Section> sections = getInstance().masterLog.get(type);
+        for (Section s : sections)
+            if (s.equals(section))
+                return s.addLogEntry(entry);
+        return false;
     }
 
     /**
-     * Populates the logs' second depth, adding all {@link com.vladimircvetanov.smartfinance.model.Manager.IType} values
-     * under the appropriate {@link com.vladimircvetanov.smartfinance.model.Manager.Type} key in the logs collection.
+     * Wraps {@link Manager#addLogEntry(com.vladimircvetanov.smartfinance.model.Manager.Type, com.vladimircvetanov.smartfinance.model.Section, com.vladimircvetanov.smartfinance.model.LogEntry)}
+     * Takes necessary data from the entry itself and passes it to addLogEntry(Type type, Section section, LogEntry entry), simplifying method calls.
+     * @param entry   LogEntry which to insert.
+     * @return
      */
-    private void populateITypes() {
-        IType[] incomeSections = Category.values();
-        HashMap<IType, TreeMap<Date, Double>> incomeLog = logs.get(Type.INCOMING);
-        for (int i = 0; i < incomeSections.length; i++)
-            incomeLog.put(incomeSections[i], new TreeMap<Date, Double>());
+    public static boolean addLogEntry(LogEntry entry) {
+        if (entry == null)
+            return false;
+        Type t = entry.getType();
+        Section s = entry.getSection();
 
-        IType[] expenseSections = Account.Type.values();
-        HashMap<IType, TreeMap<Date, Double>> expenseLog = logs.get(Type.EXPENSE);
-        for (int i = 0; i < expenseSections.length; i++)
-            expenseLog.put(expenseSections[i], new TreeMap<Date, Double>());
+        return addLogEntry(t,s,entry);
     }
-
+    /**
+     * Returns an array of all sections of a passed type in an array. Useful for ArrayAdapters, etc.
+     * @param type INCOMING or EXPENSE
+     * @return array of Sections.
+     */
+    public static Section[] getSections(Type type) {
+        Manager m = getInstance();
+        Section[] sections = new Section[m.masterLog.get(type).size()];
+        return getInstance().masterLog.get(type).toArray(sections);
+    }
 }

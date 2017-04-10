@@ -25,6 +25,8 @@
         <item name="android:layout_weight">1</item>
         <item name="android:textSize">@dimen/all_text_size_huge</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:background">@drawable/orange_button_9</item>
     </style>
 
     <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
