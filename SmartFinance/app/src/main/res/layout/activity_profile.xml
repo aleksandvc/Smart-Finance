@@ -7,21 +7,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorDark"
-    tools:context="com.vladimircvetanov.smartfinance.LoginActivity"
-    android:weightSum="1">
+    tools:context="com.vladimircvetanov.smartfinance.ProfileActivity">
+
 
     <ImageView
+        android:layout_width="231dp"
+        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/profiletext"
+        android:layout_gravity="center"/>
+    <ImageView
+        android:id="@+id/profile_user_pic"
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:src="@drawable/smartfinance_icon" />
-    <ImageView
-        android:layout_width="231dp"
+    <Button
+        android:id="@+id/profile_changepic_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/smartfinance"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:background="@drawable/shadow"
+        android:text="change picture"
+        android:textColor="@color/colorWhite"/>
+
     <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -38,7 +50,7 @@
 
             />
         <EditText
-            android:id="@+id/loggin_email_insert"
+            android:id="@+id/profile_email_change"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="e-mail                "
@@ -48,7 +60,7 @@
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
             android:layout_marginLeft="10dp"
-             />
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -63,59 +75,27 @@
             android:layout_gravity="center"
             />
         <EditText
-            android:id="@+id/loggin_pass_insert"
-            android:layout_width="match_parent"
+            android:id="@+id/profile_pass_change"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="password   "
+            android:hint="password         "
             android:maxLength="20"
             android:maxLines="1"
-            android:inputType="textPassword"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+
 
         <Button
-            android:id="@+id/loggin_loggin_button"
-            android:layout_marginTop="10dp"
+            android:id="@+id/profile_edit_button"
+            android:layout_marginTop="30dp"
             android:layout_width="187dp"
             android:layout_height="wrap_content"
-            android:text="Login"
-            android:background="@drawable/shadow"
-            android:textSize="20sp"
-            android:textColor="@color/colorWhite"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="20sp"
-            android:text="- - OR - -"
+            android:text="edit"
             android:layout_gravity="center"
-            android:textColor="@color/colorWhite"/>
-        <Button
-            android:id="@+id/loggin_signup_button"
-            android:layout_width="187dp"
-            android:layout_height="wrap_content"
-            android:text="Sign UP"
-            android:layout_marginTop="10dp"
             android:background="@drawable/shadow"
             android:textSize="20sp"
             android:textColor="@color/colorWhite"/>
-
-    </LinearLayout>
-
-
-   <ImageView
-       android:layout_marginTop="10dp"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:src="@mipmap/moresignupoptions"
-       />
-
 </LinearLayout>

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         Button toLogIn = (Button) findViewById(R.id.temp_to_login);
         Button toRegister = (Button) findViewById(R.id.temp_to_register);
         Button toTransaction = (Button) findViewById(R.id.temp_to_transaction);
+        Button toProfile = (Button) findViewById(R.id.temp_to_profile);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.temp_to_transaction:
                         startActivity(new Intent(MainActivity.this, TransactionActivity.class));
                         break;
+                    case R.id.temp_to_profile:
+                        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                        break;
                 }
             }
         };
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         toLogIn.setOnClickListener(onClickListener);
         toRegister.setOnClickListener(onClickListener);
         toTransaction.setOnClickListener(onClickListener);
+        toProfile.setOnClickListener(onClickListener);
     }
 
     @Override
