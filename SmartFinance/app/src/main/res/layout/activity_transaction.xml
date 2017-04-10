@@ -129,88 +129,93 @@
         android:orientation="vertical">
 
         <LinearLayout style="@style/transaction_numpad_row">
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_7"
                 style="@style/transaction_numpad_button"
                 android:text="7" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_8"
                 style="@style/transaction_numpad_button"
                 android:text="8" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_9"
                 style="@style/transaction_numpad_button"
                 android:text="9" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_plus"
                 style="@style/transaction_numpad_button"
                 android:text="+" />
         </LinearLayout>
 
         <LinearLayout style="@style/transaction_numpad_row">
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_4"
                 style="@style/transaction_numpad_button"
                 android:text="4" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_5"
                 style="@style/transaction_numpad_button"
                 android:text="5" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_6"
                 style="@style/transaction_numpad_button"
                 android:text="6" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_minus"
                 style="@style/transaction_numpad_button"
                 android:text="-" />
         </LinearLayout>
 
         <LinearLayout style="@style/transaction_numpad_row">
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_1"
                 style="@style/transaction_numpad_button"
                 android:text="1" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_2"
                 style="@style/transaction_numpad_button"
                 android:text="2" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_3"
                 style="@style/transaction_numpad_button"
                 android:text="3" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_multiply"
                 style="@style/transaction_numpad_button"
                 android:text="x" />
         </LinearLayout>
 
         <LinearLayout style="@style/transaction_numpad_row">
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_decimal"
                 style="@style/transaction_numpad_button"
                 android:text="." />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_0"
                 style="@style/transaction_numpad_button"
                 android:text="0" />
-            <Button
+            <TextView
                 android:id="@+id/transaction_numpad_equals"
                 style="@style/transaction_numpad_button"
                 android:text="=" />
-            <Button
+            <TextView
                 android:theme="@style/ThemeOverlay.CustomTheme"
                 android:id="@+id/transaction_numpad_divide"
                 style="@style/transaction_numpad_button"
                 android:text="÷" />
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatButton
+        <TextView
             android:id="@+id/transaction_submit_btn"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:layout_alignParentBottom="true"
             android:background="@drawable/orange_button_9"
+            android:padding="@dimen/all_view_spacing_small"
+            android:gravity="center_vertical|center_horizontal"
+
             android:text="@string/transaction_select_section"
             android:textSize="@dimen/all_text_size_large" />
     </LinearLayout>

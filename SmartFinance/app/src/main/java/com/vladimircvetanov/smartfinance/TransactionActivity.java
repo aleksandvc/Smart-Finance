@@ -53,16 +53,16 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     private View numpad;
     private View numDisplayBase;
 
-    private Button[] numButtons;
+    private TextView[] numButtons;
 
-    private Button equals;
-    private Button divide;
-    private Button multiply;
-    private Button plus;
-    private Button minus;
-    private Button decimal;
+    private TextView equals;
+    private TextView divide;
+    private TextView multiply;
+    private TextView plus;
+    private TextView minus;
+    private TextView decimal;
 
-    private Button submitButton;
+    private TextView submitButton;
 
     //Counts how far past the decimal point the input number is. Used to block input past 2 decimal positions
     private int decimalPosition = BEFORE_DECIMAL;
@@ -115,7 +115,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         numDisplayBase = findViewById(R.id.transaction_number_display);
         numpad = findViewById(R.id.transaction_numpad);
 
-        submitButton = (Button) findViewById(R.id.transaction_submit_btn);
+        submitButton = (TextView) findViewById(R.id.transaction_submit_btn);
 
         directionRadio = (RadioGroup) findViewById(R.id.transaction_radio);
         directionRadio.check(R.id.transaction_radio_expense);
@@ -125,16 +125,16 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         backspace = (ImageButton) findViewById(R.id.transaction_number_display_backspace);
 
         //Seeing as they act almost identically, put all numeric buttons in an array for easier manipulation.
-        numButtons = new Button[10];
+        numButtons = new TextView[10];
         for (int i = 0; i <= 9; i++)
-            numButtons[i] = (Button) findViewById(getResources().getIdentifier("transaction_numpad_" + i, "id", getPackageName()));
+            numButtons[i] = (TextView) findViewById(getResources().getIdentifier("transaction_numpad_" + i, "id", getPackageName()));
 
-        equals = (Button) findViewById(R.id.transaction_numpad_equals);
-        divide = (Button) findViewById(R.id.transaction_numpad_divide);
-        multiply = (Button) findViewById(R.id.transaction_numpad_multiply);
-        plus = (Button) findViewById(R.id.transaction_numpad_plus);
-        minus = (Button) findViewById(R.id.transaction_numpad_minus);
-        decimal = (Button) findViewById(R.id.transaction_numpad_decimal);
+        equals = (TextView) findViewById(R.id.transaction_numpad_equals);
+        divide = (TextView) findViewById(R.id.transaction_numpad_divide);
+        multiply = (TextView) findViewById(R.id.transaction_numpad_multiply);
+        plus = (TextView) findViewById(R.id.transaction_numpad_plus);
+        minus = (TextView) findViewById(R.id.transaction_numpad_minus);
+        decimal = (TextView) findViewById(R.id.transaction_numpad_decimal);
         //=========================================================================================================//
 
         noteInput.clearFocus();
