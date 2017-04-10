@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
             }
             }
         };
-
         toLogIn.setOnClickListener(onClickListener);
         toRegister.setOnClickListener(onClickListener);
         toTransaction.setOnClickListener(onClickListener);
@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     private void drawFavouriteIcons() {
         int counter = 0;
         for (final Category category : favouriteCategories) {
-            RadioButton icon = new RadioButton(MainActivity.this);
+            final RadioButton icon = new RadioButton(MainActivity.this);
             icon.setButtonDrawable(category.getIcon());
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.gravity = Gravity.CENTER;
@@ -150,8 +151,18 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
                     intent.putExtra("category", category.getName());
                     startActivity(intent);
+                    // pieChart.setCenterText(category.getName() + "\n" + category.getTotalAmount());
+                }
+            });
+
+            icon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    pieChart.setCenterText(category.getName() + "\n" + category.getTotalAmount());
+                    pieChart.setHoleColor(R.color.colorLightGreen);
                 }
             });
         }
     }
 }
+

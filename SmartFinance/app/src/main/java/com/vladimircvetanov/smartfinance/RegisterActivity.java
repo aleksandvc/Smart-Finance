@@ -61,11 +61,23 @@ public class RegisterActivity extends AppCompatActivity {
             userEmail.requestFocus();
             return false;
         }
+        //if(!android.util.Patterns.EMAIL_ADDRESS.matcher(username).matches()){
+        if (!username.matches("^(.+)@(.+)$")) {
+            userEmail.setError("enter a valid email address");
+            userEmail.setText("");
+            userEmail.requestFocus();
+            return false;
+        }
         if (pass.isEmpty()) {
             userPass.setError("Empty password");
             userPass.requestFocus();
             return false;
 
+        }
+        if (!pass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{8,30}$")) {
+            userPass.setError("Password should contain at least one digit," +
+                    "one special symbol,one small letter,and should be between 8 and 30 symbols. ");
+            return false;
         }
         if (confirm.isEmpty()) {
             confirmPass.setError("Empty confirmation");

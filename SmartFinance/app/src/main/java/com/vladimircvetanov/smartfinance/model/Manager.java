@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 public class Manager {
 
-    private static Manager instance;
+    private static Manager instance = null;
     /**
      * Marker interface for (e) Manager.Category and (e) Account.Type
      */
@@ -38,7 +38,6 @@ public class Manager {
         }
         return instance;
     }
-
 
     /**
      * Adds an entry, corresponding to a User expense or income, into the financial {@link Manager#logs}.

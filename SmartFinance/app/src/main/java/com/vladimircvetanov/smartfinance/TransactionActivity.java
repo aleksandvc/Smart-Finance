@@ -1,10 +1,14 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -214,6 +218,27 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         date = new LocalDate(year,month+1,dayOfMonth);
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_currency:
+                return true;
+            case R.id.item_settings:
+                return true;
+            case R.id.item_logout:
+                startActivity(new Intent(TransactionActivity.this,LoginActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

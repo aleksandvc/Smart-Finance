@@ -15,11 +15,13 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:src="@drawable/smartfinance_icon" />
+
     <ImageView
         android:layout_width="231dp"
         android:layout_height="wrap_content"
         android:src="@drawable/registration"
         android:layout_gravity="center"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,9 +31,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/mail"
-            android:layout_gravity="center"
-            android:background="@color/colorWhite"/>
+            android:src="@android:drawable/ic_dialog_email"
+            android:layout_gravity="center" />
+
         <EditText
             android:id="@+id/register_email_insert"
             android:layout_width="wrap_content"
@@ -40,9 +42,13 @@
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
+            android:maxLength="20"
+            android:maxLines="1"
             android:layout_marginLeft="10dp"
             android:layout_weight="1.55" />
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,6 +61,7 @@
             android:src="@mipmap/whitelocked"
             android:layout_gravity="center"
             android:background="@color/colorWhite"/>
+
         <EditText
             android:id="@+id/register_pass_insert"
             android:layout_width="wrap_content"
@@ -64,8 +71,12 @@
             android:inputType="textPassword"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
+            android:maxLength="20"
+            android:maxLines="1"
             android:layout_marginLeft="10dp"/>
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,6 +89,7 @@
             android:src="@mipmap/whitelocked"
             android:layout_gravity="center"
             android:background="@color/colorWhite"/>
+
         <EditText
             android:id="@+id/register_confirm_insert"
             android:layout_width="wrap_content"
@@ -87,8 +99,12 @@
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
+            android:maxLength="20"
+            android:maxLines="1"
             android:layout_marginLeft="10dp"/>
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
@@ -116,5 +132,4 @@
             android:textColor="@color/colorWhite"/>
 
     </LinearLayout>
-
 </LinearLayout>

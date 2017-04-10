@@ -6,10 +6,8 @@
     android:background="@color/colorWhite"
     tools:context="com.vladimircvetanov.smartfinance.TransactionActivity">
 
-
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar"/>
-
 
     <TextView
         android:id="@+id/transaction_date_display"

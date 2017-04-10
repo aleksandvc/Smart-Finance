@@ -16,11 +16,13 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:src="@drawable/smartfinance_icon" />
+
     <ImageView
         android:layout_width="231dp"
         android:layout_height="wrap_content"
         android:src="@drawable/smartfinance"
         android:layout_gravity="center"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,21 +33,24 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/mail"
-            android:layout_gravity="center"
-            android:background="@color/colorWhite"/>
+            android:src="@android:drawable/ic_dialog_email"
+            android:layout_gravity="center" />
+
         <EditText
             android:id="@+id/loggin_email_insert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="e-mail                "
-            android:maxLength="30"
+            android:maxLength="20"
+            android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1.55" />
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,20 +61,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/whitelocked"
-            android:layout_gravity="center"
-            android:background="@color/colorWhite"/>
+            android:layout_gravity="center" />
+
         <EditText
             android:id="@+id/loggin_pass_insert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="password   "
-            android:maxLength="30"
+            android:maxLength="20"
+            android:maxLines="1"
             android:inputType="textPassword"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="25sp"
             android:layout_marginLeft="10dp"/>
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,6 +93,7 @@
             android:background="@drawable/shadow"
             android:textSize="20sp"
             android:textColor="@color/colorWhite"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -93,6 +102,7 @@
             android:text="- - OR - -"
             android:layout_gravity="center"
             android:textColor="@color/colorWhite"/>
+
         <Button
             android:id="@+id/loggin_signup_button"
             android:layout_width="187dp"
@@ -105,12 +115,10 @@
 
     </LinearLayout>
 
-
    <ImageView
        android:layout_marginTop="10dp"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:src="@mipmap/moresignupoptions"
-       />
+       android:src="@mipmap/moresignupoptions" />
 
 </LinearLayout>
