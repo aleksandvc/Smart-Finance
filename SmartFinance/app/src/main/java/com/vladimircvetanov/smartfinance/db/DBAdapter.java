@@ -175,19 +175,59 @@ public class DBAdapter {
     }
 
     private static void loadUsers(){
-        Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,username,password FROM SmartFinance;",null);
-        while(cursor.moveToNext()){
-            int id = cursor.getInt(cursor.getColumnIndex("_id"));
-            String email = cursor.getString(cursor.getColumnIndex("username"));
-            String pass = cursor.getString(cursor.getColumnIndex("password"));
-            User u = new User(email,pass);
-            u.setId(id);
-            registeredUsers.put(email,u);
-        }
+
+        new AsyncTask<Void,Void,Void>(){
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,username,password FROM SmartFinance;",null);
+                while(cursor.moveToNext()){
+                    int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    String email = cursor.getString(cursor.getColumnIndex("username"));
+                    String pass = cursor.getString(cursor.getColumnIndex("password"));
+                    User u = new User(email,pass);
+                    u.setId(id);
+                    registeredUsers.put(email,u);
+                }
+                return null;
+            }
+        }.execute();
+
 
     }
     public boolean existsUser(String username){
         return registeredUsers.containsKey(username);
+    }
+
+    public void updateUser(String oldEmail, String oldPass, final String newEmail, final String newPass) {
+
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... strings) {
+               SQLiteDatabase db = helper.getWritableDatabase();
+                String oldEmail = strings[0];
+                User u = registeredUsers.get(oldEmail);
+                //update
+
+                ContentValues values = new ContentValues();
+                values.put("username", newEmail);
+                values.put("password", newPass);
+
+                u.setEmail(newEmail);
+                u.setPassword(newPass);
+                registeredUsers.remove(oldEmail);
+                registeredUsers.put(newEmail, u);
+                db.update("SmartFinance", values, "username = ?", new String[]{oldEmail});
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                Toast.makeText(context, " user edited successfully", Toast.LENGTH_SHORT).show();
+            }
+        }.execute(oldEmail);
+
     }
 
     public void  close(){

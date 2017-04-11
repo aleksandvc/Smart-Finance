@@ -29,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText changeEmail;
     private EditText changePass;
     private Button editChanges;
+    DBAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +42,17 @@ public class ProfileActivity extends AppCompatActivity {
         changePass = (EditText) findViewById(R.id.profile_pass_change);
         editChanges = (Button) findViewById(R.id.profile_edit_button);
 
+        adapter = DBAdapter.getInstance(this);
+
+
+
         final User u = (User) getIntent().getSerializableExtra("user");
 
         changeEmail.setText(u.getEmail());
         changePass.setText(u.getPassword());
+
+        final String oldData = changeEmail.getText().toString();
+        final String oldPass = changePass.getText().toString();
 
         View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
             @Override
@@ -57,46 +65,42 @@ public class ProfileActivity extends AppCompatActivity {
         };
 
         changePic.setOnClickListener(btnChoosePhotoPressed);
+
+
         editChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               String username = changeEmail.getText().toString();
-               String pass = changePass.getText().toString();
+               String newEmail = changeEmail.getText().toString();
+               String newPass = changePass.getText().toString();
 
-                boolean hasError = false;
-                if (username.isEmpty()) {
+
+                if (newEmail.isEmpty()) {
                     changeEmail.setError("Empty email");
                     changeEmail.requestFocus();
-                    hasError = true;
+                  return ;
                 }
                 //if(!android.util.Patterns.EMAIL_ADDRESS.matcher(username).matches()){
-                if (!username.matches("^(.+)@(.+)$")) {
+                if (!newEmail.matches("^(.+)@(.+)$")) {
                     changeEmail.setError("enter a valid email address");
                     changeEmail.setText("");
                     changeEmail.requestFocus();
-                    hasError = true;
+                   return;
                 }
-                if (pass.isEmpty()) {
+                if (newPass.isEmpty()) {
                     changePass.setError("Empty password");
                     changePass.requestFocus();
-                    hasError = true;
+                    return;
 
                 }
-                if (!pass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{8,30}$")) {
+                if (!newPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{8,30}$")) {
                     changePass.setError("Password should contain at least one digit," +
                             "one special symbol,one small letter,and should be between 8 and 30 symbols. ");
-                    hasError = true;
+                    return;
                 }
 
-                if(!hasError){
-                    DBAdapter adapter = DBAdapter.getInstance(ProfileActivity.this);
-                    ContentValues values = new ContentValues();
-                    values.put("email",username);
-                    values.put("pass",pass);
+                adapter.updateUser(oldData,oldPass,newEmail,newPass);
+                finish();
 
-                    adapter.close();
-                    finish();
-                }
             }
         });
     }
