@@ -45,10 +45,13 @@
             android:layout_weight="6"
             android:layout_height="wrap_content"
             android:hint="e-mail"
+            android:maxLength="40"
+            android:inputType="textWebEmailAddress"
             android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:textSize="25sp"
+            android:textSize="@dimen/all_text_size_standard"
+
             android:layout_marginLeft="10dp" />
 
     </LinearLayout>
@@ -58,7 +61,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginRight="10dp">
 
         <ImageView
@@ -79,7 +82,7 @@
             android:inputType="textPassword"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:textSize="25sp"
+            android:textSize="@dimen/all_text_size_standard"
             android:layout_marginLeft="10dp"/>
 
     </LinearLayout>

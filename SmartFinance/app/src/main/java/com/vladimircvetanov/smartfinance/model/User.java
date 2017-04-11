@@ -4,12 +4,14 @@ import android.accounts.Account;
 
 import com.vladimircvetanov.smartfinance.R;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class User {
+public class User implements Serializable {
 
     private String email;
     private String password;
+    private int id;
     private int imageId;
     public static HashSet<Account> accounts;
     public static HashSet<Section> favouriteCategories;
@@ -32,6 +34,22 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     private void addDefaultCategories() {

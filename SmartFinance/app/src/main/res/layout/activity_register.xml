@@ -23,9 +23,11 @@
         android:layout_gravity="center"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_gravity="center">
 
         <ImageView
@@ -38,10 +40,11 @@
             android:id="@+id/register_email_insert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="e-mail                            "
+            android:hint="e-mail"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:textSize="25sp"
+            android:textSize="@dimen/all_text_size_standard"
+            android:inputType="textWebEmailAddress"
             android:maxLength="20"
             android:maxLines="1"
             android:layout_marginLeft="10dp"
@@ -50,9 +53,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_gravity="center">
 
         <ImageView
@@ -70,7 +75,7 @@
             android:textColor="@color/colorWhite"
             android:inputType="textPassword"
             android:textColorHint="@color/colorWhite"
-            android:textSize="25sp"
+            android:textSize="@dimen/all_text_size_standard"
             android:maxLength="20"
             android:maxLines="1"
             android:layout_marginLeft="10dp"/>
@@ -78,9 +83,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_gravity="center">
 
         <ImageView
@@ -98,7 +105,7 @@
             android:inputType="textPassword"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:textSize="25sp"
+            android:textSize="@dimen/all_text_size_standard"
             android:maxLength="20"
             android:maxLines="1"
             android:layout_marginLeft="10dp"/>

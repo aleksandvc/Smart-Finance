@@ -93,6 +93,10 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
 
         }
+        if(adapter.existsUser(username)){
+            Message.message(this,"User already exists");
+            return false;
+        }
 
         flag = true;
         new AsyncTask<Boolean, Void, Boolean>() {

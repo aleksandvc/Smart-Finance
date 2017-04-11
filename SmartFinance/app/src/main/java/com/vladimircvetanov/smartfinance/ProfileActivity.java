@@ -1,6 +1,7 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.User;
 
 import java.io.IOException;
 
@@ -37,6 +41,11 @@ public class ProfileActivity extends AppCompatActivity {
         changePass = (EditText) findViewById(R.id.profile_pass_change);
         editChanges = (Button) findViewById(R.id.profile_edit_button);
 
+        final User u = (User) getIntent().getSerializableExtra("user");
+
+        changeEmail.setText(u.getEmail());
+        changePass.setText(u.getPassword());
+
         View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +57,48 @@ public class ProfileActivity extends AppCompatActivity {
         };
 
         changePic.setOnClickListener(btnChoosePhotoPressed);
+        editChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               String username = changeEmail.getText().toString();
+               String pass = changePass.getText().toString();
+
+                boolean hasError = false;
+                if (username.isEmpty()) {
+                    changeEmail.setError("Empty email");
+                    changeEmail.requestFocus();
+                    hasError = true;
+                }
+                //if(!android.util.Patterns.EMAIL_ADDRESS.matcher(username).matches()){
+                if (!username.matches("^(.+)@(.+)$")) {
+                    changeEmail.setError("enter a valid email address");
+                    changeEmail.setText("");
+                    changeEmail.requestFocus();
+                    hasError = true;
+                }
+                if (pass.isEmpty()) {
+                    changePass.setError("Empty password");
+                    changePass.requestFocus();
+                    hasError = true;
+
+                }
+                if (!pass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{8,30}$")) {
+                    changePass.setError("Password should contain at least one digit," +
+                            "one special symbol,one small letter,and should be between 8 and 30 symbols. ");
+                    hasError = true;
+                }
+
+                if(!hasError){
+                    DBAdapter adapter = DBAdapter.getInstance(ProfileActivity.this);
+                    ContentValues values = new ContentValues();
+                    values.put("email",username);
+                    values.put("pass",pass);
+
+                    adapter.close();
+                    finish();
+                }
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
@@ -70,6 +121,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
     }
+
 }
 
 

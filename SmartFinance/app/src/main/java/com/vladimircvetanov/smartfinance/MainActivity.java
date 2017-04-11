@@ -77,7 +77,10 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, TransactionActivity.class));
                         break;
                     case R.id.temp_to_profile:
-                        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                        User u = (User) getIntent().getSerializableExtra("user");
+                        Intent i = new Intent(MainActivity.this, ProfileActivity.class);
+                        i.putExtra("user",u);
+                        startActivity(i);
                         break;
                 }
             }

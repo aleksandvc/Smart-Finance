@@ -11,7 +11,11 @@ import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.LoginActivity;
 import com.vladimircvetanov.smartfinance.MainActivity;
+import com.vladimircvetanov.smartfinance.RegisterActivity;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.User;
+
+import java.util.HashMap;
 
 /**
  * Created by vladimircvetanov on 04.04.17.
@@ -19,11 +23,13 @@ import com.vladimircvetanov.smartfinance.message.Message;
 
 public class DBAdapter {
 
+    Context context;
     /**
      * Declaration of fields of the adapter class. A reference to innerclass will executes queries.
      */
-    DbHelper helper ;
+    static DbHelper helper ;
 
+    private static HashMap<String,User> registeredUsers;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
      */
@@ -37,6 +43,9 @@ public class DBAdapter {
     private DBAdapter(Context context){
 
         helper = new DbHelper(context);
+        this.context = context;
+
+
     }
 
     /**
@@ -46,6 +55,9 @@ public class DBAdapter {
     public static DBAdapter getInstance(Context context){
         if(instance == null){
             instance = new DBAdapter(context);
+            registeredUsers = new HashMap<>();
+            loadUsers();
+
         }
         return instance;
     }
@@ -59,37 +71,46 @@ public class DBAdapter {
     public long insertData(final String username,final String password){
 
         final long[] id = new long[1];
+        final boolean[] flag = new boolean[1];
 
-        new AsyncTask<Long,Void,Void>(){
+        new AsyncTask<Long,Void,Void>() {
+
+
+
             @Override
             protected Void doInBackground(Long... params) {
 
-                /**
-                 *  A reference from inner class is used to create a Database object.
-                 */
-                SQLiteDatabase db = helper.getWritableDatabase();
+                if (!flag[0]) {
+                    /**
+                     *  A reference from inner class is used to create a Database object.
+                     */
+                    SQLiteDatabase db = helper.getWritableDatabase();
 
-                /**
-                 * An instance of ContentValues class is created. To insert data the reference takes a key and a value.
-                 * We specify the key as the column name. The value is the data we want ot put inside.
-                 */
-                ContentValues values = new ContentValues();
+                    /**
+                     * An instance of ContentValues class is created. To insert data the reference takes a key and a value.
+                     * We specify the key as the column name. The value is the data we want ot put inside.
+                     */
+                    ContentValues values = new ContentValues();
 
-                /**
-                 * Two columns are inserted;
-                 */
-                values.put(DbHelper.COLUMN_USERNAME,username);
-                values.put(DbHelper.COLUMN_PASSWORD,password);
+                    /**
+                     * Three columns are inserted;
+                     */
 
-                /**
-                 * The insert method with three parameters(String TableName,String NullColumnHack,ContentValues values)
-                 * is called on the SQL object of the class.
-                 * It returns the ID of the inserted row or -1 if the operation fails.
-                 */
-                id[0] = db.insert(DbHelper.TABLE_NAME,null,values);
+                    values.put(DbHelper.COLUMN_USERNAME, username);
+                    values.put(DbHelper.COLUMN_PASSWORD, password);
+
+                    /**
+                     * The insert method with three parameters(String TableName,String NullColumnHack,ContentValues values)
+                     * is called on the SQL object of the class.
+                     * It returns the ID of the inserted row or -1 if the operation fails.
+                     */
+                    id[0] = db.insert(DbHelper.TABLE_NAME, null, values);
+
+
+
+                }
 
                 return null;
-
             }
 
         }.execute();
@@ -151,6 +172,26 @@ public class DBAdapter {
             return true;
         }
         return false;
+    }
+
+    private static void loadUsers(){
+        Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,username,password FROM SmartFinance;",null);
+        while(cursor.moveToNext()){
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String email = cursor.getString(cursor.getColumnIndex("username"));
+            String pass = cursor.getString(cursor.getColumnIndex("password"));
+            User u = new User(email,pass);
+            u.setId(id);
+            registeredUsers.put(email,u);
+        }
+
+    }
+    public boolean existsUser(String username){
+        return registeredUsers.containsKey(username);
+    }
+
+    public void  close(){
+        helper.close();
     }
     /**
      * Inner static class which is responsible for the creation of  database.
