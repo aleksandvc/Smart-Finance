@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -78,8 +77,7 @@ public class Section implements Serializable, Comparable<Section> {
 
         Section section = (Section) o;
 
-        if (!name.equals(section.name)) return false;
-        return type == section.type;
+        return (!name.equals(section.name) && type == section.type);
 
     }
 

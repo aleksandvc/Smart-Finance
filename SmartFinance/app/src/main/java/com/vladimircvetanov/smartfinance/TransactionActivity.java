@@ -102,7 +102,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        TEMPORARY_METHOD();
 
         //==============================Initializations============================================================//
         sectionList = (ListView) findViewById(R.id.transaction_section_selection);
@@ -223,8 +222,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         minus.setOnClickListener(arithmeticListener);
 
 
-        for (int i = 0; i < numButtons.length; i++)
-            numButtons[i].setOnClickListener(numberListener);
+        for (TextView btn : numButtons)
+            btn.setOnClickListener(numberListener);
         decimal.setOnClickListener(numberListener);
 
         /**
@@ -323,8 +322,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         numDisplayBase.setBackgroundResource(colourID);
         dateDisplay.setTextColor(ContextCompat.getColor(c, colourID));
 
-        for (int i = 0; i < numButtons.length; i++)
-            numButtons[i].setBackgroundResource(ninePatchID);
+        for (TextView btn : numButtons)
+            btn.setBackgroundResource(ninePatchID);
 
         decimal.setBackgroundResource(ninePatchID);
         equals.setBackgroundResource(ninePatchID);
@@ -354,29 +353,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         }
     }
 
-    //TODO !!!! V !!!!
-    /**
-     * This method only exists for testing purposes.
-     * It populates the remodeled masterLog (named log in master branch) collection in the Manager class.
-     */
-    private void TEMPORARY_METHOD() {
-        Manager.getInstance().addSection(new Section("TEST 1", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
-        Manager.getInstance().addSection(new Section("TEST 2", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
-        Manager.getInstance().addSection(new Section("TEST 3", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
-        Manager.getInstance().addSection(new Section("TEST 4", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
-        Manager.getInstance().addSection(new Section("TEST 5", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
-        Manager.getInstance().addSection(new Section("TEST 6", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
-        Manager.getInstance().addSection(new Section("TEST 7", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
-        Manager.getInstance().addSection(new Section("TEST 8", Manager.Type.EXPENSE, R.mipmap.ic_launcher, false));
-        Manager.getInstance().addSection(new Section("TEST 9", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
-        Manager.getInstance().addSection(new Section("TEST A", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
-        Manager.getInstance().addSection(new Section("TEST B", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
-        Manager.getInstance().addSection(new Section("TEST C", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
-        Manager.getInstance().addSection(new Section("TEST D", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
-        Manager.getInstance().addSection(new Section("TEST E", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
-        Manager.getInstance().addSection(new Section("TEST F", Manager.Type.INCOMING, R.mipmap.ic_launcher_round, true));
-    }
-
     /**
      * Executes stored arithmetic operation.
      */
@@ -402,7 +378,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         storedNumber = Math.round(storedNumber * 100.0) / 100.0;
 
         String numText = storedNumber.toString();
-        numText = numText.replaceAll("[\\.](00|0$)", "");
+        numText = numText.replaceAll("\\.(00$|0$)", "");
         numDisplay.setText(numText);
 
         decimalPosition = numText.contains(".") ? (numText.length() - 1) - numText.lastIndexOf(".") : BEFORE_DECIMAL;

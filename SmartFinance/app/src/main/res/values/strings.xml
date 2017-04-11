@@ -15,7 +15,7 @@
     <string name="submit">submit</string>
     <string name="transaction_success">Transaction successful!</string>
     <string name="transaction_failure">Transaction failed!</string>
-    <string name="transaction_add_to">add to</string>
+    <string name="transaction_add_to">ADD TO</string>
     <string name="transaction_select_section">SELECT SECTION</string>
     <string name="transaction_input_note">add note ...</string>
     <string name="income">income</string>

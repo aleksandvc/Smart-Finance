@@ -9,11 +9,11 @@
     <dimen name="all_view_spacing_large">24dp</dimen>
     <dimen name="all_view_spacing_huge">36dp</dimen>
 
-    <dimen name="all_text_size_tiny">8dp</dimen>
-    <dimen name="all_text_size_small">12dp</dimen>
-    <dimen name="all_text_size_standard">16dp</dimen>
-    <dimen name="all_text_size_large">24dp</dimen>
-    <dimen name="all_text_size_huge">36dp</dimen>
-    <dimen name="all_text_size_enormous">64dp</dimen>
-    <dimen name="dropdown_list_preferred_item_height">46dp</dimen>
+    <dimen name="all_text_size_tiny">8sp</dimen>
+    <dimen name="all_text_size_small">12sp</dimen>
+    <dimen name="all_text_size_standard">16sp</dimen>
+    <dimen name="all_text_size_large">24sp</dimen>
+    <dimen name="all_text_size_huge">36sp</dimen>
+    <dimen name="all_text_size_enormous">64sp</dimen>
+    <dimen name="dropdown_list_preferred_item_height">46sp</dimen>
 </resources>

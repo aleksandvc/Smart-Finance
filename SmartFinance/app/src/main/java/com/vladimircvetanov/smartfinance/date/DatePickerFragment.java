@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.widget.DatePicker;
 
 import org.joda.time.LocalDate;
 
@@ -14,7 +13,7 @@ import org.joda.time.LocalDate;
 
 public class DatePickerFragment extends DialogFragment{
 
-    LocalDate date;
+    private LocalDate date;
 
     @Override
     public void setArguments(Bundle args) {
