@@ -2,6 +2,13 @@ package com.vladimircvetanov.smartfinance;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -9,8 +16,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -26,7 +33,7 @@ import java.util.ArrayList;
 
 import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private FrameLayout frameLayout;
@@ -34,13 +41,16 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<PieEntry> percentages;
     private PieData entry;
     private PieDataSet pieDataSet;
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
         frameLayout = (FrameLayout) findViewById(R.id.frame);
         pieChart = (PieChart) findViewById(R.id.pie_chart);
         percentages = new ArrayList<>();
@@ -48,12 +58,29 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
+        FragmentManager fm = getSupportFragmentManager();
+        if(fm.getFragments() != null || !fm.getFragments().isEmpty()) {
+            fm.beginTransaction()
+                    .add(R.id.diagram_fragment, new Fragment(), "Diagram")
+                    .add(R.id.categories_list_fragment, new Fragment(), "Transactions list")
+                    .commit();
+        }
+
         // Temporarily created user so I can generate his favourite categories
         User user = new User("some mail", "some pass");
 
         drawDiagram();
         drawFavouriteIcons();
-
+        /*
         //I've added buttons to currently extant activities for ease of navigation during development.
         //Add and remove buttons as needed.
         //                                      ~Simo
@@ -86,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         toRegister.setOnClickListener(onClickListener);
         toTransaction.setOnClickListener(onClickListener);
         toProfile.setOnClickListener(onClickListener);
+        */
     }
 
     @Override
@@ -103,11 +131,41 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 MainActivity.this.finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.nav_accounts:
+                return true;
+            case R.id.nav_favourites:
+                return true;
+            case R.id.nav_income:
+                return true;
+            case R.id.nav_calculator:
+                return true;
+            case R.id.nav_calendar:
+                return true;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private void drawDiagram() {
@@ -135,12 +193,14 @@ public class MainActivity extends AppCompatActivity {
     private void drawFavouriteIcons() {
         int counter = 0;
         for (final Section section : favouriteCategories) {
-            final ImageView icon = new ImageView(MainActivity.this);
+            final ImageButton icon = new ImageButton(MainActivity.this);
             icon.setImageResource(section.getIconID());
-            icon.setPadding(30, 30, 30, 30);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(140, 140);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(150, 150);
             lp.gravity = Gravity.CENTER;
             icon.setLayoutParams(lp);
+            icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            icon.setBackgroundColor(getColor(R.color.colorTransparent));
+            //radioGroup.addView(icon);
 
             float angleDeg = counter++ * 360.0f / favouriteCategories.size() - 90.0f;
             float angleRad = (float) (angleDeg * Math.PI / 180.0f);
@@ -157,7 +217,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
 
                     pieChart.setCenterText(section.getName() + "\n" + section.getSum());
-                    pieChart.setHoleColor(getResources().getColor(R.color.colorOrange));
+                    pieChart.setHoleColor(getColor(R.color.colorOrange));
+
                     icon.setBackground(getResources().getDrawable(R.drawable.icon_background));
                 }
             });

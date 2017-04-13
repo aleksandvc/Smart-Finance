@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_accounts"
+            android:icon="@drawable/accounts"
+            android:title="@string/nav_item_accounts" />
+        <item
+            android:id="@+id/nav_favourites"
+            android:icon="@drawable/favourite"
+            android:title="@string/nav_item_favourites" />
+        <item
+            android:id="@+id/nav_income"
+            android:icon="@drawable/income"
+            android:title="@string/nav_item_income" />
+        <item
+            android:id="@+id/nav_calculator"
+            android:icon="@drawable/calculator"
+            android:title="@string/nav_item_calculator" />
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/calendar20"
+            android:title="@string/nav_item_calendar" />
+    </group>
+
+    <item android:title="@string/nav_item_interval">
+        <menu>
+            <item
+                android:id="@+id/interval_day"
+                android:title="@string/nav_item_day" />
+            <item
+                android:id="@+id/interval_week"
+                android:title="@string/nav_item_week" />
+            <item
+                android:id="@+id/interval_month"
+                android:title="@string/nav_item_month" />
+            <item
+                android:id="@+id/interval_year"
+                android:title="@string/nav_item_year" />
+        </menu>
+    </item>
+
+</menu>

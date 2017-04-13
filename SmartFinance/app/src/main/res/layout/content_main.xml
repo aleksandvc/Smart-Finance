@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.vladimircvetanov.smartfinance.MainActivity"
+    tools:showIn="@layout/toolbar"
+    android:orientation="vertical">
+
+    <fragment
+        android:name="com.vladimircvetanov.smartfinance.DiagramFragment"
+        android:id="@+id/diagram_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
+    <fragment
+        android:name="com.vladimircvetanov.smartfinance.TransactionsListFragment"
+        android:id="@+id/categories_list_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!--
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/temp_to_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="toLogIn"/>
+
+        <Button
+            android:id="@+id/temp_to_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="toRegister"/>
+
+        <Button
+            android:id="@+id/temp_to_transaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="toTransaction"/>
+
+        <Button
+            android:id="@+id/temp_to_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="toprofile"/>
+
+
+    </LinearLayout>
+    -->
+</LinearLayout>

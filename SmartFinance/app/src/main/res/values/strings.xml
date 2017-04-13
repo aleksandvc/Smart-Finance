@@ -11,6 +11,26 @@
     <!-- EXTRA'S KEYS -->
     <string name="EXTRA_SECTION">KEY_SECTION</string>
 
+    <!-- NAVIGATION ITEMS -->
+    <string name="nav_item_accounts">Accounts</string>
+    <string name="nav_item_favourites">Favourites</string>
+    <string name="nav_item_income">Income</string>
+    <string name="nav_item_calculator">Calculator</string>
+    <string name="nav_item_calendar">Calendar</string>
+    <string name="nav_item_interval">Interval</string>
+    <string name="nav_item_day">Day</string>
+    <string name="nav_item_week">Week</string>
+    <string name="nav_item_month">Month</string>
+    <string name="nav_item_year">Year</string>
+    <string name="first_and_last_name"><![CDATA[First & Last name]]></string>
+
+    <!-- TRANSACTION RADIO BUTTONS -->
+    <string name="income">income</string>
+    <string name="expense">expense</string>
+
+    <!-- NAV DRAWER ACTIONS -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="submit">submit</string>
     <string name="transaction_success">Transaction successful!</string>
@@ -18,6 +38,5 @@
     <string name="transaction_add_to">add to</string>
     <string name="transaction_select_section">SELECT SECTION</string>
     <string name="transaction_input_note">add note ...</string>
-    <string name="income">income</string>
-    <string name="expense">expense</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
 </resources>
