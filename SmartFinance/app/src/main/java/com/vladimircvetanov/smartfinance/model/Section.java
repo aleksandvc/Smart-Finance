@@ -77,7 +77,7 @@ public class Section implements Serializable, Comparable<Section> {
 
         Section section = (Section) o;
 
-        return (!name.equals(section.name) && type == section.type);
+        return (type == section.type && name.equals(section.name));
 
     }
 
