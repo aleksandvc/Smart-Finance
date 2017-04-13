@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                MainActivity.this.finish();
+                LogoutDialogFragment dialog = LogoutDialogFragment.newInstance();
+                dialog.show(getSupportFragmentManager(), "Log out");
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -39,4 +39,6 @@
     <string name="transaction_select_section">SELECT SECTION</string>
     <string name="transaction_input_note">add note ...</string>
     <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="logout_button">Log out</string>
 </resources>

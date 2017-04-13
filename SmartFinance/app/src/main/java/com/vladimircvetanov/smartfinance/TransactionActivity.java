@@ -98,7 +98,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         setContentView(R.layout.activity_transaction);
 
         //Set Toolbar, because our overlords at Google are taking <b>forever</b> to compat-ize the Appbar properly...
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
