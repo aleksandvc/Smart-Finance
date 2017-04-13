@@ -48,13 +48,16 @@ public class Manager {
      * @return <i>true</i> only if entry is successfully added.
      */
     public static boolean addLogEntry(Type type, Section section, LogEntry entry) {
+        //TODO - TEMPORARY implementation for testing purposes
+        getInstance().addSection(section);
+
         if (type == null || section == null || entry == null || !getInstance().masterLog.get(type).contains(section))
             return false;
 
-        HashSet<Section> sections = getInstance().masterLog.get(type);
-        for (Section s : sections)
+        for (Section s : getInstance().masterLog.get(type))
             if (s.equals(section))
                 return s.addLogEntry(entry);
+
         return false;
     }
 
