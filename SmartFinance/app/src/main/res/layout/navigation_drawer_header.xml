@@ -7,7 +7,8 @@
     android:gravity="bottom"
     android:orientation="horizontal"
     android:padding="@dimen/activity_vertical_margin"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:id="@+id/nav_header">
 
     <ImageView
         android:id="@+id/imageView"

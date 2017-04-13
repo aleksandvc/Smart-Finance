@@ -218,6 +218,4 @@
             android:textSize="@dimen/all_text_size_large" />
     </LinearLayout>
 
-
-
 </RelativeLayout>
