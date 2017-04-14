@@ -38,6 +38,11 @@ public class Manager {
             loggedUser = user;
         }
     }
+
+    public static User getLoggedUser() {
+        return loggedUser;
+    }
+
     /**
      * Adds an entry, corresponding to a User expense or income, into the financial {@link Manager#masterLog}.
      *
