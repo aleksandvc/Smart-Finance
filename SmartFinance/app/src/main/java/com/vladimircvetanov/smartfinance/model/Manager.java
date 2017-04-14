@@ -6,19 +6,13 @@ import java.util.HashSet;
 public class Manager {
 
     /**
-     * Temporary implementation for testing purposes.
-     */
-    public void addSection(Section section) {
-        getInstance().masterLog.get(section.getType()).add(section);
-    }
-
-    /**
      * Transaction types.
      */
     public enum Type {
         INCOMING, EXPENSE
     }
 
+    private static User loggedUser;
     private static Manager instance = null;
 
     /**
@@ -39,6 +33,11 @@ public class Manager {
         return instance;
     }
 
+    public static void setLoggedUser(User user){
+        if(user !=null){
+            loggedUser = user;
+        }
+    }
     /**
      * Adds an entry, corresponding to a User expense or income, into the financial {@link Manager#masterLog}.
      *
@@ -82,4 +81,14 @@ public class Manager {
         Section[] sections = new Section[m.masterLog.get(type).size()];
         return getInstance().masterLog.get(type).toArray(sections);
     }
+
+    public static boolean addSection(Section section){
+        if(section == null) return false;
+        return getInstance().masterLog.get(section.getType()).add(section);
+    }
+
+    public static boolean containsSection(Section section){
+       return getInstance().masterLog.get(section.getType()).contains(section);
+    }
+
 }

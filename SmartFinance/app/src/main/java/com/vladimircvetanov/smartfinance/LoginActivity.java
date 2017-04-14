@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.User;
 import com.vladimircvetanov.smartfinance.session.Session;
 
@@ -89,7 +90,10 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("user",u);
                     startActivity(intent);
+                    u.setId(adapter.getUserId(email));
+                    Manager.setLoggedUser(u);
                     session.setLoggedin(true);
+
                 }
 
                 return null;

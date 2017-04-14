@@ -10,6 +10,8 @@ import android.widget.EditText;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.Manager;
+import com.vladimircvetanov.smartfinance.model.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -111,7 +113,10 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected Boolean doInBackground(Boolean... params) {
 
+                User u = new User(username,pass);
                 long id = adapter.insertData(username, pass);
+                Manager.setLoggedUser(u);
+                u.setId(id);
 
                 return true;
             }
