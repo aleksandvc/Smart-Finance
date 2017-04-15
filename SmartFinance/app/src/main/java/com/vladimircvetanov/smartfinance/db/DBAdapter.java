@@ -356,7 +356,7 @@ public class DBAdapter {
                     ContentValues values = new ContentValues();
 
                     values.put(DbHelper.CATEGORIES_COLUMN_CATEGORYNAME,category.getName());
-                    values.put(DbHelper.CATEGORIES_COLUMN_CATEGORYNAME,category.getIconID());
+                    values.put(DbHelper.CATEGORIES_COLUMN_ICON,category.getIconID());
                     values.put(DbHelper.CATEGORIES_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_CATEGORIES,null,values);
@@ -376,6 +376,75 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_CATEGORIES,DbHelper.CATEGORIES_COLUMN_CATEGORYNAME + " = " + category.getName(),null);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void integer) {
+                Message.message(context,"Category deleted!");
+            }
+        }.execute();
+        return count[0];
+    }
+
+    public void getAllFavCategories(){
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                String[] columns = {DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,DbHelper.FAVCATEGORIES_COLUMN_ICON};
+
+                Cursor cursor = db.query(DbHelper.TABLE_NAME_FAVCATEGORIES,columns,null,null,null,null,null);
+
+                while(cursor.moveToNext()){
+
+                    int index = cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME);
+                    int index2 =cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON);
+                    String name = cursor.getString(index);
+                    int icon = cursor.getInt(index2);
+
+                    Manager.addSection(new Section(name, Manager.Type.EXPENSE,icon));
+
+                }
+                return null;
+            }
+        }.execute();
+
+    }
+    public long addFavCategory(final Section category,final int userId){
+        final long[] id = new long[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                if(!Manager.containsSection(category)) {
+                    SQLiteDatabase db = helper.getWritableDatabase();
+
+                    ContentValues values = new ContentValues();
+
+                    values.put(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,category.getName());
+                    values.put(DbHelper.FAVCATEGORIES_COLUMN_ICON,category.getIconID());
+                    values.put(DbHelper.FAVCATEGORIES_COLUMN_USERFK,userId);
+
+                    id[0] = db.insert(DbHelper.TABLE_NAME_FAVCATEGORIES,null,values);
+                }
+                return null;
+            }
+        }.execute();
+
+        return id[0];
+    }
+    public int deleteFavCategory(final Section category){
+        final int[] count = new int[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = " + category.getName(),null);
                 return null;
             }
 
