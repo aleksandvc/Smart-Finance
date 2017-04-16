@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
         android:layout_gravity="center"
+        android:layout_weight="2"
         android:padding="10dp"
-        tools:context=".MainActivity" >
+        tools:context=".MainActivity">
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pie_chart"
@@ -29,35 +29,46 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/temp_to_login"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="toLogIn"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/temp_to_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="toRegister"/>
+            <Button
+                android:id="@+id/temp_to_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="toLogIn" />
 
-        <Button
-            android:id="@+id/temp_to_transaction"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="toTransaction"/>
+            <Button
+                android:id="@+id/temp_to_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="toRegister" />
 
-        <Button
-            android:id="@+id/temp_to_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="toprofile"/>
+            <Button
+                android:id="@+id/temp_to_transaction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="toTransaction" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/temp_to_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="toprofile" />
+
+            <Button
+                android:id="@+id/temp_to_inquiry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="toinquiry" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

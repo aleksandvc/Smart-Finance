@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         Button toRegister = (Button) findViewById(R.id.temp_to_register);
         Button toTransaction = (Button) findViewById(R.id.temp_to_transaction);
         Button toProfile = (Button) findViewById(R.id.temp_to_profile);
+        Button toInquiry = (Button) findViewById(R.id.temp_to_inquiry);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -82,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
                         i.putExtra("user",u);
                         startActivity(i);
                         break;
+                    case R.id.temp_to_inquiry:
+                        startActivity(new Intent(MainActivity.this, TemporaryInquiryActivity.class));
+                        break;
                 }
             }
         };
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         toRegister.setOnClickListener(onClickListener);
         toTransaction.setOnClickListener(onClickListener);
         toProfile.setOnClickListener(onClickListener);
+        toInquiry.setOnClickListener(onClickListener);
     }
 
     @Override
