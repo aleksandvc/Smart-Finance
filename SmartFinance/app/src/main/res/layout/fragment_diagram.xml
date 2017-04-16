@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.vladimircvetanov.smartfinance.DiagramFragment"
-    android:paddingTop="@dimen/appbar_height">
+    android:paddingTop="@dimen/appbar_height"
+    android:id="@id/diagram_fragment">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

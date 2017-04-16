@@ -32,57 +32,68 @@
         android:textColor="@color/colorWhite"/>
 
     <LinearLayout
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_gravity="center"
         >
 
         <ImageView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_dialog_email"
+            android:gravity="center"
             android:layout_marginLeft="10dp"
-            android:layout_gravity="center"
 
 
             />
         <EditText
             android:id="@+id/profile_email_change"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="6"
             android:layout_height="wrap_content"
-            android:hint="e-mail                "
-            android:maxLength="20"
+            android:hint="e-mail"
+            android:maxLength="40"
+            android:inputType="textWebEmailAddress"
             android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:textSize="25sp"
+            android:textSize="@dimen/all_text_size_standard"
+
             android:layout_marginLeft="10dp"
             />
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="20dp">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@mipmap/whitelocked"
             android:layout_gravity="center"
             />
         <EditText
             android:id="@+id/profile_pass_change"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="6"
             android:layout_height="wrap_content"
-            android:hint="password         "
+            android:hint="password"
             android:maxLength="20"
             android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:textSize="25sp"
+            android:textSize="@dimen/all_text_size_standard"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
 

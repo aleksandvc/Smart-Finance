@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.User;
 import com.vladimircvetanov.smartfinance.session.Session;
 
 public class LoginActivity extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         adapter = DBAdapter.getInstance(this);
         session = Session.getInstance(this);
         session.setLoggedin(false);
+
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -76,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     private void logIn() {
        final   String email = userEmail.getText().toString();
        final  String pass = userPass.getText().toString();
+        final User u = new User(email,pass);
         final boolean[] flag = new boolean[1];
         new AsyncTask<Void,Void,Void>(){
 
@@ -83,7 +86,9 @@ public class LoginActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
                 flag[0] = adapter.getUser(email,pass);
                 if(flag[0] && !session.loggedIn()){
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("user",u);
+                    startActivity(intent);
                     session.setLoggedin(true);
                 }
 

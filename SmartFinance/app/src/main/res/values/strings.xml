@@ -32,13 +32,15 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="submit">submit</string>
-    <string name="transaction_success">Transaction successful!</string>
-    <string name="transaction_failure">Transaction failed!</string>
-    <string name="transaction_add_to">add to</string>
-    <string name="transaction_select_section">SELECT SECTION</string>
-    <string name="transaction_input_note">add note ...</string>
-    <string name="title_activity_navigation">NavigationActivity</string>
+    <!-- BUTTONS -->
     <string name="cancel_button">Cancel</string>
     <string name="logout_button">Log out</string>
+    <string name="submit">submit</string>
+    <string name="transaction_select_section">SELECT SECTION</string>
+    <string name="transaction_add_to">ADD TO</string>
+
+    <string name="transaction_success">Transaction successful!</string>
+    <string name="transaction_failure">Transaction failed!</string>
+    <string name="transaction_input_note">add note ...</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
 </resources>

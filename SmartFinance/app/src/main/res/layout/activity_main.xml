@@ -10,8 +10,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        layout="@layout/content_main" />
+    <include layout="@layout/content_main" />
 
     <include
         layout="@layout/toolbar"
@@ -23,6 +22,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemIconTint="@drawable/nav_icon_color"
+        app:itemTextColor="@drawable/nav_item_font_color"
         app:headerLayout="@layout/navigation_drawer_header"
         app:menu="@menu/menu_navigation_drawer"/>
 

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,10 +17,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -39,13 +42,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private FrameLayout frameLayout;
     private PieChart pieChart;
-    private ArrayList<PieEntry> percentages;
-    private PieData entry;
+    private ArrayList<PieEntry> entries;
+    private PieData pieData;
     private PieDataSet pieDataSet;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private LinearLayout navigationHeader;
+    private TextView userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +58,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         frameLayout = (FrameLayout) findViewById(R.id.frame);
         pieChart = (PieChart) findViewById(R.id.pie_chart);
-        percentages = new ArrayList<>();
+        entries = new ArrayList<>();
+        pieDataSet = new PieDataSet(entries, "");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -76,46 +80,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.categories_list_fragment, new Fragment(), "Transactions list")
                     .commit();
         }
+        // Temp code
+        final Button addButton = (Button) findViewById(R.id.add_value_btn);
+        final EditText addValue = (EditText) findViewById(R.id.add_value);
 
-        // Temporarily created user so I can generate his favourite categories
-        User user = new User("some mail", "some pass");
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!addValue.getText().toString().isEmpty() && Integer.parseInt(addValue.getText().toString()) > 0) {
+                    addEntry(Integer.parseInt(addValue.getText().toString()));
+                }
+            }
+        });
+        //End of temp code
+
+        //Temp user
+        User user = new User("pesho@gmail.com", "pesho123");
 
         drawDiagram();
         drawFavouriteIcons();
-        /*
-        //I've added buttons to currently extant activities for ease of navigation during development.
-        //Add and remove buttons as needed.
-        //                                      ~Simo
-
-        Button toLogIn = (Button) findViewById(R.id.temp_to_login);
-        Button toRegister = (Button) findViewById(R.id.temp_to_register);
-        Button toTransaction = (Button) findViewById(R.id.temp_to_transaction);
-        Button toProfile = (Button) findViewById(R.id.temp_to_profile);
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.temp_to_login:
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        break;
-                    case R.id.temp_to_register:
-                        startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-                        break;
-                    case R.id.temp_to_transaction:
-                        startActivity(new Intent(MainActivity.this, TransactionActivity.class));
-                        break;
-                    case R.id.temp_to_profile:
-                        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                        break;
-                }
-            }
-        };
-        toLogIn.setOnClickListener(onClickListener);
-        toRegister.setOnClickListener(onClickListener);
-        toTransaction.setOnClickListener(onClickListener);
-        toProfile.setOnClickListener(onClickListener);
-        */
     }
 
     @Override
@@ -170,25 +153,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private void addEntry(float entrySum) {
+        PieEntry entry = new PieEntry(entrySum);
+        entries.add(entry);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+    }
+
     private void drawDiagram() {
-        percentages.add(new PieEntry(25f));
-        percentages.add(new PieEntry(15f));
-        percentages.add(new PieEntry(5f));
-        percentages.add(new PieEntry(19f));
-        percentages.add(new PieEntry(2f));
-        percentages.add(new PieEntry(13f));
-        percentages.add(new PieEntry(21f));
+        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);;
 
-        pieDataSet = new PieDataSet(percentages, "");
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
-        entry = new PieData(pieDataSet);
-        entry.setValueFormatter(new PercentFormatter());
+        pieData = new PieData(pieDataSet);
+        pieData.setValueFormatter(new PercentFormatter());
 
         pieChart.setUsePercentValues(true);
-        pieChart.setData(entry);
         pieChart.setDescription(null);
         pieChart.getLegend().setEnabled(false);
+
+        pieChart.setData(pieData);
         pieChart.invalidate();
     }
 
@@ -202,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             icon.setLayoutParams(lp);
             icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
             icon.setBackgroundColor(getColor(R.color.colorTransparent));
-            //radioGroup.addView(icon);
 
             float angleDeg = counter++ * 360.0f / favouriteCategories.size() - 90.0f;
             float angleRad = (float) (angleDeg * Math.PI / 180.0f);
@@ -219,9 +200,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(intent);
 
                     pieChart.setCenterText(section.getName() + "\n" + section.getSum());
-                    pieChart.setHoleColor(getColor(R.color.colorOrange));
+                    pieChart.setHoleColor(getColor(R.color.colorGrey));
 
-                    icon.setBackground(getResources().getDrawable(R.drawable.icon_background));
+                    icon.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.icon_background));
                 }
             });
         }

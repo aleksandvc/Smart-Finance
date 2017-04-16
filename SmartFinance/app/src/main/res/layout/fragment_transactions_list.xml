@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.vladimircvetanov.smartfinance.TransactionsListFragment"
+    android:id="@+id/categories_list_fragment"
     android:orientation="vertical">
 
     <LinearLayout
@@ -45,6 +46,28 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temp"
+            android:layout_gravity="center"/>
+
+        <EditText
+            android:id="@+id/add_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+
+        <Button
+            android:id="@+id/add_value_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/appbar_height"
+            android:text="Add"
+            android:background="@drawable/balance_button"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/all_text_size_standard"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 

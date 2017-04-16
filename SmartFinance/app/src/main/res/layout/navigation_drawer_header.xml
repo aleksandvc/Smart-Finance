@@ -7,8 +7,7 @@
     android:gravity="bottom"
     android:orientation="horizontal"
     android:padding="@dimen/activity_vertical_margin"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:id="@+id/nav_header">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/imageView"
@@ -19,6 +18,7 @@
         app:srcCompat="@mipmap/smartfinance_icon" />
 
     <TextView
+        android:id="@+id/user_profile_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
