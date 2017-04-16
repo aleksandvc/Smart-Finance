@@ -2,6 +2,7 @@ package com.vladimircvetanov.smartfinance;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.model.LogEntry;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Section;
@@ -88,15 +88,23 @@ public class TemporaryInquiryActivity extends AppCompatActivity {
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            if (convertView == null) convertView = inflater.inflate(R.layout.spinner_transaction_category, null);
+            if (convertView == null) convertView = inflater.inflate(R.layout.inquiry_list_group, null);
 
             Section s = dataSet.get(groupPosition);
 
-            ImageView i = (ImageView) convertView.findViewById(R.id.account_spinner_icon);
+            ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_group_icon);
             i.setImageResource(s.getIconID());
 
-            TextView t = (TextView) convertView.findViewById(R.id.account_spinner_text);
-            t.setText(s.getName());
+            TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_group_name);
+            t1.setText(s.getName());
+
+            TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_group_sum);
+            t2.setText("$" + s.getSum());
+
+            if (s.getType() == Manager.Type.EXPENSE || s.getSum() <= 0)
+                t2.setTextColor(ContextCompat.getColor(context,R.color.colorOrange));
+            else
+                t2.setTextColor(ContextCompat.getColor(context,R.color.colorGreen));
 
             return convertView;
         }

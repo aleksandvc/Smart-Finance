@@ -2,31 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:padding="@dimen/all_view_spacing_small"
-    android:orientation="horizontal">
+    android:paddingStart="@dimen/all_view_spacing_huge">
 
     <ImageView
         android:id="@+id/inquiry_item_icon"
-        android:src="@drawable/radio_income_true"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"/>
+        android:layout_height="@dimen/all_view_spacing_large"
+        android:layout_marginRight="@dimen/all_view_spacing_small"
+        android:adjustViewBounds="true"
+        android:src="@drawable/radio_income_true" />
 
     <TextView
         android:id="@+id/inquiry_item_sum"
-        android:layout_weight="1"
         android:layout_width="0dp"
-        android:gravity="center_vertical"
-        android:textSize="@dimen/all_text_size_large"
         android:layout_height="match_parent"
-        android:text="@string/test_text"/>
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="@string/test_text"
+        android:textSize="@dimen/all_text_size_standard" />
 
     <TextView
         android:id="@+id/inquiry_item_date"
-        android:textSize="@dimen/all_text_size_large"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="01/02/17"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:textSize="@dimen/all_text_size_standard" />
 
 </LinearLayout>
