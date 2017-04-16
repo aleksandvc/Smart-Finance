@@ -25,7 +25,6 @@
 
         android:textSize="@dimen/all_text_size_standard" />
 
-
     <RadioGroup
         android:id="@+id/transaction_radio"
         android:layout_width="match_parent"

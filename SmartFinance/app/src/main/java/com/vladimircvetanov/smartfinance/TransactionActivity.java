@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -97,7 +96,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction_temp);
+        setContentView(R.layout.activity_transaction);
 
         //Set Toolbar, because our overlords at Google are taking <b>forever</b> to compat-ize the Appbar properly...
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -107,7 +106,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         FragmentManager fm = getSupportFragmentManager();
         if(fm.getFragments() != null || !fm.getFragments().isEmpty()) {
             fm.beginTransaction()
-                    .add(R.id.transaction_fragment, new Fragment(), "Transaction")
+                    .add(R.id.transaction_fragment, new TransactionFragment(), "Transaction")
                     .commit();
         }
 
@@ -405,7 +404,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 

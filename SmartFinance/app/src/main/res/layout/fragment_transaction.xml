@@ -4,10 +4,14 @@ xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context="com.vladimircvetanov.smartfinance.TransactionFragment">
+    tools:context="com.vladimircvetanov.smartfinance.TransactionFragment"
+    android:id="@+id/transaction_fragment"
+    android:paddingTop="@dimen/appbar_height">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/toolbar"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:id="@+id/temp"/>
 
     <TextView
         android:id="@+id/transaction_date_display"
@@ -15,7 +19,7 @@ xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/temp"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/all_view_spacing_standard"
 
@@ -30,7 +34,7 @@ xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/transaction_radio"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/temp"
         android:orientation="horizontal">
 
         <RadioButton

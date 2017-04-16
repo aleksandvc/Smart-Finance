@@ -13,6 +13,7 @@ public class User implements Serializable {
     private String password;
     private long id;
     private int imageId;
+    public float totalSum;
     public static HashSet<Account> accounts;
     public static HashSet<Section> favouriteCategories;
 
@@ -23,7 +24,7 @@ public class User implements Serializable {
         if (password != null && !password.isEmpty()) {
             this.password = password;
         }
-
+        totalSum = 0f;
         accounts = new HashSet<>();
         favouriteCategories = new HashSet<>();
         addDefaultCategories();
@@ -47,6 +48,10 @@ public class User implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setTotalSum(float totalSum) {
+        this.totalSum = totalSum;
     }
 
     public long getId() {
