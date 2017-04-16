@@ -44,41 +44,22 @@ public class Manager {
     }
 
     /**
-     * Adds an entry, corresponding to a User expense or income, into the financial {@link Manager#masterLog}.
-     *
-     * @param type    income or expense.
-     * @param section appropriate ISection enum value.
-     * @param entry   LogEntry which to insert.
-     * @return <i>true</i> only if entry is successfully added.
-     */
-    public static boolean addLogEntry(Type type, Section section, LogEntry entry) {
-        //TODO - TEMPORARY implementation for testing purposes
-        getInstance().addSection(section);
-
-        if (type == null || section == null || entry == null || !getInstance().masterLog.get(type).contains(section))
-            return false;
-
-        for (Section s : getInstance().masterLog.get(type))
-            if (s.equals(section))
-                return s.addLogEntry(entry);
-
-        return false;
-    }
-
-    /**
-     * Wraps {@link Manager#addLogEntry(com.vladimircvetanov.smartfinance.model.Manager.Type, com.vladimircvetanov.smartfinance.model.Section, com.vladimircvetanov.smartfinance.model.LogEntry)}
-     * Takes necessary data from the entry itself and passes it to addLogEntry(Type type, Section section, LogEntry entry), simplifying method calls.
-     * @param entry   LogEntry which to insert.
+     * Adds a
+     * @param entry
      * @return
      */
     public static boolean addLogEntry(LogEntry entry) {
         if (entry == null)
             return false;
         Type t = entry.getType();
-        Section s = entry.getSection();
-
-        return addLogEntry(t,s,entry);
+        if (t == null) return false;
+        if (!entry.getAccount().addLogEntry(entry)) return false;
+        if (t == Type.EXPENSE && !entry.getCategory().addLogEntry(entry))
+            return false;
+        //TODO - if adding to ExpenseCategory fails -> remove from account! Or find a way to make it Atomic;
+        return true;
     }
+
     /**
      * Returns an array of all sections of a passed type in an array. Useful for ArrayAdapters, etc.
      * @param type INCOMING or EXPENSE
@@ -90,13 +71,19 @@ public class Manager {
         return getInstance().masterLog.get(type).toArray(sections);
     }
 
+    /**
+     * Wraps HashSet.add(Object) for the {@link Manager#masterLog}
+     * @param section
+     * @return <code>true</code> if addition completed successfully
+     */
     public static boolean addSection(Section section){
         if(section == null) return false;
         return getInstance().masterLog.get(section.getType()).add(section);
     }
 
     public static boolean containsSection(Section section){
-       return getInstance().masterLog.get(section.getType()).contains(section);
+        if (section.getType() == null) return false;
+        return getInstance().masterLog.get(section.getType()).contains(section);
     }
 
 }

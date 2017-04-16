@@ -116,7 +116,11 @@ public class Section implements Serializable, Comparable<Section> {
     }
 
     public boolean addLogEntry(LogEntry entry) {
-        sum += entry.getSum();
+        if (this.type == Manager.Type.INCOMING && entry.getType() == Manager.Type.EXPENSE)
+            this.sum -= entry.getSum();
+        else
+            this.sum += entry.getSum();
+
         return this.log.add(entry);
     }
 }

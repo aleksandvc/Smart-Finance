@@ -39,12 +39,12 @@ import org.joda.time.format.DateTimeFormatter;
 public class TransactionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private Manager.Type selectedType;
-    private Section selectedCategory;
 
     private Spinner accountSelection;
     private Section selectedAccount;
 
     private ListView categorySelection;
+    private Section selectedCategory;
 
     private TextView dateDisplay;
     private LocalDate date;
@@ -115,7 +115,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         accountSelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.INCOMING)));
 
         categorySelection = (ListView) findViewById(R.id.transaction_account_selection);
-        accountSelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.EXPENSE)));
+        categorySelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.EXPENSE)));
 
         noteInput = (EditText) findViewById(R.id.transaction_note_input);
 
@@ -371,7 +371,9 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         double sum = Double.parseDouble(numDisplay.getText().toString());
         String note = noteInput.getText().toString();
 
-        LogEntry entry = new LogEntry(date, sum, note, selectedType, selectedCategory);
+        Section category = selectedType == Manager.Type.INCOMING ? null : selectedCategory;
+
+        LogEntry entry = new LogEntry(date, sum, note, selectedType, selectedAccount, category);
 
         if (Manager.addLogEntry(entry)) {
             Message.message(TransactionActivity.this, getString(R.string.transaction_success));
