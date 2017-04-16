@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.User;
 
 import java.io.IOException;
@@ -48,8 +49,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         final User u = (User) getIntent().getSerializableExtra("user");
 
-        changeEmail.setText(u.getEmail());
-        changePass.setText(u.getPassword());
+        changeEmail.setText(Manager.getLoggedUser().getEmail());
+        changePass.setText(Manager.getLoggedUser().getPassword());
 
         final String oldData = changeEmail.getText().toString();
         final String oldPass = changePass.getText().toString();

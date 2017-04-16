@@ -6,19 +6,13 @@ import java.util.HashSet;
 public class Manager {
 
     /**
-     * Temporary implementation for testing purposes.
-     */
-    public void addSection(Section section) {
-        getInstance().masterLog.get(section.getType()).add(section);
-    }
-
-    /**
      * Transaction types.
      */
     public enum Type {
         INCOMING, EXPENSE
     }
 
+    private static User loggedUser;
     private static Manager instance = null;
 
     /**
@@ -39,6 +33,16 @@ public class Manager {
         return instance;
     }
 
+    public static void setLoggedUser(User user){
+        if(user !=null){
+            loggedUser = user;
+        }
+    }
+
+    public static User getLoggedUser() {
+        return loggedUser;
+    }
+
     /**
      * Adds an entry, corresponding to a User expense or income, into the financial {@link Manager#masterLog}.
      *
@@ -48,13 +52,16 @@ public class Manager {
      * @return <i>true</i> only if entry is successfully added.
      */
     public static boolean addLogEntry(Type type, Section section, LogEntry entry) {
+        //TODO - TEMPORARY implementation for testing purposes
+        getInstance().addSection(section);
+
         if (type == null || section == null || entry == null || !getInstance().masterLog.get(type).contains(section))
             return false;
 
-        HashSet<Section> sections = getInstance().masterLog.get(type);
-        for (Section s : sections)
+        for (Section s : getInstance().masterLog.get(type))
             if (s.equals(section))
                 return s.addLogEntry(entry);
+
         return false;
     }
 
@@ -82,4 +89,14 @@ public class Manager {
         Section[] sections = new Section[m.masterLog.get(type).size()];
         return getInstance().masterLog.get(type).toArray(sections);
     }
+
+    public static boolean addSection(Section section){
+        if(section == null) return false;
+        return getInstance().masterLog.get(section.getType()).add(section);
+    }
+
+    public static boolean containsSection(Section section){
+       return getInstance().masterLog.get(section.getType()).contains(section);
+    }
+
 }

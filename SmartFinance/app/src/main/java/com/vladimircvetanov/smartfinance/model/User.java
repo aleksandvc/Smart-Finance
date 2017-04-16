@@ -11,7 +11,7 @@ public class User implements Serializable {
 
     private String email;
     private String password;
-    private int id;
+    private long id;
     private int imageId;
     public static HashSet<Account> accounts;
     public static HashSet<Section> favouriteCategories;
@@ -23,6 +23,7 @@ public class User implements Serializable {
         if (password != null && !password.isEmpty()) {
             this.password = password;
         }
+
         accounts = new HashSet<>();
         favouriteCategories = new HashSet<>();
         addDefaultCategories();
@@ -44,11 +45,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

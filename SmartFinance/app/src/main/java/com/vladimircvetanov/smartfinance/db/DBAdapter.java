@@ -1,5 +1,6 @@
 package com.vladimircvetanov.smartfinance.db;
 
+import android.accounts.Account;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,10 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.vladimircvetanov.smartfinance.LoginActivity;
-import com.vladimircvetanov.smartfinance.MainActivity;
-import com.vladimircvetanov.smartfinance.RegisterActivity;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.Manager;
+import com.vladimircvetanov.smartfinance.model.Section;
 import com.vladimircvetanov.smartfinance.model.User;
 
 import java.util.HashMap;
@@ -104,7 +104,7 @@ public class DBAdapter {
                      * is called on the SQL object of the class.
                      * It returns the ID of the inserted row or -1 if the operation fails.
                      */
-                    id[0] = db.insert(DbHelper.TABLE_NAME, null, values);
+                    id[0] = db.insert(DbHelper.TABLE_NAME_USERS, null, values);
 
 
 
@@ -142,7 +142,7 @@ public class DBAdapter {
          * extra conditions on the SQL statement to return rows satisfying certain criteria,
          * String selection, String [] selectionArgs, String groupBy, String having, String orderby
          */
-        Cursor cursor = db.query(DbHelper.TABLE_NAME,columns,DbHelper.COLUMN_USERNAME + " = '" + username + "'",null,null,null,null);
+        Cursor cursor = db.query(DbHelper.TABLE_NAME_USERS,columns,DbHelper.COLUMN_USERNAME + " = '" + username + "'",null,null,null,null);
 
 
         while(cursor.moveToNext()){
@@ -157,6 +157,21 @@ public class DBAdapter {
 
         return buffer.toString();
 
+    }
+
+    public long getUserId(String email){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        String[] columns = {DbHelper.COLUMN_ID};
+        String[] params = {email};
+        Cursor cursor = db.rawQuery(" SELECT " + DbHelper.COLUMN_ID + " FROM " + DbHelper.TABLE_NAME_USERS + " WHERE username =?",params);
+
+        if(cursor.moveToNext()){
+           int columnIndex = cursor.getColumnIndex(DbHelper.COLUMN_ID);
+           return cursor.getInt(columnIndex);
+        }
+        return -1;
     }
     /**
      * Method to verify user data if user is already in database.
@@ -180,7 +195,7 @@ public class DBAdapter {
 
             @Override
             protected Void doInBackground(Void... params) {
-                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,username,password FROM SmartFinance;",null);
+                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,username,password FROM Users;",null);
                 while(cursor.moveToNext()){
                     int id = cursor.getInt(cursor.getColumnIndex("_id"));
                     String email = cursor.getString(cursor.getColumnIndex("username"));
@@ -217,7 +232,7 @@ public class DBAdapter {
                 u.setPassword(newPass);
                 registeredUsers.remove(oldEmail);
                 registeredUsers.put(newEmail, u);
-                db.update("SmartFinance", values, "username = ?", new String[]{oldEmail});
+                db.update("Users", values, "username = ?", new String[]{oldEmail});
 
                 return null;
             }
@@ -230,9 +245,217 @@ public class DBAdapter {
 
     }
 
-    public void  close(){
-        helper.close();
+
+    public void getAllAccounts(){
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                String[] columns = {DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,DbHelper.ACCOUNTS_COLUMN_ICON};
+
+                Cursor cursor = db.query(DbHelper.TABLE_NAME_ACCOUNTS,columns,null,null,null,null,null);
+
+                while(cursor.moveToNext()){
+
+                    int index = cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME);
+                    int index2 =cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ICON);
+                    String name = cursor.getString(index);
+                    int icon = cursor.getInt(index2);
+
+                    Manager.addSection(new Section(name, Manager.Type.INCOMING,icon));
+
+                }
+                return null;
+            }
+        }.execute();
+
     }
+
+    public long addAccount(final Section account,final int userId){
+        final long[] id = new long[1];
+
+       new AsyncTask<Void,Void,Void>(){
+           @Override
+           protected Void doInBackground(Void... params) {
+               if(!Manager.containsSection(account)) {
+                   SQLiteDatabase db = helper.getWritableDatabase();
+
+                   ContentValues values = new ContentValues();
+
+                   values.put(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,account.getName());
+                   values.put(DbHelper.ACCOUNTS_COLUMN_ICON,account.getIconID());
+                   values.put(DbHelper.ACCOUNTS_COLUMN_USERFK,userId);
+
+                   id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
+               }
+               return null;
+           }
+       }.execute();
+
+        return id[0];
+    }
+
+    public int deleteAccount(final Section account){
+
+        final int[] count = new int[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = " + account.getName(),null);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void integer) {
+                Message.message(context,"Account deleted!");
+            }
+        }.execute();
+        return count[0];
+    }
+
+    public void getAllCategories(){
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                String[] columns = {DbHelper.CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.CATEGORIES_COLUMN_ICON};
+
+                Cursor cursor = db.query(DbHelper.TABLE_NAME_CATEGORIES,columns,null,null,null,null,null);
+
+                while(cursor.moveToNext()){
+
+                    int index = cursor.getColumnIndex(DbHelper.CATEGORIES_COLUMN_CATEGORYNAME);
+                    int index2 =cursor.getColumnIndex(DbHelper.CATEGORIES_COLUMN_ICON);
+                    String name = cursor.getString(index);
+                    int icon = cursor.getInt(index2);
+
+                    Manager.addSection(new Section(name, Manager.Type.EXPENSE,icon));
+
+                }
+                return null;
+            }
+        }.execute();
+
+    }
+    public long addCategory(final Section category,final int userId){
+        final long[] id = new long[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                if(!Manager.containsSection(category)) {
+                    SQLiteDatabase db = helper.getWritableDatabase();
+
+                    ContentValues values = new ContentValues();
+
+                    values.put(DbHelper.CATEGORIES_COLUMN_CATEGORYNAME,category.getName());
+                    values.put(DbHelper.CATEGORIES_COLUMN_ICON,category.getIconID());
+                    values.put(DbHelper.CATEGORIES_COLUMN_USERFK,userId);
+
+                    id[0] = db.insert(DbHelper.TABLE_NAME_CATEGORIES,null,values);
+                }
+                return null;
+            }
+        }.execute();
+
+        return id[0];
+    }
+    public int deleteCategory(final Section category){
+        final int[] count = new int[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                count[0] = db.delete(DbHelper.TABLE_NAME_CATEGORIES,DbHelper.CATEGORIES_COLUMN_CATEGORYNAME + " = " + category.getName(),null);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void integer) {
+                Message.message(context,"Category deleted!");
+            }
+        }.execute();
+        return count[0];
+    }
+
+    public void getAllFavCategories(){
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                String[] columns = {DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,DbHelper.FAVCATEGORIES_COLUMN_ICON};
+
+                Cursor cursor = db.query(DbHelper.TABLE_NAME_FAVCATEGORIES,columns,null,null,null,null,null);
+
+                while(cursor.moveToNext()){
+
+                    int index = cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME);
+                    int index2 =cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON);
+                    String name = cursor.getString(index);
+                    int icon = cursor.getInt(index2);
+
+                    Manager.addSection(new Section(name, Manager.Type.EXPENSE,icon));
+
+                }
+                return null;
+            }
+        }.execute();
+
+    }
+    public long addFavCategory(final Section category,final int userId){
+        final long[] id = new long[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                if(!Manager.containsSection(category)) {
+                    SQLiteDatabase db = helper.getWritableDatabase();
+
+                    ContentValues values = new ContentValues();
+
+                    values.put(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,category.getName());
+                    values.put(DbHelper.FAVCATEGORIES_COLUMN_ICON,category.getIconID());
+                    values.put(DbHelper.FAVCATEGORIES_COLUMN_USERFK,userId);
+
+                    id[0] = db.insert(DbHelper.TABLE_NAME_FAVCATEGORIES,null,values);
+                }
+                return null;
+            }
+        }.execute();
+
+        return id[0];
+    }
+    public int deleteFavCategory(final Section category){
+        final int[] count = new int[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = " + category.getName(),null);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void integer) {
+                Message.message(context,"Category deleted!");
+            }
+        }.execute();
+        return count[0];
+    }
+
     /**
      * Inner static class which is responsible for the creation of  database.
      * A custom class implementation of SQLiteOpenHelper is created. Database's schema is defined programatically.
@@ -247,19 +470,26 @@ public class DBAdapter {
         private static final String DB_NAME = "smartfinance.db";
 
         /**
-         * Definition of the database's table name. Specify a String constant.
+         * Definition of the database's tables name`s. Specify a String constant.
          */
-        private static final String TABLE_NAME = "SmartFinance";
+        private static final String TABLE_NAME_USERS = "Users" ;
 
+        private static final String TABLE_NAME_ACCOUNTS = "Accounts";
+
+        private static final String TABLE_NAME_CATEGORIES = "Categories";
+
+        private static final String TABLE_NAME_FAVCATEGORIES = "Fav_Categories";
+
+        private static final String TABLE_NAME_TRANSACTIONS = "Transactions";
         /**
          * Constant String SQL statement for erasing old version of table.
          */
-        private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        private static final String DROP_TABLE = "DROP TABLE IF EXISTS ";
 
         /**
          * Constant integer of database`s version.
          */
-        private static final int DB_VERSION = 1;
+        private static final int DB_VERSION = 2;
 
         /**
          * Constant String of the table`s column for id;
@@ -276,12 +506,59 @@ public class DBAdapter {
          */
         private static final String COLUMN_PASSWORD = "password";
 
+        private static final String ACCOUNTS_COLUMN_ACCOUNTNAME = "account_name";
+
+        private static final String ACCOUNTS_COLUMN_ICON = "account_icon";
+
+        private static final String ACCOUNTS_COLUMN_USERFK = "account_user";
+
+        private static final String CATEGORIES_COLUMN_CATEGORYNAME = "category_name";
+
+        private static final String CATEGORIES_COLUMN_USERFK = "category_user";
+
+        private static final String CATEGORIES_COLUMN_ICON = "category_icon";
+
+        private static final String FAVCATEGORIES_COLUMN_CATEGORYNAME = "fav_category_name";
+
+        private static final String FAVCATEGORIES_COLUMN_USERFK = "fav_category_user";
+
+        private static final String FAVCATEGORIES_COLUMN_ICON = "fav_category_icon";
+
+        private static final String TRANSACTIONS_COLUMN_NOTE = "transaction_note";
+
+        private static final String TRANSACTIONS_COLUMN_SUM = "transaction_sum";
+
+        private static final String TRANSACTIONS_COLUMN_DATE = "transaction_date";
+
+        private static final String TRANSACTIONS_COLUMN_USERFK = "transaction_user_fk";
+
+        private static final String TRANSACTIONS_COLUMN_CATEGORYFK = "transaction_category_fk";
+
+        private static final String TRANSACTIONS_COLUMN_ACCOUNTFK = "transaction_account_fk";
+
         /**
          * Constant String SQL statement for creating new database table.
          */
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + COLUMN_ID +
+        public static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_NAME_USERS + "(" + COLUMN_ID +
                 " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_USERNAME + " VARCHAR(255), " +
                 COLUMN_PASSWORD + " VARCHAR(255));";
+
+        public static final String CREATE_TABLE_ACCOUNTS = "CREATE TABLE " + TABLE_NAME_ACCOUNTS + "(" + COLUMN_ID +
+                " INTEGER PRIMARY KEY AUTOINCREMENT, " + ACCOUNTS_COLUMN_ACCOUNTNAME + " VARCHAR(255), " +
+                ACCOUNTS_COLUMN_ICON + " INTEGER, " + ACCOUNTS_COLUMN_USERFK + " INTEGER);";
+
+        public static final String CREATE_TABLE_CATEGORIES = "CREATE TABLE " + TABLE_NAME_CATEGORIES + "(" + COLUMN_ID +
+                " INTEGER PRIMARY KEY AUTOINCREMENT, " + CATEGORIES_COLUMN_CATEGORYNAME + " VARCHAR(255), " +
+                CATEGORIES_COLUMN_ICON + " INTEGER, " + CATEGORIES_COLUMN_USERFK + " INTEGER);";
+
+        public static final String CREATE_TABLE_FAVCATEGORIES = "CREATE TABLE " + TABLE_NAME_FAVCATEGORIES + "(" + COLUMN_ID +
+                " INTEGER PRIMARY KEY AUTOINCREMENT, " + FAVCATEGORIES_COLUMN_CATEGORYNAME + " VARCHAR(255), " +
+                FAVCATEGORIES_COLUMN_ICON + " INTEGER, " + FAVCATEGORIES_COLUMN_USERFK + " INTEGER);";
+
+        public static final String CREATE_TABLE_TRANASCTIONS = "CREATE TABLE " + TABLE_NAME_TRANSACTIONS + "(" + COLUMN_ID +
+                " INTEGER PRIMARY KEY AUTOINCREMENT, " + TRANSACTIONS_COLUMN_NOTE + " VARCHAR(255), " +
+                TRANSACTIONS_COLUMN_SUM + " REAL, " + TRANSACTIONS_COLUMN_DATE + " INTEGER, " + TRANSACTIONS_COLUMN_CATEGORYFK + " INTEGER," +
+                 TRANSACTIONS_COLUMN_USERFK + " INTEGER, " + TRANSACTIONS_COLUMN_ACCOUNTFK + " INTEGER);";
 
 
         /**
@@ -323,7 +600,11 @@ public class DBAdapter {
                 /**
                  * Executes a single SQL statement that is NOT a SELECT and does not return data.
                  */
-                db.execSQL(CREATE_TABLE);
+                db.execSQL(CREATE_TABLE_USERS);
+                db.execSQL(CREATE_TABLE_ACCOUNTS);
+                db.execSQL(CREATE_TABLE_CATEGORIES);
+                db.execSQL(CREATE_TABLE_FAVCATEGORIES);
+                db.execSQL(CREATE_TABLE_TRANASCTIONS);
 
             }
             /**
@@ -351,7 +632,11 @@ public class DBAdapter {
                 /**
                  * When there are edits, the old table is deleted.
                  */
-                db.execSQL(DROP_TABLE);
+                db.execSQL(DROP_TABLE + TABLE_NAME_USERS);
+                db.execSQL(DROP_TABLE + TABLE_NAME_ACCOUNTS);
+                db.execSQL(DROP_TABLE + TABLE_NAME_TRANSACTIONS);
+                db.execSQL(DROP_TABLE + TABLE_NAME_CATEGORIES);
+                db.execSQL(DROP_TABLE + TABLE_NAME_FAVCATEGORIES);
 
                 /**
                  * Once the table is deleted the new database is created once again with new statements.
