@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    style="?android:attr/spinnerDropDownItemStyle"
-    android:textColor="@color/colorDark"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dropdown_list_preferred_item_height"
-    android:ellipsize="marquee"
-    android:maxLines="1" />
+    android:layout_height="36dp"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/all_view_spacing_tiny"
+    android:paddingRight="@dimen/all_text_size_small"
+    android:paddingStart="@dimen/all_text_size_small"
+    android:paddingTop="@dimen/all_view_spacing_tiny">
+
+    <ImageView
+        android:id="@+id/account_spinner_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/cocktail"
+        android:layout_marginRight="@dimen/all_text_size_tiny"/>
+
+    <TextView
+        android:id="@+id/account_spinner_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:text="@string/test_text" />
+
+
+</LinearLayout>

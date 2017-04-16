@@ -20,4 +20,6 @@
     <string name="transaction_input_note">add note ...</string>
     <string name="income">income</string>
     <string name="expense">expense</string>
+    <string name="test_text">TEST_TEXT</string>
+    <string name="transaction_select_account">Please select an account!</string>
 </resources>
