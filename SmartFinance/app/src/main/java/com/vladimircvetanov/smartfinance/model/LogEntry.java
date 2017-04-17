@@ -2,7 +2,9 @@ package com.vladimircvetanov.smartfinance.model;
 
 import android.support.annotation.Nullable;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -14,9 +16,9 @@ import java.util.Comparator;
 /**
  * Class representing a single entry in an account or an expense category.
  */
-public class LogEntry implements Serializable{
+public class LogEntry implements Serializable {
 
-    private LocalDate date;
+    private DateTime date;
     private double sum;
     private String note;
 
@@ -24,7 +26,7 @@ public class LogEntry implements Serializable{
     private Section account;
     private Section category;
 
-    public LogEntry(LocalDate date, double sum, String note, Manager.Type type, Section account, @Nullable Section category) {
+    public LogEntry(DateTime date, double sum, String note, Manager.Type type, Section account, @Nullable Section category) {
         if (date == null || note == null || type == null || account == null)
             throw new IllegalArgumentException("Arguments can not be null!");
         if (type == Manager.Type.EXPENSE && category == null)
@@ -40,12 +42,31 @@ public class LogEntry implements Serializable{
         this.category = category;
     }
 
-    public LocalDate getDate() {return date;}
-    public double getSum() {return sum;}
-    public String getNote() {return note;}
-    public Manager.Type getType() {return type;}
-    public Section getAccount() {return account;}
-    public @Nullable Section getCategory() {return category;}
+    public DateTime getDate() {
+        return date;
+    }
+
+    public double getSum() {
+        return sum;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public Manager.Type getType() {
+        return type;
+    }
+
+    public Section getAccount() {
+        return account;
+    }
+
+    public
+    @Nullable
+    Section getCategory() {
+        return category;
+    }
 
     /**
      * A chronological comparator for the {@link LogEntry} data type.

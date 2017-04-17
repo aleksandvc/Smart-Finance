@@ -32,6 +32,7 @@ import com.vladimircvetanov.smartfinance.model.LogEntry;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Section;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -47,7 +48,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     private Section selectedCategory;
 
     private TextView dateDisplay;
-    private LocalDate date;
+    private DateTime date;
 
     private EditText noteInput;
 
@@ -130,7 +131,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
-        date = LocalDate.now();
+        date = DateTime.now();
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
 
@@ -419,7 +420,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
      * Handles selection from the DatePickerFragment.
      */
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        date = new LocalDate(year, month + 1, dayOfMonth);
+        date = new DateTime(year, month + 1, dayOfMonth,0,0);
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
     }
