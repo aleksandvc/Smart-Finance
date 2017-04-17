@@ -1,13 +1,17 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -20,27 +24,28 @@ import com.vladimircvetanov.smartfinance.model.Section;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class TemporaryInquiryActivity extends AppCompatActivity {
+public class ReportFragment extends Fragment {
 
     private ExpandableListView expandableListView;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temporary_inquiry);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_report, container, false);
 
-        expandableListView = (ExpandableListView) findViewById(R.id.inquiry_expandable_list);
+        expandableListView = (ExpandableListView) v.findViewById(R.id.inquiry_expandable_list);
         ArrayList<Section> sections = new ArrayList<>();
         Section[] expenseSections = Manager.getSections(Manager.Type.EXPENSE);
         Section[] incomeSections = Manager.getSections(Manager.Type.INCOMING);
         sections.addAll(Arrays.asList(expenseSections));
         sections.addAll(Arrays.asList(incomeSections));
 
-        expandableListView.setAdapter(new ExpandableListAdapter(this, sections));
+        expandableListView.setAdapter(new ExpandableListAdapter(getActivity(), sections));
 
+        return v;
     }
 
-    class ExpandableListAdapter extends BaseExpandableListAdapter{
+    class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         private Context context;
         private ArrayList<Section> dataSet;
@@ -78,17 +83,24 @@ public class TemporaryInquiryActivity extends AppCompatActivity {
         }
 
         @Override
-        public long getGroupId(int groupPosition) { return groupPosition;}
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
 
         @Override
-        public long getChildId(int groupPosition, int childPosition) { return childPosition; }
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
 
         @Override
-        public boolean hasStableIds() {return false;}
+        public boolean hasStableIds() {
+            return false;
+        }
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            if (convertView == null) convertView = inflater.inflate(R.layout.inquiry_list_group, null);
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.report_list_group, null);
 
             Section s = dataSet.get(groupPosition);
 
@@ -102,26 +114,27 @@ public class TemporaryInquiryActivity extends AppCompatActivity {
             t2.setText("$" + s.getSum());
 
             if (s.getType() == Manager.Type.EXPENSE || s.getSum() <= 0)
-                t2.setTextColor(ContextCompat.getColor(context,R.color.colorOrange));
+                t2.setTextColor(ContextCompat.getColor(context, R.color.colorOrange));
             else
-                t2.setTextColor(ContextCompat.getColor(context,R.color.colorGreen));
+                t2.setTextColor(ContextCompat.getColor(context, R.color.colorGreen));
 
             return convertView;
         }
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            if (convertView == null) convertView = inflater.inflate(R.layout.inquiry_list_item,null);
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.report_list_item, null);
 
             LogEntry e = dataSet.get(groupPosition).getLog().get(childPosition);
 
             ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_item_icon);
-            switch (e.getType()){
+            switch (e.getType()) {
                 case EXPENSE:
-                    i.setImageDrawable(getDrawable(R.drawable.radio_expense_true));
+                    i.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.radio_expense_true));
                     break;
                 case INCOMING:
-                    i.setImageDrawable(getDrawable(R.drawable.radio_income_true));
+                    i.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.radio_income_true));
                     break;
             }
 
@@ -135,6 +148,8 @@ public class TemporaryInquiryActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {return false;}
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
     }
 }

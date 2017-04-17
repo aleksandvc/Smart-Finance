@@ -64,10 +64,10 @@
                 android:text="toprofile" />
 
             <Button
-                android:id="@+id/temp_to_inquiry"
+                android:id="@+id/to_main_with_report"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="toinquiry" />
+                android:text="tomainwithreport" />
 
         </LinearLayout>
     </ScrollView>

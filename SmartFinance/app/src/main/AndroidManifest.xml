@@ -21,9 +21,9 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".MainWithReportActivity"/>
         <activity android:name=".ProfileActivity" />
         <activity android:name=".TransactionActivity" />
-        <activity android:name=".TemporaryInquiryActivity"></activity>
     </application>
 
 </manifest>

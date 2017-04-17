@@ -2,16 +2,22 @@ package com.vladimircvetanov.smartfinance;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -19,6 +25,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Section;
 import com.vladimircvetanov.smartfinance.model.User;
 
@@ -26,7 +33,7 @@ import java.util.ArrayList;
 
 import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
 
-public class MainActivity extends AppCompatActivity {
+public class MainWithReportActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private FrameLayout frameLayout;
@@ -38,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_with_report);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         frameLayout = (FrameLayout) findViewById(R.id.frame);
@@ -54,46 +61,50 @@ public class MainActivity extends AppCompatActivity {
         drawDiagram();
         drawFavouriteIcons();
 
-        //I've added buttons to currently extant activities for ease of navigation during development.
-        //Add and remove buttons as needed.
-        //                                      ~Simo
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.report_layout);
+        final Button bt = (Button) findViewById(R.id.report_sum);
 
-        Button toLogIn = (Button) findViewById(R.id.temp_to_login);
-        Button toRegister = (Button) findViewById(R.id.temp_to_register);
-        Button toTransaction = (Button) findViewById(R.id.temp_to_transaction);
-        Button toProfile = (Button) findViewById(R.id.temp_to_profile);
-        Button toInquiry = (Button) findViewById(R.id.to_main_with_report);
+        frameLayout.setPadding(50,50,50,bt.getHeight()+10);
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        final float[] startY = new float[1];
+        final float[] translationY = new float[1];
+        layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.temp_to_login:
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        break;
-                    case R.id.temp_to_register:
-                        startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-                        break;
-                    case R.id.temp_to_transaction:
-                        startActivity(new Intent(MainActivity.this, TransactionActivity.class));
-                        break;
-                    case R.id.temp_to_profile:
-                        User u = (User) getIntent().getSerializableExtra("user");
-                        Intent i = new Intent(MainActivity.this, ProfileActivity.class);
-                        i.putExtra("user",u);
-                        startActivity(i);
-                        break;
-                    case R.id.to_main_with_report:
-                        startActivity(new Intent(MainActivity.this, MainWithReportActivity.class));
-                        break;
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        startY[0] = event.getY();
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        float newY = event.getY();
+                        float deltaY = startY[0] - newY;
+                        translationY[0] = v.getTranslationY();
+                        translationY[0] -= deltaY;
+                        if (translationY[0] < 0)
+                            translationY[0] = 0;
+                        if (translationY[0] >= v.getHeight()-150)
+                            translationY[0] = v.getHeight()-150;
+                        v.setTranslationY(translationY[0]);
+                        return true;
+                    default:
+                        Interpolator interpolator = new AccelerateDecelerateInterpolator();
+                        v.animate().setInterpolator(interpolator).translationY(translationY[0] < 350 ? 0 : v.getHeight()-bt.getHeight());
+                        return v.onTouchEvent(event);
                 }
             }
-        };
-        toLogIn.setOnClickListener(onClickListener);
-        toRegister.setOnClickListener(onClickListener);
-        toTransaction.setOnClickListener(onClickListener);
-        toProfile.setOnClickListener(onClickListener);
-        toInquiry.setOnClickListener(onClickListener);
+        });
+
+        bt.setText("" + Manager.getSum());
+        bt.setBackgroundColor(ContextCompat.getColor(this,Manager.getSum() >= 0 ? R.color.colorGreen : R.color.colorOrange));
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (layout.getTranslationY() != 0){
+                    Interpolator interpolator = new OvershootInterpolator(3);
+                    layout.animate().setInterpolator(interpolator).translationY(0);
+                }
+            }
+        });
     }
 
     @Override
@@ -111,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
-                MainActivity.this.finish();
+                startActivity(new Intent(MainWithReportActivity.this,LoginActivity.class));
+                MainWithReportActivity.this.finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -143,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     private void drawFavouriteIcons() {
         int counter = 0;
         for (final Section section : favouriteCategories) {
-            final ImageView icon = new ImageView(MainActivity.this);
+            final ImageView icon = new ImageView(MainWithReportActivity.this);
             icon.setImageResource(section.getIconID());
             icon.setPadding(30, 30, 30, 30);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(140, 140);
@@ -160,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
+                    Intent intent = new Intent(MainWithReportActivity.this, TransactionActivity.class);
                     intent.putExtra(getString(R.string.EXTRA_SECTION), section);
                     startActivity(intent);
 

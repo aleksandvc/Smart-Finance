@@ -6,6 +6,13 @@ import java.util.List;
 
 public class Manager {
 
+    public static double getSum() {
+        double sum = 0;
+        for (Section s : getSections(Type.INCOMING))
+            sum += s.getSum();
+        return sum;
+    }
+
     /**
      * Transaction types.
      */
