@@ -1,17 +1,12 @@
 package com.vladimircvetanov.smartfinance.model;
 
+import com.vladimircvetanov.smartfinance.R;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 public class Manager {
-
-    public static double getSum() {
-        double sum = 0;
-        for (Section s : getSections(Type.INCOMING))
-            sum += s.getSum();
-        return sum;
-    }
 
     /**
      * Transaction types.
@@ -37,6 +32,10 @@ public class Manager {
     public static Manager getInstance() {
         if (instance == null) {
             instance = new Manager();
+            //TODO - temporary : for test purposes
+            addSection(new Section("Cash",Type.INCOMING, R.mipmap.letter,false));
+            addSection(new Section("Debit",Type.INCOMING, R.mipmap.lock,false));
+            addSection(new Section("Credit",Type.INCOMING, R.mipmap.lockche,false));
         }
         return instance;
     }
@@ -66,6 +65,18 @@ public class Manager {
             return false;
         //TODO - if adding to ExpenseCategory fails -> remove from account! Or find a way to make it Atomic;
         return true;
+    }
+
+
+    /**
+     * Get the balance of all active Accounts (INCOMING type Sections) in the {@link Manager#masterLog}
+     * @return balance of all Accounts in masterLog
+     */
+    public static double getSum() {
+        double sum = 0;
+        for (Section s : getSections(Type.INCOMING))
+            sum += s.getSum();
+        return sum;
     }
 
     /**

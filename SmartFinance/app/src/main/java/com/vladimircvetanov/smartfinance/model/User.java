@@ -60,11 +60,10 @@ public class User implements Serializable {
         favouriteCategories.add(new Section("Travel", Manager.Type.EXPENSE, R.mipmap.plane, true));
         favouriteCategories.add(new Section("House", Manager.Type.EXPENSE, R.mipmap.home, true));
         favouriteCategories.add(new Section("Sport", Manager.Type.EXPENSE, R.mipmap.swimming, true));
-        favouriteCategories.add(new Section("Food", Manager.Type.INCOMING, R.mipmap.restaurant, true));
-        favouriteCategories.add(new Section("Transport", Manager.Type.INCOMING, R.mipmap.train, true));
-        favouriteCategories.add(new Section("Entertainment", Manager.Type.INCOMING, R.mipmap.cocktail, true));
-        favouriteCategories.add(new Section("Phone", Manager.Type.INCOMING, R.mipmap.phone, true));
-
+        favouriteCategories.add(new Section("Food", Manager.Type.EXPENSE, R.mipmap.restaurant, true));
+        favouriteCategories.add(new Section("Transport", Manager.Type.EXPENSE, R.mipmap.train, true));
+        favouriteCategories.add(new Section("Entertainment", Manager.Type.EXPENSE, R.mipmap.cocktail, true));
+        favouriteCategories.add(new Section("Phone", Manager.Type.EXPENSE, R.mipmap.phone, true));
         for (Section s : favouriteCategories)
             Manager.addSection(s);
     }

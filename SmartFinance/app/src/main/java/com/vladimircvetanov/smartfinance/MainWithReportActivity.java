@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
@@ -85,10 +86,12 @@ public class MainWithReportActivity extends AppCompatActivity {
                         if (translationY[0] >= v.getHeight()-150)
                             translationY[0] = v.getHeight()-150;
                         v.setTranslationY(translationY[0]);
+                        frameLayout.setAlpha(translationY[0]/v.getHeight());
                         return true;
                     default:
                         Interpolator interpolator = new AccelerateDecelerateInterpolator();
-                        v.animate().setInterpolator(interpolator).translationY(translationY[0] < 350 ? 0 : v.getHeight()-bt.getHeight());
+                        v.animate().setInterpolator(interpolator).translationY(translationY[0] < v.getHeight()/2 ? 0 : v.getHeight()-bt.getHeight());
+                        frameLayout.setAlpha(translationY[0] < 350 ? 0 : 1);
                         return v.onTouchEvent(event);
                 }
             }
@@ -100,7 +103,7 @@ public class MainWithReportActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (layout.getTranslationY() != 0){
-                    Interpolator interpolator = new OvershootInterpolator(3);
+                    Interpolator interpolator = new AccelerateDecelerateInterpolator();
                     layout.animate().setInterpolator(interpolator).translationY(0);
                 }
             }
