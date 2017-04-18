@@ -3,33 +3,33 @@ package com.vladimircvetanov.smartfinance.date;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import org.joda.time.LocalDate;
+import com.vladimircvetanov.smartfinance.R;
 
-/**
- * Created by simeon on 4/5/17.
- */
+import org.joda.time.DateTime;
 
-public class DatePickerFragment extends DialogFragment{
+public class DatePickerFragment extends DialogFragment {
 
-    private LocalDate date;
+    private DateTime date;
 
     @Override
     public void setArguments(Bundle args) {
-        LocalDate date = (LocalDate) args.getSerializable("date");
+        date = (DateTime) args.getSerializable(getString(R.string.EXTRA_DATE));
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        if (date == null) date = LocalDate.now();
+        if (date == null) date = DateTime.now();
 
         int year = date.getYear();
         int month = date.getMonthOfYear() - 1;
         int day = date.getDayOfMonth();
 
-        return new DatePickerDialog(getContext(),(DatePickerDialog.OnDateSetListener) getActivity(), year,month,day);
+        return new DatePickerDialog(getContext(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
     }
 
 

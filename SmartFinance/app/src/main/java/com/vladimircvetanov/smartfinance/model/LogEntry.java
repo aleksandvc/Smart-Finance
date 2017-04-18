@@ -3,15 +3,9 @@ package com.vladimircvetanov.smartfinance.model;
 import android.support.annotation.Nullable;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
 import java.util.Comparator;
-
-/**
- * Created by simeon on 4/8/17.
- */
 
 /**
  * Class representing a single entry in an account or an expense category.

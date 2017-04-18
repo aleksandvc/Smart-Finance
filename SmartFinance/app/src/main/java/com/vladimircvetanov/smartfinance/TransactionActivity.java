@@ -33,7 +33,6 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Section;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -98,7 +97,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
     private boolean startedWithSection = false;
     private boolean isNumpadDown = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +105,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         //Set Toolbar, because our overlords at Google are taking <b>forever</b> to compat-ize the Appbar properly...
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
@@ -287,15 +286,15 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedCategory = (Section) categorySelection.getAdapter().getItem(position);
-                createEntry(selectedCategory);
+                createEntry();
             }
         });
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (startedWithSection){
-                    createEntry(selectedCategory);
+                if (startedWithSection) {
+                    createEntry();
                     return;
                 }
                 if (selectedType == Manager.Type.INCOMING) {
@@ -305,8 +304,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                         Message.message(TransactionActivity.this, getString(R.string.transaction_select_account));
                         return;
                     }
-                    createEntry(selectedAccount);
-                } else{
+                    createEntry();
+                } else {
                     numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                         @Override
                         public void run() {
@@ -339,8 +338,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
     /**
      * Changes the colours and background of UI elements for the TransactionActivity.
-     *
-     * @param c           Activity Context.
+     * @param c Activity Context.
      * @param colourID
      * @param ninePatchID
      */
@@ -365,10 +363,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
     /**
      * Creates a LogEntry with the note, sum, type and date selected in the Activity and a passed Section.
-     *
-     * @param s Section for the LogEntry.
      */
-    private void createEntry(Section s) {
+    private void createEntry() {
         double sum = Double.parseDouble(numDisplay.getText().toString());
         String note = noteInput.getText().toString();
 
@@ -420,7 +416,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
      * Handles selection from the DatePickerFragment.
      */
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        date = new DateTime(year, month + 1, dayOfMonth,0,0);
+        date = new DateTime(year, month + 1, dayOfMonth, 0, 0);
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
     }
@@ -503,6 +499,5 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             return convertView;
         }
     }
-
 }
 

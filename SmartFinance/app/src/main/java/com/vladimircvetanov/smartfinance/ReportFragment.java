@@ -7,11 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -52,7 +49,7 @@ public class ReportFragment extends Fragment {
         private LayoutInflater inflater;
 
 
-        public ExpandableListAdapter(@NonNull Context context, @NonNull ArrayList<Section> dataSet) {
+        public ExpandableListAdapter(Context context, ArrayList<Section> dataSet) {
             if (context == null || dataSet == null)
                 throw new IllegalArgumentException("Parameter CAN NOT be null!");
 
@@ -100,7 +97,7 @@ public class ReportFragment extends Fragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if (convertView == null)
-                convertView = inflater.inflate(R.layout.report_list_group, null);
+                convertView = inflater.inflate(R.layout.report_list_group, parent, false);
 
             Section s = dataSet.get(groupPosition);
 
@@ -124,7 +121,7 @@ public class ReportFragment extends Fragment {
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             if (convertView == null)
-                convertView = inflater.inflate(R.layout.report_list_item, null);
+                convertView = inflater.inflate(R.layout.report_list_item, parent, false);
 
             LogEntry e = dataSet.get(groupPosition).getLog().get(childPosition);
 

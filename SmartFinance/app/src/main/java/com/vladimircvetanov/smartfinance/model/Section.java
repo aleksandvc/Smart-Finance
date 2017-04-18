@@ -8,10 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by simeon on 4/8/17.
- */
-
-/**
  * Section class represents an Income Account or an Expense Category.
  * Sections should be unique by name + type.
  */

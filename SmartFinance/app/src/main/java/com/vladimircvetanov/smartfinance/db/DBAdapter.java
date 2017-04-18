@@ -15,14 +15,7 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Section;
 import com.vladimircvetanov.smartfinance.model.User;
 
-import org.joda.time.Duration;
-import org.joda.time.Instant;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-
 import java.util.HashMap;
-
-import static android.R.attr.category;
 
 /**
  * Created by vladimircvetanov on 04.04.17.
@@ -463,7 +456,7 @@ public class DBAdapter {
         return count[0];
     }
 
-    public long addTransaction(final LogEntry transaction, final int userId){
+    public long addTransaction(final LogEntry transaction, final int userId) {
         final long[] id = new long[1];
 
         new AsyncTask<Void, Void, Void>() {
@@ -479,32 +472,30 @@ public class DBAdapter {
                 Long accountID = null;
                 Long categoryID = null;
 
-                long userID = userId;
-
-                String[] columns = {DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,DbHelper.COLUMN_ID};
-                Cursor cursor = db.query(DbHelper.TABLE_NAME_ACCOUNTS,columns,null,null,null,null,null);
+                String[] columns = {DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME, DbHelper.COLUMN_ID};
+                Cursor cursor = db.query(DbHelper.TABLE_NAME_ACCOUNTS, columns, null, null, null, null, null);
 
                 //Get Account entry dbID
-                while(cursor.moveToNext()){
+                while (cursor.moveToNext()) {
 
                     int indexNameCol = cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME);
 
                     String name = cursor.getString(indexNameCol);
                     if (name.equals(accountName)) {
-                        categoryID = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_ID));
+                        accountID = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_ID));
                         break;
                     }
                 }
-                if (accountID == null) accountID = addAccount(transaction.getAccount(),userId);
+                if (accountID == null) accountID = addAccount(transaction.getAccount(), userId);
 
                 //If transaction is an EXPENSE -> get Category entry dbID
-                if (transaction.getType() == Manager.Type.EXPENSE){
-                    columns = new String[] {DbHelper.CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.COLUMN_ID};
-                    cursor = db.query(DbHelper.TABLE_NAME_CATEGORIES,columns,null,null,null,null,null);
+                if (transaction.getType() == Manager.Type.EXPENSE) {
+                    columns = new String[]{DbHelper.CATEGORIES_COLUMN_CATEGORYNAME, DbHelper.COLUMN_ID};
+                    cursor = db.query(DbHelper.TABLE_NAME_CATEGORIES, columns, null, null, null, null, null);
 
                     String categoryName = transaction.getAccount().getName();
 
-                    while(cursor.moveToNext()){
+                    while (cursor.moveToNext()) {
 
                         int indexNameCol = cursor.getColumnIndex(DbHelper.CATEGORIES_COLUMN_CATEGORYNAME);
 
@@ -514,7 +505,8 @@ public class DBAdapter {
                             break;
                         }
                     }
-                    if (categoryID == null) categoryID = addCategory(transaction.getCategory(),userId);
+                    if (categoryID == null)
+                        categoryID = addCategory(transaction.getCategory(), userId);
                 }
 
                 values.put(DbHelper.TRANSACTIONS_COLUMN_SUM, transaction.getSum());
