@@ -12,17 +12,14 @@ import org.joda.time.DateTime;
 
 public class DatePickerFragment extends DialogFragment {
 
-    private DateTime date;
-
-    @Override
-    public void setArguments(Bundle args) {
-        date = (DateTime) args.getSerializable(getString(R.string.EXTRA_DATE));
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        DateTime date;
+        date = (DateTime) getArguments().getSerializable(getString(R.string.EXTRA_DATE));
+
+        getArguments();
         if (date == null) date = DateTime.now();
 
         int year = date.getYear();

@@ -238,7 +238,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                 DialogFragment datePicker = new DatePickerFragment();
 
                 Bundle args = new Bundle();
-                args.putSerializable("date", date);
+                args.putSerializable(getString(R.string.EXTRA_DATE), date);
                 datePicker.setArguments(args);
 
                 datePicker.show(getSupportFragmentManager(), "testTag");
