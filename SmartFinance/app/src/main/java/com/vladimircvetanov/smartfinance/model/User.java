@@ -14,7 +14,7 @@ public class User implements Serializable {
     private long id;
     private int imageId;
     public static HashSet<Account> accounts;
-    public static HashSet<Section> favouriteCategories;
+    public static HashSet<CategoryExpense> favouriteCategories;
 
     public User(String email, String password) {
         if (email != null && !email.isEmpty()) {
@@ -26,7 +26,7 @@ public class User implements Serializable {
 
         accounts = new HashSet<>();
         favouriteCategories = new HashSet<>();
-        addDefaultCategories();
+
     }
 
     public String getEmail() {
@@ -53,8 +53,8 @@ public class User implements Serializable {
         return id;
     }
 
-    private void addDefaultCategories() {
-        favouriteCategories.add(new Section("Vehicle", Manager.Type.EXPENSE, R.mipmap.car, true));
+    /*private void addDefaultCategories() {
+        favouriteCategories.add(new CategoryExpense("Vehicle", Manager.Type.EXPENSE, R.mipmap.car, true));
         favouriteCategories.add(new Section("Clothes", Manager.Type.EXPENSE, R.mipmap.clothes, true));
         favouriteCategories.add(new Section("Health", Manager.Type.EXPENSE, R.mipmap.heart, true));
         favouriteCategories.add(new Section("Travel", Manager.Type.EXPENSE, R.mipmap.plane, true));
@@ -66,5 +66,5 @@ public class User implements Serializable {
         favouriteCategories.add(new Section("Phone", Manager.Type.EXPENSE, R.mipmap.phone, true));
         for (Section s : favouriteCategories)
             Manager.addSection(s);
-    }
+    }*/
 }
