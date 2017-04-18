@@ -1,5 +1,6 @@
 package com.vladimircvetanov.smartfinance;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -85,6 +86,47 @@ public class DiagramFragment extends Fragment {
         drawDiagram();
         drawFavouriteIcons();
 
+        //I've added buttons to currently extant activities for ease of navigation during development.
+        //Add and remove buttons as needed.
+        //                                      ~Simo
+
+        Button toLogIn = (Button) rootView.findViewById(R.id.temp_to_login);
+        Button toRegister = (Button) rootView.findViewById(R.id.temp_to_register);
+        Button toTransaction = (Button) rootView.findViewById(R.id.temp_to_transaction);
+        Button toProfile = (Button) rootView.findViewById(R.id.temp_to_profile);
+        Button toInquiry = (Button) rootView.findViewById(R.id.to_main_with_report);
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.temp_to_login:
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                        break;
+                    case R.id.temp_to_register:
+                        startActivity(new Intent(getActivity(), RegisterActivity.class));
+                        break;
+                    case R.id.temp_to_transaction:
+                        startActivity(new Intent(getActivity(), TransactionActivity.class));
+                        break;
+                    case R.id.temp_to_profile:
+                        User u = (User) getActivity().getIntent().getSerializableExtra("user");
+                        Intent i = new Intent(getActivity(), ProfileActivity.class);
+                        i.putExtra("user",u);
+                        startActivity(i);
+                        break;
+                    case R.id.to_main_with_report:
+                        startActivity(new Intent(getActivity(), MainWithReportActivity.class));
+                        break;
+                }
+            }
+        };
+        toLogIn.setOnClickListener(onClickListener);
+        toRegister.setOnClickListener(onClickListener);
+        toTransaction.setOnClickListener(onClickListener);
+        toProfile.setOnClickListener(onClickListener);
+        toInquiry.setOnClickListener(onClickListener);
+
         return rootView;
     }
 
@@ -155,20 +197,22 @@ public class DiagramFragment extends Fragment {
             });
         }
     }
+
+    class CustomPercentFormatter implements IValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        public CustomPercentFormatter() {
+            mFormat = new DecimalFormat("###,###,##0.0");
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+
+            if(value <= 0) return "";
+            return mFormat.format(value) + " %";
+        }
+    }
 }
 
-class CustomPercentFormatter implements IValueFormatter {
 
-    private DecimalFormat mFormat;
-
-    public CustomPercentFormatter() {
-        mFormat = new DecimalFormat("###,###,##0.0");
-    }
-
-    @Override
-    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-
-        if(value <= 0) return "";
-        return mFormat.format(value) + " %";
-    }
-}

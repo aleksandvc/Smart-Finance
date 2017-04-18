@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,14 +16,9 @@ import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
-
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import static com.vladimircvetanov.smartfinance.TransactionFragment.date;
-import static com.vladimircvetanov.smartfinance.TransactionFragment.dateDisplay;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
@@ -38,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private FragmentManager fragmentManager;
     private Bundle dataBetweenFragments;
+
+    private TextView dateDisplay;
+    private DateTime date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +56,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         userProfile = (TextView) findViewById(R.id.user_profile_link);
+
+        dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
+        //Show the current date in a "d MMMM, YYYY" format.
+        date = DateTime.now();
+        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
+//        dateDisplay.setText(date.toString(dateFormat));
 
         fragmentManager = getSupportFragmentManager();
         if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
@@ -127,13 +130,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
 
             case R.id.nav_calendar:
+                /*
                 DialogFragment datePicker = new DatePickerFragment();
                 Bundle args = new Bundle();
 
-                args.putSerializable(getString(R.string.date), date);
+                args.putSerializable(getString(date), date);
                 datePicker.setArguments(args);
                 datePicker.show(getSupportFragmentManager(), getString(R.string.calendar_fragment_tag));
-
+                */
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
         }
@@ -143,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        date = new LocalDate(year, month + 1, dayOfMonth);
+        date = new DateTime(year, month + 1, dayOfMonth, 0, 0);
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
-        dateDisplay.setText(date.toString(dateFormat));
+       // dateDisplay.setText(date.toString(dateFormat));
     }
 }

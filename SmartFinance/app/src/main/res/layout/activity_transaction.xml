@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
     tools:context="com.vladimircvetanov.smartfinance.TransactionActivity">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/toolbar"/>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <TextView
         android:id="@+id/transaction_date_display"
@@ -33,24 +33,24 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:text="@string/expense"
             android:id="@+id/transaction_radio_expense"
-            android:button="@drawable/transaction_radio_expense"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:button="@drawable/transaction_radio_expense"
+            android:text="@string/expense" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <RadioButton
-            android:text="@string/income"
-            android:layoutDirection="rtl"
             android:id="@+id/transaction_radio_income"
-            android:button="@drawable/transaction_radio_income"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:button="@drawable/transaction_radio_income"
+            android:layoutDirection="rtl"
+            android:text="@string/income" />
     </RadioGroup>
 
     <LinearLayout
@@ -60,10 +60,10 @@
         android:layout_below="@id/transaction_date_display"
         android:layout_margin="@dimen/all_view_spacing_standard"
         android:background="@color/colorOrange"
-        android:padding="@dimen/all_text_size_tiny"
-
         android:gravity="end"
-        android:orientation="horizontal">
+
+        android:orientation="horizontal"
+        android:padding="@dimen/all_view_spacing_tiny">
 
         <TextView
             android:id="@+id/transaction_number_display_text"
@@ -80,64 +80,79 @@
             android:id="@+id/transaction_number_display_backspace"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/colorOrange"
             android:layout_marginLeft="@dimen/all_view_spacing_small"
+            android:background="@color/colorOrange"
             android:src="@drawable/ic_action_backspace" />
     </LinearLayout>
 
 
     <EditText
         android:id="@+id/transaction_note_input"
-        android:allowUndo="true"
-        android:maxLines="5"
-        android:maxLength="256"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/transaction_number_display"
         android:layout_marginLeft="@dimen/all_view_spacing_standard"
         android:layout_marginRight="@dimen/all_view_spacing_standard"
-        android:hint="@string/transaction_input_note" />
+        android:allowUndo="true"
+        android:hint="@string/transaction_input_note"
+        android:maxLength="256"
+        android:maxLines="5" />
 
+    <Spinner
+        android:id="@+id/transaction_account_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transaction_note_input" />
 
     <LinearLayout
         android:id="@+id/transaction_section_selection_layout"
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/transaction_note_input"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/transaction_account_spinner"
         android:layout_marginLeft="@dimen/all_view_spacing_standard"
+        android:layout_marginRight="@dimen/all_view_spacing_standard"
+        android:orientation="vertical"
         android:visibility="gone">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please select a section:"/>
+            android:text="@string/transaction_select_section" />
+
         <ListView
-            android:id="@+id/transaction_section_selection"
-            android:orientation="vertical"
+            android:id="@+id/transaction_account_selection"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/transaction_numpad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/transaction_note_input"
+        android:layout_below="@id/transaction_account_spinner"
         android:orientation="vertical">
 
         <LinearLayout style="@style/transaction_numpad_row">
+
             <TextView
                 android:id="@+id/transaction_numpad_7"
                 style="@style/transaction_numpad_button"
                 android:text="7" />
+
             <TextView
                 android:id="@+id/transaction_numpad_8"
                 style="@style/transaction_numpad_button"
                 android:text="8" />
+
             <TextView
                 android:id="@+id/transaction_numpad_9"
                 style="@style/transaction_numpad_button"
                 android:text="9" />
+
             <TextView
                 android:id="@+id/transaction_numpad_plus"
                 style="@style/transaction_numpad_button"
@@ -145,18 +160,22 @@
         </LinearLayout>
 
         <LinearLayout style="@style/transaction_numpad_row">
+
             <TextView
                 android:id="@+id/transaction_numpad_4"
                 style="@style/transaction_numpad_button"
                 android:text="4" />
+
             <TextView
                 android:id="@+id/transaction_numpad_5"
                 style="@style/transaction_numpad_button"
                 android:text="5" />
+
             <TextView
                 android:id="@+id/transaction_numpad_6"
                 style="@style/transaction_numpad_button"
                 android:text="6" />
+
             <TextView
                 android:id="@+id/transaction_numpad_minus"
                 style="@style/transaction_numpad_button"
@@ -164,18 +183,22 @@
         </LinearLayout>
 
         <LinearLayout style="@style/transaction_numpad_row">
+
             <TextView
                 android:id="@+id/transaction_numpad_1"
                 style="@style/transaction_numpad_button"
                 android:text="1" />
+
             <TextView
                 android:id="@+id/transaction_numpad_2"
                 style="@style/transaction_numpad_button"
                 android:text="2" />
+
             <TextView
                 android:id="@+id/transaction_numpad_3"
                 style="@style/transaction_numpad_button"
                 android:text="3" />
+
             <TextView
                 android:id="@+id/transaction_numpad_multiply"
                 style="@style/transaction_numpad_button"
@@ -183,23 +206,27 @@
         </LinearLayout>
 
         <LinearLayout style="@style/transaction_numpad_row">
+
             <TextView
                 android:id="@+id/transaction_numpad_decimal"
                 style="@style/transaction_numpad_button"
                 android:text="." />
+
             <TextView
                 android:id="@+id/transaction_numpad_0"
                 style="@style/transaction_numpad_button"
                 android:text="0" />
+
             <TextView
                 android:id="@+id/transaction_numpad_equals"
                 style="@style/transaction_numpad_button"
                 android:text="=" />
+
             <TextView
-                android:theme="@style/ThemeOverlay.CustomTheme"
                 android:id="@+id/transaction_numpad_divide"
                 style="@style/transaction_numpad_button"
-                android:text="÷" />
+                android:text="÷"
+                android:theme="@style/ThemeOverlay.CustomTheme" />
         </LinearLayout>
 
         <TextView
@@ -208,10 +235,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:layout_alignParentBottom="true"
             android:background="@drawable/orange_button_9"
-            android:padding="@dimen/all_view_spacing_small"
             android:gravity="center_vertical|center_horizontal"
+            android:padding="@dimen/all_view_spacing_small"
 
             android:text="@string/transaction_select_section"
             android:textSize="@dimen/all_text_size_large" />

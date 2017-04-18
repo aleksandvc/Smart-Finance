@@ -1,29 +1,30 @@
 package com.vladimircvetanov.smartfinance.model;
 
-import org.joda.time.LocalDate;
+import android.support.annotation.Nullable;
+
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * Created by simeon on 4/8/17.
- */
-
-/**
  * Class representing a single entry in an account or an expense category.
  */
-public class LogEntry implements Serializable{
+public class LogEntry implements Serializable {
 
-    private LocalDate date;
+    private DateTime date;
     private double sum;
     private String note;
 
     private Manager.Type type;
-    private Section section;
+    private Section account;
+    private Section category;
 
-    public LogEntry(LocalDate date, double sum, String note, Manager.Type type, Section section) {
-        if (date == null || note == null || type == null || section == null)
+    public LogEntry(DateTime date, double sum, String note, Manager.Type type, Section account, @Nullable Section category) {
+        if (date == null || note == null || type == null || account == null)
             throw new IllegalArgumentException("Arguments can not be null!");
+        if (type == Manager.Type.EXPENSE && category == null)
+            throw new IllegalArgumentException("The category of an expense entry can not be null!");
         if (type.equals(Manager.Type.INCOMING) && sum < 0.0)
             throw new IllegalArgumentException("Negative values are not allowed for Income account entries!");
 
@@ -31,14 +32,35 @@ public class LogEntry implements Serializable{
         this.sum = sum;
         this.note = note;
         this.type = type;
-        this.section = section;
+        this.account = account;
+        this.category = category;
     }
 
-    public LocalDate getDate() {return date;}
-    public double getSum() {return sum;}
-    public String getNote() {return note;}
-    public Manager.Type getType() {return type;}
-    public Section getSection() {return section;}
+    public DateTime getDate() {
+        return date;
+    }
+
+    public double getSum() {
+        return sum;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public Manager.Type getType() {
+        return type;
+    }
+
+    public Section getAccount() {
+        return account;
+    }
+
+    public
+    @Nullable
+    Section getCategory() {
+        return category;
+    }
 
     /**
      * A chronological comparator for the {@link LogEntry} data type.

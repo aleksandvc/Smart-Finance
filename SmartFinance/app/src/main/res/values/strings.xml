@@ -9,6 +9,7 @@
 
     <!-- EXTRA'S KEYS -->
     <string name="EXTRA_SECTION">KEY_SECTION</string>
+    <string name="EXTRA_DATE">DATE</string>
     <string name="date">date</string>
 
     <!-- NAVIGATION ITEMS -->
@@ -49,7 +50,9 @@
     <string name="transaction_failure">Transaction failed!</string>
     <string name="logout_message">Are you sure you want to log out?</string>
     <string name="logout_title">Log out!</string>
+    <string name="transaction_select_account">Please select an account!</string>
 
     <string name="transaction_input_note">add note ...</string>
     <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="test_text">TEST_TEXT</string>
 </resources>

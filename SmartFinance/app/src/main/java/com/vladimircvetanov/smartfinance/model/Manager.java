@@ -1,5 +1,7 @@
 package com.vladimircvetanov.smartfinance.model;
 
+import com.vladimircvetanov.smartfinance.R;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -29,12 +31,16 @@ public class Manager {
     public static Manager getInstance() {
         if (instance == null) {
             instance = new Manager();
+            //TODO - temporary : for test purposes
+            addSection(new Section("Cash", Type.INCOMING, R.mipmap.letter, false));
+            addSection(new Section("Debit", Type.INCOMING, R.mipmap.lock, false));
+            addSection(new Section("Credit", Type.INCOMING, R.mipmap.lockche, false));
         }
         return instance;
     }
 
-    public static void setLoggedUser(User user){
-        if(user !=null){
+    public static void setLoggedUser(User user) {
+        if (user != null) {
             loggedUser = user;
         }
     }
@@ -44,43 +50,41 @@ public class Manager {
     }
 
     /**
-     * Adds an entry, corresponding to a User expense or income, into the financial {@link Manager#masterLog}.
+     * Adds the passed {@link LogEntry} to the appropriate sections.
      *
-     * @param type    income or expense.
-     * @param section appropriate ISection enum value.
-     * @param entry   LogEntry which to insert.
-     * @return <i>true</i> only if entry is successfully added.
-     */
-    public static boolean addLogEntry(Type type, Section section, LogEntry entry) {
-        //TODO - TEMPORARY implementation for testing purposes
-        getInstance().addSection(section);
-
-        if (type == null || section == null || entry == null || !getInstance().masterLog.get(type).contains(section))
-            return false;
-
-        for (Section s : getInstance().masterLog.get(type))
-            if (s.equals(section))
-                return s.addLogEntry(entry);
-
-        return false;
-    }
-
-    /**
-     * Wraps {@link Manager#addLogEntry(com.vladimircvetanov.smartfinance.model.Manager.Type, com.vladimircvetanov.smartfinance.model.Section, com.vladimircvetanov.smartfinance.model.LogEntry)}
-     * Takes necessary data from the entry itself and passes it to addLogEntry(Type type, Section section, LogEntry entry), simplifying method calls.
-     * @param entry   LogEntry which to insert.
-     * @return
+     * @param entry {@link LogEntry} to process.
+     * @return <code>true</code> if addition was successful.
      */
     public static boolean addLogEntry(LogEntry entry) {
-        if (entry == null)
-            return false;
-        Type t = entry.getType();
-        Section s = entry.getSection();
+        if (entry == null) return false;
 
-        return addLogEntry(t,s,entry);
+        Type type = entry.getType();
+        Section account = entry.getAccount();
+        Section category = entry.getCategory();
+
+        if (type == null || account == null || (type == Type.EXPENSE && category == null)) return false;
+        if (!account.addLogEntry(entry)) return false;
+        if (type == Type.EXPENSE && !category.addLogEntry(entry)) return false;
+        return true;
+        //TODO - if adding to ExpenseCategory fails -> remove from account! Or find a way to make it Atomic;
     }
+
+
+    /**
+     * Get the balance of all active Accounts (INCOMING type Sections) in the {@link Manager#masterLog}
+     *
+     * @return balance of all Accounts in masterLog
+     */
+    public static double getSum() {
+        double sum = 0;
+        for (Section s : getSections(Type.INCOMING))
+            sum += s.getSum();
+        return sum;
+    }
+
     /**
      * Returns an array of all sections of a passed type in an array. Useful for ArrayAdapters, etc.
+     *
      * @param type INCOMING or EXPENSE
      * @return array of Sections.
      */
@@ -90,13 +94,18 @@ public class Manager {
         return getInstance().masterLog.get(type).toArray(sections);
     }
 
-    public static boolean addSection(Section section){
-        if(section == null) return false;
-        return getInstance().masterLog.get(section.getType()).add(section);
+    /**
+     * Wraps HashSet.add(Object) for the {@link Manager#masterLog}
+     *
+     * @param section
+     * @return <code>true</code> if addition completed successfully
+     */
+    public static boolean addSection(Section section) {
+        return section != null && getInstance().masterLog.get(section.getType()).add(section);
     }
 
-    public static boolean containsSection(Section section){
-       return getInstance().masterLog.get(section.getType()).contains(section);
+    public static boolean containsSection(Section section) {
+        return section.getType() != null && getInstance().masterLog.get(section.getType()).contains(section);
     }
 
 }

@@ -70,37 +70,81 @@
                 android:layout_height="match_parent" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/categories_list"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:layout_weight="1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Temp"
-                android:layout_gravity="center"/>
-
-            <EditText
-                android:id="@+id/add_value"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/add_value_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/appbar_height"
-                android:text="Add"
-                android:background="@drawable/balance_button"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/all_text_size_standard"
-                android:layout_gravity="center"/>
+                <LinearLayout
+                    android:id="@+id/categories_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        </LinearLayout>
+                    <EditText
+                        android:id="@+id/add_value"
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"/>
+
+                    <Button
+                        android:id="@+id/add_value_btn"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="@dimen/appbar_height"
+                        android:text="Add"
+                        android:background="@drawable/balance_button"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/all_text_size_standard"
+                        android:layout_gravity="center"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/temp_to_login"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="toLogIn" />
+
+                    <Button
+                        android:id="@+id/temp_to_register"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="toRegister" />
+
+                    <Button
+                        android:id="@+id/temp_to_transaction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="toTransaction" />
+
+                    <Button
+                        android:id="@+id/temp_to_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="toprofile" />
+
+                    <Button
+                        android:id="@+id/to_main_with_report"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="tomainwithreport" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 

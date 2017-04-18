@@ -69,5 +69,7 @@ public class User implements Serializable {
         favouriteCategories.add(new Section("Transport", Manager.Type.EXPENSE, R.mipmap.train, true));
         favouriteCategories.add(new Section("Entertainment", Manager.Type.EXPENSE, R.mipmap.cocktail, true));
         favouriteCategories.add(new Section("Phone", Manager.Type.EXPENSE, R.mipmap.phone, true));
+        for (Section s : favouriteCategories)
+            Manager.addSection(s);
     }
 }
