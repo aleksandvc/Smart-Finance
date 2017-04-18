@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
     tools:context="com.vladimircvetanov.smartfinance.TransactionActivity">
 
     <include
@@ -122,7 +121,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please select a section:" />
+            android:text="@string/transaction_select_section" />
 
         <ListView
             android:id="@+id/transaction_account_selection"
@@ -237,7 +236,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:layout_alignParentBottom="true"
             android:background="@drawable/orange_button_9"
             android:gravity="center_vertical|center_horizontal"
             android:padding="@dimen/all_view_spacing_small"

@@ -10,6 +10,7 @@
 
     <!-- EXTRA'S KEYS -->
     <string name="EXTRA_SECTION">KEY_SECTION</string>
+    <string name="EXTRA_DATE">DATE</string>
 
 
     <string name="submit">submit</string>
