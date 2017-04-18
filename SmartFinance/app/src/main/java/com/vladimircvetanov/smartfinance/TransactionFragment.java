@@ -38,8 +38,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     private ListView sectionList;
 
-    private TextView dateDisplay;
-    private LocalDate date;
+    static TextView dateDisplay;
+    static LocalDate date;
 
     private EditText noteInput;
 
@@ -93,6 +93,14 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     private View rootView;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            selectedSection = (Section) getArguments().getSerializable(getString(R.string.EXTRA_SECTION));
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
@@ -142,12 +150,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
 
-        //Bundle arguments = getArguments();
-        //String desired_string = arguments.getString(getString(R.string.EXTRA_SECTION));
-
-        Intent intent = getActivity().getIntent();
-        if (intent.hasExtra(getString(R.string.EXTRA_SECTION))) {
-            selectedSection = (Section) intent.getSerializableExtra(getString(R.string.EXTRA_SECTION));
+        Bundle arguments = getArguments();
+        //Intent intent = getActivity().getIntent();
+        if (arguments != null && arguments.containsKey(getString(R.string.EXTRA_SECTION))) {
+            selectedSection = (Section) getArguments().getSerializable(getString(R.string.EXTRA_SECTION));
             switch (selectedSection.getType()) {
                 case INCOMING:
                     directionRadio.check(R.id.transaction_radio_income);

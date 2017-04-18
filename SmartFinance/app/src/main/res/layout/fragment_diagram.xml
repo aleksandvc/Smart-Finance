@@ -2,30 +2,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.vladimircvetanov.smartfinance.DiagramFragment"
     android:paddingTop="@dimen/appbar_height"
     android:id="@+id/diagram_fragment"
     android:orientation="vertical">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/frame"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:layout_gravity="center"
-        android:padding="10dp"
-        tools:context=".MainActivity" >
+        android:layout_weight="2">
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pie_chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp" />
+            android:layout_marginRight="50dp"
+            android:layout_centerInParent="true"/>
 
-    </FrameLayout>
+        <com.szugyi.circlemenu.view.CircleLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            app:radius="150dp"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

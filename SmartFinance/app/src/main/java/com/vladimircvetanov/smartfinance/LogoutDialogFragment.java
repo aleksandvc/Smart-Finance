@@ -24,17 +24,17 @@ public class LogoutDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {;
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle("Log out!");
-        alertDialogBuilder.setMessage("Are you sure you want to log out?");
+        alertDialogBuilder.setTitle(getString(R.string.logout_title));
+        alertDialogBuilder.setMessage(getString(R.string.logout_message));
 
-        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
 
-        alertDialogBuilder.setPositiveButton("Log out", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(getString(R.string.logout_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //dialog.dismiss();

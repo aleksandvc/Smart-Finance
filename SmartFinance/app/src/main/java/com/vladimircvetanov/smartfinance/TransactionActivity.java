@@ -154,7 +154,6 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
 
-
         Intent intent = getIntent();
         if (intent.hasExtra(getString(R.string.EXTRA_SECTION))) {
             selectedSection = (Section) intent.getSerializableExtra(getString(R.string.EXTRA_SECTION));

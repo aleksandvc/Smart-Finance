@@ -1,9 +1,9 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +14,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.szugyi.circlemenu.view.CircleLayout;
 import com.vladimircvetanov.smartfinance.model.Section;
 import com.vladimircvetanov.smartfinance.model.User;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
@@ -39,13 +43,25 @@ public class DiagramFragment extends Fragment {
     private EditText addValue;
     private Button addButton;
     static User user;
+    private CircleLayout circleLayout;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState.putInt("someVarA", someVarA);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //someVarA = savedInstanceState.getInt("someVarA");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_diagram, container, false);
 
-        frameLayout = (FrameLayout) rootView.findViewById(R.id.frame);
+        circleLayout = (CircleLayout) rootView.findViewById(R.id.frame);
         pieChart = (PieChart) rootView.findViewById(R.id.pie_chart);
         entries = new ArrayList<>();
         pieDataSet = new PieDataSet(entries, "");
@@ -73,8 +89,13 @@ public class DiagramFragment extends Fragment {
     }
 
     private void addEntry(float entrySum) {
+        if (entries.size() == 1) {
+            entries.clear();
+            entries.add(new PieEntry(0));
+        }
         PieEntry entry = new PieEntry(entrySum);
         entries.add(entry);
+
         pieChart.setData(pieData);
         pieChart.invalidate();
 
@@ -83,10 +104,14 @@ public class DiagramFragment extends Fragment {
     }
 
     void drawDiagram() {
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);;
+
+        if (entries.isEmpty()) {
+            entries.add(new PieEntry(100));
+        }
+        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 
         pieData = new PieData(pieDataSet);
-        pieData.setValueFormatter(new PercentFormatter());
+        pieData.setValueFormatter(new CustomPercentFormatter());
 
         pieChart.setUsePercentValues(true);
         pieChart.setDescription(null);
@@ -97,45 +122,53 @@ public class DiagramFragment extends Fragment {
     }
 
     void drawFavouriteIcons() {
-        int counter = 0;
         for (final Section section : favouriteCategories) {
-            final ImageButton icon = new ImageButton(getActivity());
+            final ImageView icon = new ImageView(getActivity());
             icon.setImageResource(section.getIconID());
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(150, 150);
-            lp.gravity = Gravity.CENTER;
-            icon.setLayoutParams(lp);
-            icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            icon.setScaleType(ImageButton.ScaleType.FIT_CENTER);
+            CircleLayout.LayoutParams params = new CircleLayout.LayoutParams(120, 120);
+            icon.setLayoutParams(params);
+
+            icon.setPadding(30, 30, 30, 30);
             icon.setBackgroundColor(getActivity().getColor(R.color.colorTransparent));
 
-            float angleDeg = counter++ * 360.0f / favouriteCategories.size() - 90.0f;
-            float angleRad = (float) (angleDeg * Math.PI / 180.0f);
-            // Calculate the position of the view, offset from center (300 px from center).
-            icon.setTranslationX(450 * (float) Math.cos(angleRad));
-            icon.setTranslationY(450 * (float) Math.sin(angleRad));
-            frameLayout.addView(icon);
+            circleLayout.addView(icon);
+            circleLayout.setRotating(false);
 
             icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     TransactionFragment fragment = new TransactionFragment();
                     Bundle arguments = new Bundle();
-                    arguments.putString(getString(R.string.EXTRA_SECTION), String.valueOf(section));
+                    arguments.putSerializable(getString(R.string.EXTRA_SECTION), section);
                     fragment.setArguments(arguments);
-                    getFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.master_layout, new TransactionFragment(), "Transaction Fragment")
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.master_layout, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
+                            .addToBackStack(getString(R.string.transaction_fragment_tag))
                             .commit();
-
-                    //Intent intent = new Intent(getActivity(), TransactionActivity.class);
-                    //intent.putExtra(getString(R.string.EXTRA_SECTION), section);
-                    //startActivity(intent);
 
                     pieChart.setCenterText(section.getName() + "\n" + section.getSum());
                     pieChart.setHoleColor(getActivity().getColor(R.color.colorGrey));
-
                     icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
                 }
             });
         }
+    }
+}
+
+class CustomPercentFormatter implements IValueFormatter {
+
+    private DecimalFormat mFormat;
+
+    public CustomPercentFormatter() {
+        mFormat = new DecimalFormat("###,###,##0.0");
+    }
+
+    @Override
+    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+
+        if(value <= 0) return "";
+        return mFormat.format(value) + " %";
     }
 }

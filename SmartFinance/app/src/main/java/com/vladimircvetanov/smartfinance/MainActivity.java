@@ -1,8 +1,10 @@
 package com.vladimircvetanov.smartfinance;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,15 +14,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
+
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import static com.vladimircvetanov.smartfinance.TransactionFragment.date;
+import static com.vladimircvetanov.smartfinance.TransactionFragment.dateDisplay;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+
     private TextView userProfile;
+    private TextView toolbarTitle;
+
+    private FragmentManager fragmentManager;
+    private Bundle dataBetweenFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +57,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
 
-        FragmentManager fm = getSupportFragmentManager();
-        if(fm.getFragments() == null || fm.getFragments().isEmpty()) {
-            fm.beginTransaction()
-                .add(R.id.master_layout, new DiagramFragment(), "Diagram")
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        userProfile = (TextView) findViewById(R.id.user_profile_link);
+
+        fragmentManager = getSupportFragmentManager();
+        if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
+            fragmentManager.beginTransaction()
+                .add(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
                 .commit();
         }
     }
@@ -64,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             case R.id.item_logout:
                 LogoutDialogFragment dialog = LogoutDialogFragment.newInstance();
-                dialog.show(getSupportFragmentManager(), "Log out");
+                dialog.show(getSupportFragmentManager(), getString(R.string.logout_button));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -85,17 +105,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()) {
             case R.id.nav_accounts:
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
+
             case R.id.nav_favourites:
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
+
             case R.id.nav_income:
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
+
             case R.id.nav_calculator:
-                return true;
+                if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.master_layout, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
+                        .addToBackStack(getString(R.string.transaction_fragment_tag))
+                        .commit();
+                }
+                drawer.closeDrawer(GravityCompat.START);
+                return false;
+
             case R.id.nav_calendar:
-                return true;
+                DialogFragment datePicker = new DatePickerFragment();
+                Bundle args = new Bundle();
+
+                args.putSerializable(getString(R.string.date), date);
+                datePicker.setArguments(args);
+                datePicker.show(getSupportFragmentManager(), getString(R.string.calendar_fragment_tag));
+
+                drawer.closeDrawer(GravityCompat.START);
+                return false;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        date = new LocalDate(year, month + 1, dayOfMonth);
+        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
+        dateDisplay.setText(date.toString(dateFormat));
     }
 }

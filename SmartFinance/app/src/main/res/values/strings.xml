@@ -6,10 +6,10 @@
     <!-- TOOLBAR MENU -->
     <string name="currency">Currency</string>
     <string name="settings">Settings</string>
-    <string name="log_out">Log out</string>
 
     <!-- EXTRA'S KEYS -->
     <string name="EXTRA_SECTION">KEY_SECTION</string>
+    <string name="date">date</string>
 
     <!-- NAVIGATION ITEMS -->
     <string name="nav_item_accounts">Accounts</string>
@@ -39,8 +39,17 @@
     <string name="transaction_select_section">SELECT SECTION</string>
     <string name="transaction_add_to">ADD TO</string>
 
+    <!-- FRAGMENT TAGS -->
+    <string name="transaction_fragment_tag">Transaction Fragment</string>
+    <string name="diagram_fragment_tag">Diagram Fragment</string>
+    <string name="calendar_fragment_tag">Calendar</string>
+
+    <!-- MESSAGES -->
     <string name="transaction_success">Transaction successful!</string>
     <string name="transaction_failure">Transaction failed!</string>
+    <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="logout_title">Log out!</string>
+
     <string name="transaction_input_note">add note ...</string>
     <string name="title_activity_navigation">NavigationActivity</string>
 </resources>
