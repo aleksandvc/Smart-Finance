@@ -6,21 +6,53 @@
     <!-- TOOLBAR MENU -->
     <string name="currency">Currency</string>
     <string name="settings">Settings</string>
-    <string name="log_out">Log out</string>
 
     <!-- EXTRA'S KEYS -->
     <string name="EXTRA_SECTION">KEY_SECTION</string>
     <string name="EXTRA_DATE">DATE</string>
+    <string name="date">date</string>
 
+    <!-- NAVIGATION ITEMS -->
+    <string name="nav_item_accounts">Accounts</string>
+    <string name="nav_item_favourites">Favourites</string>
+    <string name="nav_item_income">Income</string>
+    <string name="nav_item_calculator">Calculator</string>
+    <string name="nav_item_calendar">Calendar</string>
+    <string name="nav_item_interval">Interval</string>
+    <string name="nav_item_day">Day</string>
+    <string name="nav_item_week">Week</string>
+    <string name="nav_item_month">Month</string>
+    <string name="nav_item_year">Year</string>
+    <string name="first_and_last_name"><![CDATA[First & Last name]]></string>
 
-    <string name="submit">submit</string>
-    <string name="transaction_success">Transaction successful!</string>
-    <string name="transaction_failure">Transaction failed!</string>
-    <string name="transaction_add_to">ADD TO</string>
-    <string name="transaction_select_section">SELECT SECTION</string>
-    <string name="transaction_input_note">add note ...</string>
+    <!-- TRANSACTION RADIO BUTTONS -->
     <string name="income">income</string>
     <string name="expense">expense</string>
-    <string name="test_text">TEST_TEXT</string>
+
+    <!-- NAV DRAWER ACTIONS -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- BUTTONS -->
+    <string name="cancel_button">Cancel</string>
+    <string name="logout_button">Log out</string>
+    <string name="submit">submit</string>
+    <string name="transaction_select_section">SELECT SECTION</string>
+    <string name="transaction_add_to">ADD TO</string>
+
+    <!-- FRAGMENT TAGS -->
+    <string name="transaction_fragment_tag">Transaction Fragment</string>
+    <string name="diagram_fragment_tag">Diagram Fragment</string>
+    <string name="calendar_fragment_tag">Calendar</string>
+
+    <!-- MESSAGES -->
+    <string name="transaction_success">Transaction successful!</string>
+    <string name="transaction_failure">Transaction failed!</string>
+    <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="logout_title">Log out!</string>
     <string name="transaction_select_account">Please select an account!</string>
+
+    <string name="transaction_input_note">add note ...</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="test_text">TEST_TEXT</string>
 </resources>

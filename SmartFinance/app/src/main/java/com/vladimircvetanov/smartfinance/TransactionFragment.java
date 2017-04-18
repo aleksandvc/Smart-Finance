@@ -6,13 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,7 +33,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class TransactionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private Manager.Type selectedType;
 
@@ -98,67 +94,86 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
     private boolean startedWithSection = false;
     private boolean isNumpadDown = false;
+
+    private View rootView;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //Set Toolbar, because our overlords at Google are taking <b>forever</b> to compat-ize the Appbar properly...
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        FragmentManager fm = getSupportFragmentManager();
-        if(fm.getFragments() != null || !fm.getFragments().isEmpty()) {
-            fm.beginTransaction()
-                    .add(R.id.transaction_fragment, new TransactionFragment(), "Transaction")
-                    .commit();
-        }
+        rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
 
         //==============================Initializations============================================================//
 
-        accountSelection = (Spinner) findViewById(R.id.transaction_account_spinner);
+        accountSelection = (Spinner) rootView.findViewById(R.id.transaction_account_spinner);
         accountSelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.INCOMING)));
 
-        categorySelection = (ListView) findViewById(R.id.transaction_account_selection);
+        categorySelection = (ListView) rootView.findViewById(R.id.transaction_account_selection);
         categorySelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.EXPENSE)));
 
-        noteInput = (EditText) findViewById(R.id.transaction_note_input);
+        noteInput = (EditText) rootView.findViewById(R.id.transaction_note_input);
 
-        numDisplayBase = findViewById(R.id.transaction_number_display);
-        numpad = findViewById(R.id.transaction_numpad);
+        numDisplayBase = rootView.findViewById(R.id.transaction_number_display);
+        numpad = rootView.findViewById(R.id.transaction_numpad);
 
-        submitButton = (TextView) findViewById(R.id.transaction_submit_btn);
+        submitButton = (TextView) rootView.findViewById(R.id.transaction_submit_btn);
 
-        directionRadio = (RadioGroup) findViewById(R.id.transaction_radio);
+        directionRadio = (RadioGroup) rootView.findViewById(R.id.transaction_radio);
         directionRadio.check(R.id.transaction_radio_expense);
         selectedType = Manager.Type.EXPENSE;
 
-        dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
+        dateDisplay = (TextView) rootView.findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
 
-        numDisplay = (TextView) findViewById(R.id.transaction_number_display_text);
-        backspace = (ImageButton) findViewById(R.id.transaction_number_display_backspace);
+        numDisplay = (TextView) rootView.findViewById(R.id.transaction_number_display_text);
+        backspace = (ImageButton) rootView.findViewById(R.id.transaction_number_display_backspace);
 
         //Seeing as they act almost identically, put all numeric buttons in an array for easier manipulation.
         numButtons = new TextView[10];
         for (int i = 0; i <= 9; i++)
-            numButtons[i] = (TextView) findViewById(getResources().getIdentifier("transaction_numpad_" + i, "id", getPackageName()));
+            numButtons[i] = (TextView) rootView.findViewById(getResources().getIdentifier("transaction_numpad_" + i, "id", getActivity().getPackageName()));
 
-        equals = (TextView) findViewById(R.id.transaction_numpad_equals);
-        divide = (TextView) findViewById(R.id.transaction_numpad_divide);
-        multiply = (TextView) findViewById(R.id.transaction_numpad_multiply);
-        plus = (TextView) findViewById(R.id.transaction_numpad_plus);
-        minus = (TextView) findViewById(R.id.transaction_numpad_minus);
-        decimal = (TextView) findViewById(R.id.transaction_numpad_decimal);
+        equals = (TextView) rootView.findViewById(R.id.transaction_numpad_equals);
+        divide = (TextView) rootView.findViewById(R.id.transaction_numpad_divide);
+        multiply = (TextView) rootView.findViewById(R.id.transaction_numpad_multiply);
+        plus = (TextView) rootView.findViewById(R.id.transaction_numpad_plus);
+        minus = (TextView) rootView.findViewById(R.id.transaction_numpad_minus);
+        decimal = (TextView) rootView.findViewById(R.id.transaction_numpad_decimal);
         //=========================================================================================================//
 
-        Intent intent = getIntent();
+        /*
+        noteInput.clearFocus();
+
+        //TODO - dynamically link with corresponding RadioGroup, to avoid errors in case of future change of default selection.
+        selectedType = Manager.Type.EXPENSE;
+
+        //Show the current date in a "d MMMM, YYYY" format.
+        date = LocalDate.now();
+        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
+        dateDisplay.setText(date.toString(dateFormat));
+
+        Bundle arguments = getArguments();
+        //Intent intent = getActivity().getIntent();
+        if (arguments != null && arguments.containsKey(getString(R.string.EXTRA_SECTION))) {
+            selectedSection = (Section) getArguments().getSerializable(getString(R.string.EXTRA_SECTION));
+            switch (selectedSection.getType()) {
+                case INCOMING:
+                    directionRadio.check(R.id.transaction_radio_income);
+                    break;
+                case EXPENSE:
+                    directionRadio.check(R.id.transaction_radio_expense);
+                    break;
+            }
+            selectedType = selectedSection.getType();
+            submitButton.setText(getString(R.string.transaction_add_to) + " " + selectedSection.getName());
+            startedWithSection = true;
+        }*/
+
+        Intent intent = getActivity().getIntent();
         checkForCategoryExtra(intent);
+
 
         //============onClickListeners=============================================================================//
 
@@ -248,7 +263,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                 args.putSerializable(getString(R.string.EXTRA_DATE), date);
                 datePicker.setArguments(args);
 
-                datePicker.show(getSupportFragmentManager(), "testTag");
+                datePicker.show(getFragmentManager(), "testTag");
             }
         });
 
@@ -257,12 +272,12 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
                     case R.id.transaction_radio_expense:
-                        colorizeUI(TransactionActivity.this, R.color.colorOrange, R.drawable.orange_button_9);
+                        colorizeUI(getActivity(), R.color.colorOrange, R.drawable.orange_button_9);
                         selectedType = Manager.Type.EXPENSE;
                         submitButton.setText(getString(R.string.transaction_select_section));
                         break;
                     case R.id.transaction_radio_income:
-                        colorizeUI(TransactionActivity.this, R.color.colorGreen, R.drawable.green_button_9);
+                        colorizeUI(getActivity(), R.color.colorGreen, R.drawable.green_button_9);
 
                         selectedType = Manager.Type.INCOMING;
                         selectedAccount = (Section) accountSelection.getSelectedItem();
@@ -308,7 +323,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                     selectedAccount = (Section) accountSelection.getSelectedItem();
                     if (selectedAccount == null) {
                         accountSelection.requestFocus();
-                        Message.message(TransactionActivity.this, getString(R.string.transaction_select_account));
+                        Message.message(getActivity(), getString(R.string.transaction_select_account));
                         return;
                     }
                     createEntry();
@@ -317,8 +332,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                         @Override
                         public void run() {
                             numpad.setVisibility(View.GONE);
-                            findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
-                            findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
+                            rootView.findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
+                            rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
                             isNumpadDown = true;
                         }
                     });
@@ -327,6 +342,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         });
         //=========================================================================================================//
 
+        return rootView;
     }
 
     private void checkForCategoryExtra(Intent intent) {
@@ -380,10 +396,10 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         LogEntry entry = new LogEntry(date, sum, note, selectedType, selectedAccount, category);
 
         if (Manager.addLogEntry(entry)) {
-            Message.message(TransactionActivity.this, getString(R.string.transaction_success));
-            startActivity(new Intent(TransactionActivity.this, MainActivity.class));
+            Message.message(getActivity(), getString(R.string.transaction_success));
+            startActivity(new Intent(getActivity(), MainActivity.class));
         } else {
-            Message.message(TransactionActivity.this, getString(R.string.transaction_failure));
+            Message.message(getActivity(), getString(R.string.transaction_failure));
         }
     }
 
@@ -428,43 +444,22 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         dateDisplay.setText(date.toString(dateFormat));
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_toolbar, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_currency:
-                return true;
-            case R.id.item_settings:
-                return true;
-            case R.id.item_logout:
-                startActivity(new Intent(TransactionActivity.this, LoginActivity.class));
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * Animates transition between CategorySelector and number-pad, if number-pad is hidden.
      */
     public void onBackPressed() {
         if (isNumpadDown)
-            findViewById(R.id.transaction_section_selection_layout).animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
+            rootView.findViewById(R.id.transaction_section_selection_layout).animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                 @Override
                 public void run() {
-                    findViewById(R.id.transaction_section_selection_layout).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.GONE);
                     numpad.setAlpha(1F);
                     numpad.setVisibility(View.VISIBLE);
                     isNumpadDown = false;
                 }
             });
         else
-            super.onBackPressed();
+            super.getActivity().onBackPressed();
     }
 
     class AccountSpinnerAdapter extends BaseAdapter {
@@ -493,7 +488,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null)
-                convertView = getLayoutInflater().inflate(R.layout.spinner_transaction_category, parent, false);
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.spinner_transaction_category, parent, false);
 
             Section s = dataSet[position];
 
@@ -507,4 +502,3 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         }
     }
 }
-

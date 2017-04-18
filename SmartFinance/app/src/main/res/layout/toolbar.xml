@@ -1,32 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorGreen"
-    app:popupTheme="@style/ThemeOverlay.CustomTheme"
-    android:id="@+id/toolbar"
-    app:theme="@style/OverflowMenu">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/master_layout"
+    tools:context="com.vladimircvetanov.smartfinance.MainActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:theme="@style/AppBarOverlay">
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/smartfinance_icon"/>
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/app_bar"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@color/colorGreen"
+            app:popupTheme="@style/ThemeOverlay.CustomTheme"
+            app:theme="@style/OverflowMenu">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/toolbar_title"
-            android:text="@string/app_name"
-            android:paddingLeft="10dp"
-            android:gravity="center"
-            android:textSize="20sp"/>
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
-</android.support.v7.widget.Toolbar>
+                <ImageView
+                    android:layout_width="@dimen/logo_side"
+                    android:layout_height="@dimen/logo_side"
+                    android:src="@drawable/smartfinance_icon"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/toolbar_title"
+                    android:text="@string/app_name"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/all_view_spacing_small"
+                    android:textSize="@dimen/all_text_size_middle"/>
+
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+</android.support.design.widget.CoordinatorLayout>

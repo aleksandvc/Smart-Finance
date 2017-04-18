@@ -108,7 +108,7 @@ public class MainWithReportActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_navigation_drawer, menu);
         return true;
     }
 

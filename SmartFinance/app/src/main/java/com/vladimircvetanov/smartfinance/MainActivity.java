@@ -1,105 +1,80 @@
 package com.vladimircvetanov.smartfinance;
 
-import android.content.Intent;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.DatePicker;
+import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.vladimircvetanov.smartfinance.model.Section;
-import com.vladimircvetanov.smartfinance.model.User;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import java.util.ArrayList;
-
-import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
     private Toolbar toolbar;
-    private FrameLayout frameLayout;
-    private PieChart pieChart;
-    private ArrayList<PieEntry> percentages;
-    private PieData entry;
-    private PieDataSet pieDataSet;
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
+
+    private TextView userProfile;
+    private TextView toolbarTitle;
+
+    private FragmentManager fragmentManager;
+    private Bundle dataBetweenFragments;
+
+    private TextView dateDisplay;
+    private DateTime date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        frameLayout = (FrameLayout) findViewById(R.id.frame);
-        pieChart = (PieChart) findViewById(R.id.pie_chart);
-        percentages = new ArrayList<>();
-
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // Temporarily created user so I can generate his favourite categories
-        User user = new User("some mail", "some pass");
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        drawDiagram();
-        drawFavouriteIcons();
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
 
-        //I've added buttons to currently extant activities for ease of navigation during development.
-        //Add and remove buttons as needed.
-        //                                      ~Simo
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        userProfile = (TextView) findViewById(R.id.user_profile_link);
 
-        Button toLogIn = (Button) findViewById(R.id.temp_to_login);
-        Button toRegister = (Button) findViewById(R.id.temp_to_register);
-        Button toTransaction = (Button) findViewById(R.id.temp_to_transaction);
-        Button toProfile = (Button) findViewById(R.id.temp_to_profile);
-        Button toInquiry = (Button) findViewById(R.id.to_main_with_report);
+        dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
+        //Show the current date in a "d MMMM, YYYY" format.
+        date = DateTime.now();
+        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
+//        dateDisplay.setText(date.toString(dateFormat));
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.temp_to_login:
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        break;
-                    case R.id.temp_to_register:
-                        startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-                        break;
-                    case R.id.temp_to_transaction:
-                        startActivity(new Intent(MainActivity.this, TransactionActivity.class));
-                        break;
-                    case R.id.temp_to_profile:
-                        User u = (User) getIntent().getSerializableExtra("user");
-                        Intent i = new Intent(MainActivity.this, ProfileActivity.class);
-                        i.putExtra("user",u);
-                        startActivity(i);
-                        break;
-                    case R.id.to_main_with_report:
-                        startActivity(new Intent(MainActivity.this, MainWithReportActivity.class));
-                        break;
-                }
-            }
-        };
-        toLogIn.setOnClickListener(onClickListener);
-        toRegister.setOnClickListener(onClickListener);
-        toTransaction.setOnClickListener(onClickListener);
-        toProfile.setOnClickListener(onClickListener);
-        toInquiry.setOnClickListener(onClickListener);
+        fragmentManager = getSupportFragmentManager();
+        if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
+            fragmentManager.beginTransaction()
+                .add(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
+                .commit();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
@@ -111,65 +86,69 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
-                MainActivity.this.finish();
+                LogoutDialogFragment dialog = LogoutDialogFragment.newInstance();
+                dialog.show(getSupportFragmentManager(), getString(R.string.logout_button));
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void drawDiagram() {
-        percentages.add(new PieEntry(25f));
-        percentages.add(new PieEntry(15f));
-        percentages.add(new PieEntry(5f));
-        percentages.add(new PieEntry(19f));
-        percentages.add(new PieEntry(2f));
-        percentages.add(new PieEntry(13f));
-        percentages.add(new PieEntry(21f));
-
-        pieDataSet = new PieDataSet(percentages, "");
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
-        entry = new PieData(pieDataSet);
-        entry.setValueFormatter(new PercentFormatter());
-
-        pieChart.setUsePercentValues(true);
-        pieChart.setData(entry);
-        pieChart.setDescription(null);
-        pieChart.getLegend().setEnabled(false);
-        pieChart.invalidate();
-    }
-
-    private void drawFavouriteIcons() {
-        int counter = 0;
-        for (final Section section : favouriteCategories) {
-            final ImageView icon = new ImageView(MainActivity.this);
-            icon.setImageResource(section.getIconID());
-            icon.setPadding(30, 30, 30, 30);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(140, 140);
-            lp.gravity = Gravity.CENTER;
-            icon.setLayoutParams(lp);
-
-            float angleDeg = counter++ * 360.0f / favouriteCategories.size() - 90.0f;
-            float angleRad = (float) (angleDeg * Math.PI / 180.0f);
-            // Calculate the position of the view, offset from center (300 px from center).
-            icon.setTranslationX(450 * (float) Math.cos(angleRad));
-            icon.setTranslationY(450 * (float) Math.sin(angleRad));
-            frameLayout.addView(icon);
-
-            icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
-                    intent.putExtra(getString(R.string.EXTRA_SECTION), section);
-                    startActivity(intent);
-
-                    pieChart.setCenterText(section.getName() + "\n" + section.getSum());
-                    pieChart.setHoleColor(getResources().getColor(R.color.colorOrange));
-                    icon.setBackground(getResources().getDrawable(R.drawable.icon_background));
-                }
-            });
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
-}
 
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.nav_accounts:
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+
+            case R.id.nav_favourites:
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+
+            case R.id.nav_income:
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+
+            case R.id.nav_calculator:
+                if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.master_layout, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
+                        .addToBackStack(getString(R.string.transaction_fragment_tag))
+                        .commit();
+                }
+                drawer.closeDrawer(GravityCompat.START);
+                return false;
+
+            case R.id.nav_calendar:
+                /*
+                DialogFragment datePicker = new DatePickerFragment();
+                Bundle args = new Bundle();
+
+                args.putSerializable(getString(date), date);
+                datePicker.setArguments(args);
+                datePicker.show(getSupportFragmentManager(), getString(R.string.calendar_fragment_tag));
+                */
+                drawer.closeDrawer(GravityCompat.START);
+                return false;
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        date = new DateTime(year, month + 1, dayOfMonth, 0, 0);
+        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
+       // dateDisplay.setText(date.toString(dateFormat));
+    }
+}
