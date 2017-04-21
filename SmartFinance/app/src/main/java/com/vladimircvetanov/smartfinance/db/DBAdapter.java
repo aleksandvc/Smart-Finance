@@ -626,6 +626,7 @@ public class DBAdapter {
         return id[0];
     }
 
+
     /**
      * Inner static class which is responsible for the creation of  database.
      * A custom class implementation of SQLiteOpenHelper is created. Database's schema is defined programatically.

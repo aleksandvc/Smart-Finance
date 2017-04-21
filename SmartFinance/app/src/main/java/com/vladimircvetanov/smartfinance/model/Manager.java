@@ -22,12 +22,14 @@ public class Manager {
     private ArrayList<Account> accounts;
     private ArrayList<CategoryExpense> expenseCategories;
     private ArrayList<CategoryIncome> incomeCategories;
+    private ArrayList<Transaction> transactions;
 
 
     private Manager() {
         accounts = new ArrayList<>();
         expenseCategories = new ArrayList<>();
         incomeCategories = new ArrayList<>();
+        transactions = new ArrayList<>();
     }
 
     public static Manager getInstance() {
@@ -64,6 +66,10 @@ public class Manager {
         if(category == null) return false;
         return getInstance().incomeCategories.contains(category);
     }
+    public static boolean containsTransaction(Transaction transaction){
+        if(transaction == null) return false;
+        return getInstance().incomeCategories.contains(transaction);
+    }
 
     /**
      * Get the balance of all active Accounts (INCOMING type Sections) in the {@link Manager#accounts}
@@ -93,6 +99,9 @@ public class Manager {
     }
     public static boolean addIncomeCategory(CategoryIncome category) {
         return category != null && getInstance().incomeCategories.add(category);
+    }
+    public static boolean addTransaction(Transaction transaction) {
+        return transaction != null && getInstance().transactions.add(transaction);
     }
 
 
