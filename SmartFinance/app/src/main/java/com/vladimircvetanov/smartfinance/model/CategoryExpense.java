@@ -6,13 +6,13 @@ package com.vladimircvetanov.smartfinance.model;
 
 public class CategoryExpense extends Category {
 
-    private int iconId;
+
     private boolean isFavourite;
 
 
     public CategoryExpense(String name,boolean isFavourite,int iconId) {
-        super(Type.EXPENSE, name);
+        super(Type.EXPENSE, name,iconId);
         this.isFavourite = isFavourite;
-        this.iconId = iconId;
+
     }
 }

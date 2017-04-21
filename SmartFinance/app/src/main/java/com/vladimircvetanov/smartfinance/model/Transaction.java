@@ -15,6 +15,7 @@ public class Transaction implements Serializable {
     private DateTime date;
     private double sum;
     private String note;
+    private long id;
 
     private Account account;
     private Category category;
@@ -41,6 +42,13 @@ public class Transaction implements Serializable {
         return note;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Account getAccount() {
         return account;

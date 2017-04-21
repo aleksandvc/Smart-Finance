@@ -28,10 +28,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.Account;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.LogEntry;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Section;
+import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -39,13 +43,13 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class TransactionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    private Manager.Type selectedType;
+   // private Manager.Type selectedType;
 
     private Spinner accountSelection;
-    private Section selectedAccount;
+    private Account selectedAccount;
 
     private ListView categorySelection;
-    private Section selectedCategory;
+    private CategoryExpense selectedCategory;
 
     private TextView dateDisplay;
     private DateTime date;
@@ -71,6 +75,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     private TextView decimal;
 
     private TextView submitButton;
+
+    private DBAdapter adapter;
 
     //Counts how far past the decimal point the input number is. Used to block input past 2 decimal positions
     private int decimalPosition = BEFORE_DECIMAL;
@@ -109,6 +115,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        adapter = DBAdapter.getInstance(this);
         FragmentManager fm = getSupportFragmentManager();
         if(fm.getFragments() != null || !fm.getFragments().isEmpty()) {
             fm.beginTransaction()
@@ -133,7 +140,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
         directionRadio = (RadioGroup) findViewById(R.id.transaction_radio);
         directionRadio.check(R.id.transaction_radio_expense);
-        selectedType = Manager.Type.EXPENSE;
+       // selectedType = Manager.Type.EXPENSE;
 
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
@@ -258,14 +265,14 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
                 switch (checkedId) {
                     case R.id.transaction_radio_expense:
                         colorizeUI(TransactionActivity.this, R.color.colorOrange, R.drawable.orange_button_9);
-                        selectedType = Manager.Type.EXPENSE;
+                      //  selectedType = Manager.Type.EXPENSE;
                         submitButton.setText(getString(R.string.transaction_select_section));
                         break;
                     case R.id.transaction_radio_income:
                         colorizeUI(TransactionActivity.this, R.color.colorGreen, R.drawable.green_button_9);
 
-                        selectedType = Manager.Type.INCOMING;
-                        selectedAccount = (Section) accountSelection.getSelectedItem();
+                      //  selectedType = Manager.Type.INCOMING;
+                        selectedAccount = (Account) accountSelection.getSelectedItem();
                         submitButton.setText(getString(R.string.transaction_add_to) + " " + selectedAccount.getName());
                         break;
                 }
@@ -278,7 +285,7 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         accountSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Section s = (Section) accountSelection.getItemAtPosition(position);
+                Account s = (Account) accountSelection.getItemAtPosition(position);
                 selectedAccount = s;
                 if (selectedType == Manager.Type.INCOMING)
                     submitButton.setText(getString(R.string.transaction_add_to) + " " + s.getName());
@@ -292,8 +299,8 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
         categorySelection.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedCategory = (Section) categorySelection.getAdapter().getItem(position);
-                createEntry();
+                selectedCategory = (CategoryExpense) categorySelection.getAdapter().getItem(position);
+                createTransaction();
             }
         });
 
@@ -301,17 +308,17 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
             @Override
             public void onClick(View v) {
                 if (startedWithSection) {
-                    createEntry();
+                    createTransaction();
                     return;
                 }
                 if (selectedType == Manager.Type.INCOMING) {
-                    selectedAccount = (Section) accountSelection.getSelectedItem();
+                    selectedAccount = (Account) accountSelection.getSelectedItem();
                     if (selectedAccount == null) {
                         accountSelection.requestFocus();
                         Message.message(TransactionActivity.this, getString(R.string.transaction_select_account));
                         return;
                     }
-                    createEntry();
+                    createTransaction();
                 } else {
                     numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                         @Override
@@ -331,10 +338,10 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
 
     private void checkForCategoryExtra(Intent intent) {
         if (intent != null && intent.hasExtra(getString(R.string.EXTRA_SECTION))) {
-            Section s = (Section) intent.getSerializableExtra(getString(R.string.EXTRA_SECTION));
-            if (s == null || s.getType() == Manager.Type.INCOMING) return;
+            CategoryExpense s = (CategoryExpense) intent.getSerializableExtra(getString(R.string.EXTRA_SECTION));
+            if (s == null ) return;
 
-            selectedType = s.getType();
+            //selectedType = s.getType();
             selectedCategory = s;
             directionRadio.check(R.id.transaction_radio_expense);
 
@@ -371,20 +378,17 @@ public class TransactionActivity extends AppCompatActivity implements DatePicker
     /**
      * Creates a LogEntry with the note, sum, type and date selected in the Activity and a passed Section.
      */
-    private void createEntry() {
+    private void createTransaction() {
         double sum = Double.parseDouble(numDisplay.getText().toString());
         String note = noteInput.getText().toString();
 
-        Section category = selectedType == Manager.Type.INCOMING ? null : selectedCategory;
+        CategoryExpense category =  selectedCategory;
 
-        LogEntry entry = new LogEntry(date, sum, note, selectedType, selectedAccount, category);
+        Transaction transaction = new Transaction(date, sum, note, selectedAccount, category);
 
-        if (Manager.addLogEntry(entry)) {
-            Message.message(TransactionActivity.this, getString(R.string.transaction_success));
+        adapter.addTransaction(transaction,Manager.getLoggedUser().getId());
             startActivity(new Intent(TransactionActivity.this, MainActivity.class));
-        } else {
-            Message.message(TransactionActivity.this, getString(R.string.transaction_failure));
-        }
+
     }
 
     /**

@@ -6,6 +6,8 @@ package com.vladimircvetanov.smartfinance.model;
 
 public abstract class Category {
 
+
+
     public enum Type {
         INCOME, EXPENSE
     }
@@ -13,11 +15,13 @@ public abstract class Category {
     private Type type;
     private String name;
     private int id;
+    private int iconId;
 
 
-    public Category(Type type, String name) {
+    public Category(Type type, String name,int iconId) {
         this.type = type;
         this.name = name;
+        this.iconId = iconId;
 
     }
 
@@ -29,11 +33,16 @@ public abstract class Category {
         return name;
     }
 
-
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
     }
 
 
+    public int getIconId() {
+        return iconId;
+    }
 }

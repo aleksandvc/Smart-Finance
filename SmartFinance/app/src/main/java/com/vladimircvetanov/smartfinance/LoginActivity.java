@@ -90,8 +90,9 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("user",u);
                     startActivity(intent);
-                    u.setId(adapter.getUserId(email));
                     Manager.setLoggedUser(u);
+                    u.setId(adapter.getId(u.getEmail()));
+
                     session.setLoggedin(true);
 
                 }

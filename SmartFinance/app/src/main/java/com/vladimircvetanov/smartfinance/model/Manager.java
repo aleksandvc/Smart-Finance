@@ -2,6 +2,7 @@ package com.vladimircvetanov.smartfinance.model;
 
 import com.vladimircvetanov.smartfinance.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -18,20 +19,24 @@ public class Manager {
     /**
      * A collection that maintains a list of all Sections (both Income and Expense) and distributes input accordingly.
      */
-    private HashSet<Account>accounts;
+    private ArrayList<Account> accounts;
+    private ArrayList<CategoryExpense> expenseCategories;
+    private ArrayList<CategoryIncome> incomeCategories;
+
 
     private Manager() {
-        accounts = new HashSet<>();
-
+        accounts = new ArrayList<>();
+        expenseCategories = new ArrayList<>();
+        incomeCategories = new ArrayList<>();
     }
 
     public static Manager getInstance() {
         if (instance == null) {
             instance = new Manager();
             //TODO - temporary : for test purposes
-            addSection(new Account("Cash", R.mipmap.letter));
-            addSection(new Account("Debit",R.mipmap.lock));
-            addSection(new Account("Credit", R.mipmap.lockche));
+            addAccount(new Account("Cash", R.mipmap.letter));
+            addAccount(new Account("Debit",R.mipmap.lock));
+            addAccount(new Account("Credit", R.mipmap.lockche));
         }
         return instance;
     }
@@ -47,6 +52,18 @@ public class Manager {
     }
 
 
+    public static boolean containsAccount(Account account){
+        if(account == null) return false;
+        return getInstance().accounts.contains(account);
+    }
+    public static boolean containsExpenseCat(CategoryExpense category){
+        if(category == null) return false;
+        return getInstance().expenseCategories.contains(category);
+    }
+    public static boolean containsIncomeCat(CategoryIncome category){
+        if(category == null) return false;
+        return getInstance().incomeCategories.contains(category);
+    }
 
     /**
      * Get the balance of all active Accounts (INCOMING type Sections) in the {@link Manager#accounts}
@@ -68,8 +85,14 @@ public class Manager {
      * @param account
      * @return <code>true</code> if addition completed successfully
      */
-    public static boolean addSection(Account account) {
+    public static boolean addAccount(Account account) {
         return account != null && getInstance().accounts.add(account);
+    }
+    public static boolean addExpenseCategory(CategoryExpense category) {
+        return category != null && getInstance().expenseCategories.add(category);
+    }
+    public static boolean addIncomeCategory(CategoryIncome category) {
+        return category != null && getInstance().incomeCategories.add(category);
     }
 
 

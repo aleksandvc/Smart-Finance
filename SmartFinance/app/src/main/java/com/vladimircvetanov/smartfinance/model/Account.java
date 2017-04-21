@@ -16,6 +16,7 @@ import java.util.List;
 public class Account implements Serializable, Comparable<Account> {
 
     private String name;
+    private int id;
     private int iconID;
     private double sum;
     private HashMap<Category.Type,ArrayList<Transaction>> transactions;
@@ -39,7 +40,9 @@ public class Account implements Serializable, Comparable<Account> {
     }
 
 
-
+    public int getId() {
+        return id;
+    }
 
     @Override
     public int compareTo(@NonNull Account o) {
@@ -76,6 +79,10 @@ public class Account implements Serializable, Comparable<Account> {
         return iconID;
     }
 
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public double getSum(){ return sum; }
 
