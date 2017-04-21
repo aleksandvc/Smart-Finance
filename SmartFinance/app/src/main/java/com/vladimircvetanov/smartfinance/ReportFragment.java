@@ -2,7 +2,6 @@ package com.vladimircvetanov.smartfinance;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,12 +13,11 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.vladimircvetanov.smartfinance.model.LogEntry;
-import com.vladimircvetanov.smartfinance.model.Manager;
-import com.vladimircvetanov.smartfinance.model.Section;
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.Account;
+import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ReportFragment extends Fragment {
 
@@ -31,11 +29,8 @@ public class ReportFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_report, container, false);
 
         expandableListView = (ExpandableListView) v.findViewById(R.id.inquiry_expandable_list);
-        ArrayList<Section> sections = new ArrayList<>();
-        Section[] expenseSections = Manager.getSections(Manager.Type.EXPENSE);
-        Section[] incomeSections = Manager.getSections(Manager.Type.INCOMING);
-        sections.addAll(Arrays.asList(expenseSections));
-        sections.addAll(Arrays.asList(incomeSections));
+        ArrayList<Account> sections = new ArrayList<>();
+        sections.addAll(DBAdapter.getInstance(getActivity()).getAccountsMap().values());
 
         expandableListView.setAdapter(new ExpandableListAdapter(getActivity(), sections));
 
@@ -45,11 +40,11 @@ public class ReportFragment extends Fragment {
     class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         private Context context;
-        private ArrayList<Section> dataSet;
+        private ArrayList<Account> dataSet;
         private LayoutInflater inflater;
 
 
-        public ExpandableListAdapter(Context context, ArrayList<Section> dataSet) {
+        public ExpandableListAdapter(Context context, ArrayList<Account> dataSet) {
             if (context == null || dataSet == null)
                 throw new IllegalArgumentException("Parameter CAN NOT be null!");
 
@@ -66,7 +61,7 @@ public class ReportFragment extends Fragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return dataSet.get(groupPosition).getLog().size();
+            return dataSet.get(groupPosition).getTransactions().size();
         }
 
         @Override
@@ -76,7 +71,7 @@ public class ReportFragment extends Fragment {
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return dataSet.get(groupPosition).getLog().get(childPosition);
+            return dataSet.get(groupPosition).getTransactions().get(childPosition);
         }
 
         @Override
@@ -99,18 +94,18 @@ public class ReportFragment extends Fragment {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.report_list_group, parent, false);
 
-            Section s = dataSet.get(groupPosition);
+            Account acc = dataSet.get(groupPosition);
 
             ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_group_icon);
-            i.setImageResource(s.getIconID());
+            i.setImageResource(acc.getIconID());
 
             TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_group_name);
-            t1.setText(s.getName());
+            t1.setText(acc.getName());
 
             TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_group_sum);
-            t2.setText("$" + s.getSum());
+            t2.setText("$" + acc.getSum());
 
-            if (s.getType() == Manager.Type.EXPENSE || s.getSum() <= 0)
+            if (acc.getSum() <= 0)
                 t2.setTextColor(ContextCompat.getColor(context, R.color.colorOrange));
             else
                 t2.setTextColor(ContextCompat.getColor(context, R.color.colorGreen));
@@ -123,23 +118,13 @@ public class ReportFragment extends Fragment {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.report_list_item, parent, false);
 
-            LogEntry e = dataSet.get(groupPosition).getLog().get(childPosition);
-
-            ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_item_icon);
-            switch (e.getType()) {
-                case EXPENSE:
-                    i.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.radio_expense_true));
-                    break;
-                case INCOMING:
-                    i.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.radio_income_true));
-                    break;
-            }
+            Transaction t = dataSet.get(groupPosition).getTransactions().get(childPosition);
 
             TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_item_sum);
-            t1.setText("$" + e.getSum());
+            t1.setText("$" + t.getSum());
 
             TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_item_date);
-            t2.setText(e.getDate().toString("dd/MM/YY"));
+            t2.setText(t.getDate().toString("dd/MM/YY"));
 
             return convertView;
         }

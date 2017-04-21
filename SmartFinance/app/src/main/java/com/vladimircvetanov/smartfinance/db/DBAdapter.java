@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.CategoryIncome;
 import com.vladimircvetanov.smartfinance.model.Transaction;
@@ -17,7 +18,9 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.User;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by vladimircvetanov on 04.04.17.
@@ -73,7 +76,19 @@ public class DBAdapter {
         return instance;
     }
 
-
+    public Map<String, Category> getIncomeCategoriesMap(){
+        HashMap<String, Category> temp = new HashMap<>();
+        temp.putAll(incomeCategories);
+        return Collections.unmodifiableMap(temp);
+    }
+    public Map<String, Category> getExpenseCategoriesMap(){
+        HashMap<String, Category> temp = new HashMap<>();
+        temp.putAll(expenseCategories);
+        return Collections.unmodifiableMap(temp);
+    }
+    public Map<String, Account> getAccountsMap(){
+        return Collections.unmodifiableMap(accounts);
+    }
 
     public long getId(String email){
         return registeredUsers.get(email).getId();

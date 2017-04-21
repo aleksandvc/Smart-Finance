@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
-import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
@@ -33,12 +32,11 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
@@ -114,11 +112,11 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         //==============================Initializations============================================================//
 
         accountSelection = (Spinner) rootView.findViewById(R.id.transaction_account_spinner);
-        accountSelection.setAdapter(new AccountSpinnerAdapter(Manager.getInstance().getAccounts()));
+        accountSelection.setAdapter(new AccountSpinnerAdapter(adapter.getAccountsMap().values()));
 
         categorySelection = (ListView) rootView.findViewById(R.id.transaction_account_selection);
-        CategorySpinnerAdapter expenseAdapter = new CategorySpinnerAdapter(Manager.getInstance().getExpenseCategories());
-        CategorySpinnerAdapter incomeAdapter = new CategorySpinnerAdapter(Manager.getInstance().getIncomeCategories());
+        CategorySpinnerAdapter expenseAdapter = new CategorySpinnerAdapter(adapter.getExpenseCategoriesMap().values());
+        CategorySpinnerAdapter incomeAdapter = new CategorySpinnerAdapter(adapter.getIncomeCategoriesMap().values());
 
         noteInput = (EditText) rootView.findViewById(R.id.transaction_note_input);
 
@@ -461,7 +459,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         private ArrayList<Account> dataSet;
 
-        public AccountSpinnerAdapter(List<Account> dataSet) {
+        public AccountSpinnerAdapter(Collection<Account> dataSet) {
             this.dataSet = new ArrayList<>(dataSet);
         }
 
@@ -501,7 +499,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         private ArrayList<Category> dataSet;
 
-        public CategorySpinnerAdapter(List<Category> dataSet) {
+        public CategorySpinnerAdapter(Collection<Category> dataSet) {
             this.dataSet = new ArrayList<>(dataSet);
         }
 
