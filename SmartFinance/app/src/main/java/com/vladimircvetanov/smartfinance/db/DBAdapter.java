@@ -32,6 +32,9 @@ public class DBAdapter {
     static DbHelper helper ;
 
     private static HashMap<String,User> registeredUsers;
+    private static HashMap<String,Account> accounts;
+    private static HashMap<String,CategoryExpense> expenseCategories;
+    private static HashMap<String,CategoryIncome> incomeCategories;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
      */
@@ -58,7 +61,13 @@ public class DBAdapter {
         if(instance == null){
             instance = new DBAdapter(context);
             registeredUsers = new HashMap<>();
+            accounts = new HashMap<>();
+            expenseCategories = new HashMap<>();
+            incomeCategories = new HashMap<>();
             loadUsers();
+            loadAccounts();
+            loadExpenseCategories();
+            loadIncomeCategories();
 
         }
         return instance;
@@ -254,7 +263,7 @@ public class DBAdapter {
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ICON));
                     Account account = new Account(accountName,iconId);
                     account.setId(id);
-                    Manager.addAccount(account);
+                    accounts.put(accountName+"",account);//dva puti go pravim
                 }
                 return null;
             }
@@ -263,7 +272,7 @@ public class DBAdapter {
 
     }
     public boolean existsAccount(Account account){
-        return Manager.containsAccount(account);
+        return accounts.containsKey(account.getName());
     }
 
     public void getAllAccounts(){
@@ -284,7 +293,7 @@ public class DBAdapter {
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
 
-                    Manager.addAccount(new Account(name,icon));
+                    accounts.put(name+"",new Account(name,icon));
 
                 }
                 return null;
@@ -299,7 +308,7 @@ public class DBAdapter {
        new AsyncTask<Void,Void,Void>(){
            @Override
            protected Void doInBackground(Void... params) {
-               if(!Manager.containsAccount(account)) {
+               if(!accounts.containsKey(account.getName())) {
                    SQLiteDatabase db = helper.getWritableDatabase();
 
                    ContentValues values = new ContentValues();
@@ -337,7 +346,36 @@ public class DBAdapter {
         }.execute();
         return count[0];
     }
+    public void editAccount(String oldName,int oldIconId , final String newName, final int newIconId) {
 
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... strings) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+                String oldName = strings[0];
+
+                Account a = accounts.get(oldName);
+
+                ContentValues values = new ContentValues();
+                values.put("name", newName);
+                values.put("iconId", newIconId);
+
+                a.setName(newName);
+                a.setIconID(newIconId);
+                accounts.remove(oldName);
+                accounts.put(newName, a);
+                db.update("Accounts", values, "account_name = ?", new String[]{oldName});
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                Toast.makeText(context, " account edited successfully", Toast.LENGTH_SHORT).show();
+            }
+        }.execute(oldName);
+
+    }
     private static void loadExpenseCategories(){
 
         new AsyncTask<Void,Void,Void>(){
@@ -352,7 +390,7 @@ public class DBAdapter {
                     String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME));
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON));
                     CategoryExpense category = new CategoryExpense(categoryName,false,iconId);
-                    Manager.addExpenseCategory(category);//pravim go dva puti i pri getAllExpenseCategories
+                    expenseCategories.put(categoryName+"",category);//pravim go dva puti i pri getAllExpenseCategories
                 }
                 return null;
             }
@@ -361,7 +399,7 @@ public class DBAdapter {
 
     }
     public boolean existsExpenseCat(CategoryExpense category){
-        return Manager.containsExpenseCat(category);
+        return expenseCategories.containsKey(category.getName());
     }
     public void getAllExpenseCategories(){
 
@@ -381,7 +419,7 @@ public class DBAdapter {
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
 
-                    Manager.addExpenseCategory(new CategoryExpense(name, false,icon));
+                   expenseCategories.put(name+"",new CategoryExpense(name, false,icon));
 
                 }
                 return null;
@@ -395,7 +433,7 @@ public class DBAdapter {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                if(!Manager.containsExpenseCat(category)) {
+                if(!expenseCategories.containsKey(category.getName())) {
                     SQLiteDatabase db = helper.getWritableDatabase();
 
                     ContentValues values = new ContentValues();
@@ -431,6 +469,36 @@ public class DBAdapter {
         }.execute();
         return count[0];
     }
+    public void editExpenseCategory(String oldName,int oldIconId , final String newName, final int newIconId) {
+
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... strings) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+                String oldName = strings[0];
+
+                CategoryExpense c = expenseCategories.get(oldName);
+
+                ContentValues values = new ContentValues();
+                values.put("name", newName);
+                values.put("iconId", newIconId);
+
+                c.setName(newName);
+                c.setIconId(newIconId);
+                expenseCategories.remove(oldName);
+                expenseCategories.put(newName, c);
+                db.update("Expense_Categories", values, "expense_category_name = ?", new String[]{oldName});
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                Toast.makeText(context, " Category edited successfully", Toast.LENGTH_SHORT).show();
+            }
+        }.execute(oldName);
+
+    }
     private static void loadIncomeCategories(){
 
         new AsyncTask<Void,Void,Void>(){
@@ -444,7 +512,7 @@ public class DBAdapter {
                     String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME));
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.INCOME_CATEGORIES_COLUMN_ICON));
                     CategoryIncome category = new CategoryIncome(categoryName,iconId);
-                    Manager.addIncomeCategory(category);//i tuk go pravim dva puti
+                    incomeCategories.put(categoryName+"",category);//i tuk go pravim dva puti
                 }
                 return null;
             }
@@ -453,7 +521,7 @@ public class DBAdapter {
 
     }
     public boolean existsIncomeCat(CategoryIncome category){
-        return Manager.containsIncomeCat(category);
+        return incomeCategories.containsKey(category.getName());
     }
     public void getAllIncomeCategories(){
 
@@ -473,7 +541,7 @@ public class DBAdapter {
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
 
-                    Manager.addIncomeCategory(new CategoryIncome(name,icon));
+                    incomeCategories.put(name+"",new CategoryIncome(name,icon));
 
                 }
                 return null;
@@ -487,7 +555,7 @@ public class DBAdapter {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                if(!Manager.containsIncomeCat(category)) {
+                if(!incomeCategories.containsKey(category.getName())) {
                     SQLiteDatabase db = helper.getWritableDatabase();
 
                     ContentValues values = new ContentValues();
@@ -524,6 +592,36 @@ public class DBAdapter {
         return count[0];
     }
 
+    public void editIncomeCategory(String oldName,int oldIconId , final String newName, final int newIconId) {
+
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... strings) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+                String oldName = strings[0];
+
+                CategoryIncome c = incomeCategories.get(oldName);
+
+                ContentValues values = new ContentValues();
+                values.put("name", newName);
+                values.put("iconId", newIconId);
+
+                c.setName(newName);
+                c.setIconId(newIconId);
+                incomeCategories.remove(oldName);
+                incomeCategories.put(newName, c);
+                db.update("Income_Categories", values, "income_category_name = ?", new String[]{oldName});
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                Toast.makeText(context, " Category edited successfully", Toast.LENGTH_SHORT).show();
+            }
+        }.execute(oldName);
+
+    }
     public void getAllFavCategories(){
 
         new AsyncTask<Void,Void,Void>(){
@@ -542,7 +640,7 @@ public class DBAdapter {
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
 
-                    Manager.addExpenseCategory(new CategoryExpense(name, true,icon));
+                    expenseCategories.put(name+"",new CategoryExpense(name, true,icon));
 
                 }
                 return null;
@@ -556,7 +654,7 @@ public class DBAdapter {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                if(!Manager.containsExpenseCat(category)) {
+                if(!expenseCategories.containsKey(category.getName())) {
                     SQLiteDatabase db = helper.getWritableDatabase();
 
                     ContentValues values = new ContentValues();
@@ -625,6 +723,8 @@ public class DBAdapter {
 
         return id[0];
     }
+
+
 
 
     /**

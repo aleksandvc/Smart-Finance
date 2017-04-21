@@ -84,6 +84,14 @@ public class Account implements Serializable, Comparable<Account> {
         this.id = id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setIconID(int iconID) {
+        this.iconID = iconID;
+    }
+
     public double getSum(){ return sum; }
 
     public List<Transaction> getTransactions() {
