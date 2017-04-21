@@ -105,10 +105,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         //==============================Initializations============================================================//
 
         accountSelection = (Spinner) rootView.findViewById(R.id.transaction_account_spinner);
-        accountSelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.INCOMING)));
+        //accountSelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.INCOMING)));
 
         categorySelection = (ListView) rootView.findViewById(R.id.transaction_account_selection);
-        categorySelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.EXPENSE)));
+        //categorySelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.EXPENSE)));
 
         noteInput = (EditText) rootView.findViewById(R.id.transaction_note_input);
 
