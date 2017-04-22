@@ -26,7 +26,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static final int SELECT_IMAGE = 12 ;
     private ImageView userPic;
-    private Button changePic;
     private EditText changeEmail;
     private EditText changePass;
     private Button editChanges;
@@ -38,7 +37,6 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         userPic = (ImageView) findViewById(R.id.profile_user_pic);
-        changePic = (Button) findViewById(R.id.profile_changepic_button);
         changeEmail = (EditText) findViewById(R.id.profile_email_change);
         changePass = (EditText) findViewById(R.id.profile_pass_change);
         editChanges = (Button) findViewById(R.id.profile_edit_button);
@@ -54,19 +52,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         final String oldData = changeEmail.getText().toString();
         final String oldPass = changePass.getText().toString();
-
-        View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);//
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE);
-            }
-        };
-
-        changePic.setOnClickListener(btnChoosePhotoPressed);
-
 
         editChanges.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,26 +91,8 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        if (requestCode == SELECT_IMAGE) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (imageReturnedIntent != null) {
-                    try {
 
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageReturnedIntent.getData());
 
-                        userPic.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
 }
 

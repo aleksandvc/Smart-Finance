@@ -39,6 +39,7 @@ public class LogoutDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 //dialog.dismiss();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
             }
         });
         return alertDialogBuilder.create();
