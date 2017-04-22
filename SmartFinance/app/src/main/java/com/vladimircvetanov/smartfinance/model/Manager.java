@@ -1,6 +1,7 @@
 package com.vladimircvetanov.smartfinance.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class Manager {
@@ -40,6 +41,7 @@ public class Manager {
     public static User getLoggedUser() {
         return loggedUser;
     }
+
 
     /**
      * Get the balance of all active Accounts (INCOMING type Sections) in the {@link Manager#}
