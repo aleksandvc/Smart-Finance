@@ -20,7 +20,6 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/all_view_spacing_standard"
-
             android:focusable="false"
             android:inputType="date"
             android:textColor="@color/colorOrange"
