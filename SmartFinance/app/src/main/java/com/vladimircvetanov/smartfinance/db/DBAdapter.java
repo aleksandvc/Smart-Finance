@@ -28,16 +28,16 @@ import java.util.Map;
 
 public class DBAdapter {
 
-    Context context;
+    static Context context;
     /**
      * Declaration of fields of the adapter class. A reference to innerclass will executes queries.
      */
     static DbHelper helper ;
 
-    private static HashMap<String,User> registeredUsers;
-    private static HashMap<String,Account> accounts;
-    private static HashMap<String,CategoryExpense> expenseCategories;
-    private static HashMap<String,CategoryIncome> incomeCategories;
+    private static HashMap<String, User> registeredUsers;
+    private static HashMap<String, Account> accounts;
+    private static HashMap<String, CategoryExpense> expenseCategories;
+    private static HashMap<String, CategoryIncome> incomeCategories;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
      */
@@ -404,8 +404,8 @@ public class DBAdapter {
                     long id = cursor.getInt(cursor.getColumnIndex("_id"));
                     String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME));
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON));
-                    CategoryExpense category = new CategoryExpense(categoryName,false,iconId);
-                    expenseCategories.put(categoryName+"",category);//pravim go dva puti i pri getAllExpenseCategories
+                    CategoryExpense category = new CategoryExpense(categoryName, false, iconId);
+                    expenseCategories.put(categoryName + "", category);//pravim go dva puti i pri getAllExpenseCategories
                 }
                 return null;
             }
@@ -442,7 +442,7 @@ public class DBAdapter {
         }.execute();
 
     }
-    public long addExpenseCategory(final CategoryExpense category,final long userId){
+    public static long addExpenseCategory(final CategoryExpense category, final long userId){
         final long[] id = new long[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -465,7 +465,7 @@ public class DBAdapter {
 
         return id[0];
     }
-    public int deleteExpenseCategory(final CategoryExpense category){
+    public static int deleteExpenseCategory(final CategoryExpense category){
         final int[] count = new int[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -663,7 +663,7 @@ public class DBAdapter {
         }.execute();
 
     }
-    public long addFavCategory(final CategoryExpense category,final long userId){
+    public static long addFavCategory(final CategoryExpense category, final long userId){
         final long[] id = new long[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -686,7 +686,7 @@ public class DBAdapter {
 
         return id[0];
     }
-    public int deleteFavCategory(final CategoryExpense category){
+    public static int deleteFavCategory(final CategoryExpense category){
         final int[] count = new int[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -723,10 +723,7 @@ public class DBAdapter {
                 values.put(DbHelper.TRANSACTIONS_COLUMN_ACCOUNTFK,transaction.getAccount().getId());
                 values.put(DbHelper.TRANSACTIONS_COLUMN_CATEGORYFK,transaction.getCategory().getId());
 
-
                 id[0] = db.insert(DbHelper.TABLE_NAME_TRANSACTIONS,null,values);
-
-
                 return null;
             }
 

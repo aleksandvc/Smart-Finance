@@ -1,19 +1,13 @@
 package com.vladimircvetanov.smartfinance.model;
 
-import com.vladimircvetanov.smartfinance.R;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 public class Manager {
 
     /**
      * Transaction types.
      */
-
 
     private static User loggedUser;
     private static Manager instance = null;
@@ -22,9 +16,8 @@ public class Manager {
      * A collection that maintains a list of all Sections (both Income and Expense) and distributes input accordingly.
      */
 
-
+    public static HashSet<Integer> allExpenseIcons;
     private ArrayList<Transaction> transactions;
-
 
     private Manager() {
 
@@ -34,7 +27,6 @@ public class Manager {
     public static Manager getInstance() {
         if (instance == null) {
             instance = new Manager();
-
         }
         return instance;
     }
@@ -49,9 +41,8 @@ public class Manager {
         return loggedUser;
     }
 
-
     /**
-     * Get the balance of all active Accounts (INCOMING type Sections) in the {@link Manager#accounts}
+     * Get the balance of all active Accounts (INCOMING type Sections) in the {@link Manager#}
      *
      * @return balance of all Accounts in masterLog
      */
@@ -63,12 +54,7 @@ public class Manager {
         return sum;
     }*/
 
-
-
     public static boolean addTransaction(Transaction transaction) {
         return transaction != null && getInstance().transactions.add(transaction);
     }
-
-
-
 }

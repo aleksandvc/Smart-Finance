@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -36,7 +35,7 @@ public class Account implements Serializable, Comparable<Account> {
         this.name = name;
         this.iconID = iconID;
 
-       transactions = new HashMap<>();
+        transactions = new HashMap<>();
     }
 
 

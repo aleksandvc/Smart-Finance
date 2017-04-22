@@ -6,7 +6,7 @@ package com.vladimircvetanov.smartfinance.model;
 
 public class CategoryIncome extends Category {
 
-    public CategoryIncome(String name,int iconId) {
-        super(Type.INCOME, name,iconId);
+    public CategoryIncome(String name, int iconId) {
+        super(Type.INCOME, name, iconId);
     }
 }
