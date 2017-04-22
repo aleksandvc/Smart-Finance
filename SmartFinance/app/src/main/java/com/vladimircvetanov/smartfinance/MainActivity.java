@@ -159,8 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        date = new DateTime(year, month + 1, dayOfMonth, 0, 0);
-        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
-       // dateDisplay.setText(date.toString(dateFormat));
+        TransactionFragment t = (TransactionFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.transaction_fragment_tag));
+        if (t != null) t.onDateSet(view, year, month, dayOfMonth);
     }
 }

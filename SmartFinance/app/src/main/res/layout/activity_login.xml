@@ -68,7 +68,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@mipmap/whitelocked"
+            android:src="@mipmap/mylock"
             android:layout_gravity="center" />
 
         <EditText
@@ -83,6 +83,7 @@
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="@dimen/all_text_size_standard"
+            android:layout_marginTop="6dp"
             android:layout_marginLeft="10dp"/>
 
     </LinearLayout>
