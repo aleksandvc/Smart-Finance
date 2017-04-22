@@ -52,7 +52,7 @@
     <string name="logout_message">Are you sure you want to log out?</string>
     <string name="logout_title">Log out!</string>
     <string name="transaction_select_account">Please select an account!</string>
-    <string name="change_favourite_categories">Change favourite categories</string>
+    <string name="change_favourite_categories">Change favourite categories:</string>
 
     <string name="transaction_input_note">add note ...</string>
     <string name="title_activity_navigation">NavigationActivity</string>
