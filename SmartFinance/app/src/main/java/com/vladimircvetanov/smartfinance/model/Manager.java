@@ -17,12 +17,12 @@ public class Manager {
      * A collection that maintains a list of all Sections (both Income and Expense) and distributes input accordingly.
      */
 
-    public static HashSet<Integer> allExpenseIcons;
+    private HashSet<Integer> allExpenseIcons;
     private ArrayList<Transaction> transactions;
 
     private Manager() {
-
         transactions = new ArrayList<>();
+        allExpenseIcons = new HashSet<>();
     }
 
     public static Manager getInstance() {
@@ -58,5 +58,9 @@ public class Manager {
 
     public static boolean addTransaction(Transaction transaction) {
         return transaction != null && getInstance().transactions.add(transaction);
+    }
+
+    public static void addExpenseIcon(int icon) {
+        getInstance().allExpenseIcons.add(icon);
     }
 }

@@ -16,25 +16,26 @@ import java.util.HashSet;
 
 import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
 
-public class IconsListAdapter extends RecyclerView.Adapter<IconsListAdapter.IconViewHolder>{
+public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
 
     private ArrayList<CategoryExpense> categories;
     private Activity activity;
 
-    IconsListAdapter(HashSet<CategoryExpense> favouriteCategories, Activity activity) {
+    FavouritesListAdapter(HashSet<CategoryExpense> favouriteCategories, Activity activity) {
         this.activity = activity;
         categories = new ArrayList<CategoryExpense> (favouriteCategories);
     }
 
     @Override
-    public IconsListAdapter.IconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FavouritesListAdapter.IconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         LayoutInflater inflater = LayoutInflater.from(activity);
         View view = inflater.inflate(R.layout.icons_list_item, parent, false);
         return new IconViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final IconsListAdapter.IconViewHolder holder, final int position) {
+    public void onBindViewHolder(final FavouritesListAdapter.IconViewHolder holder, final int position) {
         final CategoryExpense categoryExpense = categories.get(position);
         holder.image.setImageResource(categoryExpense.getIconId());
 
@@ -47,9 +48,7 @@ public class IconsListAdapter extends RecyclerView.Adapter<IconsListAdapter.Icon
                 holder.removeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //holder.viewGroup.setVisibility(View.GONE);
                         delete(position);
-                        categories.remove(categoryExpense);
                         favouriteCategories.remove(categoryExpense);
                         DBAdapter.deleteFavCategory(categoryExpense);
                     }
@@ -69,16 +68,18 @@ public class IconsListAdapter extends RecyclerView.Adapter<IconsListAdapter.Icon
         notifyItemRemoved(position);
     }
 
-    public class IconViewHolder extends RecyclerView.ViewHolder{
+    public static class IconViewHolder extends RecyclerView.ViewHolder{
 
         ImageView image;
         ImageButton removeButton;
+        ImageButton addButton;
         View viewGroup;
 
         public IconViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
-            removeButton = (ImageButton) itemView.findViewById(R.id.remove_btn);
+            removeButton = (ImageButton) itemView.findViewById(R.id.remove_icon_btn);
+            addButton = (ImageButton) itemView.findViewById(R.id.add_icon_btn);
             this.viewGroup = itemView.findViewById(R.id.viewGroup);
         }
     }

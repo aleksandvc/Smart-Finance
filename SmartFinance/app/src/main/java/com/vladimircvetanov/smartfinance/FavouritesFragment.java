@@ -24,12 +24,12 @@ public class FavouritesFragment extends Fragment {
         moreIconsTitle = (TextView) root.findViewById(R.id.more_icons_title);
 
         favoutitesList = (RecyclerView) root.findViewById(R.id.favourites_list);
-        favoutitesList.setAdapter(new IconsListAdapter(favouriteCategories, getActivity()));
+        favoutitesList.setAdapter(new FavouritesListAdapter(favouriteCategories, getActivity()));
         favoutitesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
         /*
         additionalIconsList = (RecyclerView) root.findViewById(R.id.additional_icons_list);
-        additionalIconsList.setAdapter(new IconsListAdapter(allExpenseIcons, getActivity()));
+        additionalIconsList.setAdapter(new AdditionalIconsListAddapter(allExpenseIcons, getActivity()));
         additionalIconsList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
         */
 
