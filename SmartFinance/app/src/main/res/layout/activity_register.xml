@@ -26,29 +26,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_dialog_email"
-            android:layout_gravity="center" />
+            android:gravity="center"
+            android:layout_marginLeft="10dp"/>
 
         <EditText
             android:id="@+id/register_email_insert"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="6"
             android:layout_height="wrap_content"
             android:hint="e-mail"
+            android:maxLength="40"
+            android:inputType="textWebEmailAddress"
+            android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="@dimen/all_text_size_standard"
-            android:inputType="textWebEmailAddress"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1.55" />
+
+            android:layout_marginLeft="10dp" />
+
 
     </LinearLayout>
 
@@ -56,60 +60,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@mipmap/whitelocked"
-            android:layout_gravity="center"
-            android:background="@color/colorWhite"/>
+            android:src="@mipmap/mylock"
+            android:layout_gravity="center" />
 
         <EditText
             android:id="@+id/register_pass_insert"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="6"
             android:layout_height="wrap_content"
-            android:hint="password        "
-            android:textColor="@color/colorWhite"
-            android:inputType="textPassword"
-            android:textColorHint="@color/colorWhite"
-            android:textSize="@dimen/all_text_size_standard"
+            android:hint="password"
             android:maxLength="20"
             android:maxLines="1"
+            android:layout_marginTop="6dp"
+            android:inputType="textPassword"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:textSize="@dimen/all_text_size_standard"
             android:layout_marginLeft="10dp"/>
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@mipmap/whitelocked"
-            android:layout_gravity="center"
-            android:background="@color/colorWhite"/>
+            android:src="@mipmap/mylock"
+            android:layout_gravity="center" />
 
         <EditText
             android:id="@+id/register_confirm_insert"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="6"
             android:layout_height="wrap_content"
             android:hint="confirm password"
+            android:maxLength="20"
+            android:layout_marginTop="6dp"
+            android:maxLines="1"
             android:inputType="textPassword"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
             android:textSize="@dimen/all_text_size_standard"
-            android:maxLength="20"
-            android:maxLines="1"
             android:layout_marginLeft="10dp"/>
-
     </LinearLayout>
 
     <LinearLayout

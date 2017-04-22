@@ -80,8 +80,6 @@ public class DiagramFragment extends Fragment {
                 }
             }
         });
-        //Temp user
-        User user = new User("pesho@gmail.com", "pesho123");
 
         drawDiagram();
         drawFavouriteIcons();

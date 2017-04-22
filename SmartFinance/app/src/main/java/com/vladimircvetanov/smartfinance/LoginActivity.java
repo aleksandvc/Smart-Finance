@@ -12,7 +12,7 @@ import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.User;
-import com.vladimircvetanov.smartfinance.session.Session;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,7 +22,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button signUp;
 
     private DBAdapter adapter;
-    private  Session session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         signUp = (Button)findViewById(R.id.loggin_signup_button);
 
         adapter = DBAdapter.getInstance(this);
-        session = Session.getInstance(this);
-        session.setLoggedin(false);
 
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -55,26 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         signUp.setOnClickListener(listener);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        session.setLoggedin(false);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        session.setLoggedin(false);
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        session.setLoggedin(false);
-
-    }
-
     private void logIn() {
        final   String email = userEmail.getText().toString();
        final  String pass = userPass.getText().toString();
@@ -85,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 flag[0] = adapter.getUser(email, pass);
-                if(flag[0] && !session.loggedIn()){
+                if(flag[0]){
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("user", u);
                     startActivity(intent);
@@ -95,7 +72,6 @@ public class LoginActivity extends AppCompatActivity {
                     adapter.loadAccounts();
                     adapter.loadExpenseCategories();
                     adapter.loadIncomeCategories();
-                    session.setLoggedin(true);
                 }
                 return null;
             }
