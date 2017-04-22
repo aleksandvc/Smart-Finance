@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
 //        dateDisplay.setText(date.toString(dateFormat));
 
+        /*
+        Bundle bundle = getIntent().getExtras();
+        if (!bundle.isEmpty() && bundle.getSerializable("user") != null) {
+
+        }*/
+
         fragmentManager = getSupportFragmentManager();
         if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
             fragmentManager.beginTransaction()
@@ -112,8 +118,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
 
             case R.id.nav_favourites:
+                if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.master_layout, new FavouritesFragment(), getString(R.string.favourites_fragment_tag))
+                            .addToBackStack(getString(R.string.transaction_fragment_tag))
+                            .commit();
+                }
                 drawer.closeDrawer(GravityCompat.START);
-                return true;
+                return false;
 
             case R.id.nav_income:
                 drawer.closeDrawer(GravityCompat.START);

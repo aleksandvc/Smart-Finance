@@ -23,12 +23,13 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.szugyi.circlemenu.view.CircleLayout;
-import com.vladimircvetanov.smartfinance.model.Section;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.User;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import static com.vladimircvetanov.smartfinance.model.Manager.getLoggedUser;
 import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
 
 public class DiagramFragment extends Fragment {
@@ -43,7 +44,6 @@ public class DiagramFragment extends Fragment {
     //Temp
     private EditText addValue;
     private Button addButton;
-    static User user;
     private CircleLayout circleLayout;
 
     @Override
@@ -81,7 +81,7 @@ public class DiagramFragment extends Fragment {
             }
         });
         //Temp user
-        user = new User("pesho@gmail.com", "pesho123");
+        User user = new User("pesho@gmail.com", "pesho123");
 
         drawDiagram();
         drawFavouriteIcons();
@@ -107,7 +107,7 @@ public class DiagramFragment extends Fragment {
                         startActivity(new Intent(getActivity(), RegisterActivity.class));
                         break;
                     case R.id.temp_to_transaction:
-                        startActivity(new Intent(getActivity(), TransactionActivity.class));
+                        //startActivity(new Intent(getActivity(), TransactionActivity.class));
                         break;
                     case R.id.temp_to_profile:
                         User u = (User) getActivity().getIntent().getSerializableExtra("user");
@@ -116,7 +116,7 @@ public class DiagramFragment extends Fragment {
                         startActivity(i);
                         break;
                     case R.id.to_main_with_report:
-                        startActivity(new Intent(getActivity(), MainWithReportActivity.class));
+                       // startActivity(new Intent(getActivity(), MainWithReportActivity.class));
                         break;
                 }
             }
@@ -141,8 +141,8 @@ public class DiagramFragment extends Fragment {
         pieChart.setData(pieData);
         pieChart.invalidate();
 
-        user.totalSum += entrySum;
-        totalSumButton.setText(String.valueOf(user.totalSum));
+        getLoggedUser().totalSum += entrySum;
+        totalSumButton.setText(String.valueOf(getLoggedUser().totalSum));
     }
 
     void drawDiagram() {
@@ -164,9 +164,9 @@ public class DiagramFragment extends Fragment {
     }
 
     void drawFavouriteIcons() {
-        for (final Section section : favouriteCategories) {
+        for (final CategoryExpense categoryExpense : favouriteCategories) {
             final ImageView icon = new ImageView(getActivity());
-            icon.setImageResource(section.getIconID());
+            icon.setImageResource(categoryExpense.getIconId());
 
             icon.setScaleType(ImageButton.ScaleType.FIT_CENTER);
             CircleLayout.LayoutParams params = new CircleLayout.LayoutParams(120, 120);
@@ -183,14 +183,14 @@ public class DiagramFragment extends Fragment {
                 public void onClick(View v) {
                     TransactionFragment fragment = new TransactionFragment();
                     Bundle arguments = new Bundle();
-                    arguments.putSerializable(getString(R.string.EXTRA_SECTION), section);
+                    arguments.putSerializable(getString(R.string.EXTRA_SECTION), categoryExpense);
                     fragment.setArguments(arguments);
                     getFragmentManager().beginTransaction()
                             .replace(R.id.master_layout, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
                             .addToBackStack(getString(R.string.transaction_fragment_tag))
                             .commit();
 
-                    pieChart.setCenterText(section.getName() + "\n" + section.getSum());
+                    pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
                     pieChart.setHoleColor(getActivity().getColor(R.color.colorGrey));
                     icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
                 }

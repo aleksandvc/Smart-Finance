@@ -24,24 +24,27 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
-import com.vladimircvetanov.smartfinance.message.Message;
-import com.vladimircvetanov.smartfinance.model.LogEntry;
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.Account;
+import com.vladimircvetanov.smartfinance.model.Category;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
-import com.vladimircvetanov.smartfinance.model.Section;
+import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    private Manager.Type selectedType;
-
     private Spinner accountSelection;
-    private Section selectedAccount;
+    private Account selectedAccount;
 
     private ListView categorySelection;
-    private Section selectedCategory;
+    private Category selectedCategory;
 
     private TextView dateDisplay;
     private DateTime date;
@@ -49,7 +52,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     private EditText noteInput;
 
     //Selection between income and expense;
-    private RadioGroup directionRadio;
+    private RadioGroup catTypeRadio;
 
     private TextView numDisplay;
     private ImageButton backspace;
@@ -67,6 +70,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     private TextView decimal;
 
     private TextView submitButton;
+
+    private DBAdapter adapter;
 
     //Counts how far past the decimal point the input number is. Used to block input past 2 decimal positions
     private int decimalPosition = BEFORE_DECIMAL;
@@ -102,13 +107,16 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
 
+        adapter = DBAdapter.getInstance(this.getActivity());
+
         //==============================Initializations============================================================//
 
         accountSelection = (Spinner) rootView.findViewById(R.id.transaction_account_spinner);
-        //accountSelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.INCOMING)));
+        accountSelection.setAdapter(new AccountSpinnerAdapter(adapter.getAccountsMap().values()));
 
         categorySelection = (ListView) rootView.findViewById(R.id.transaction_account_selection);
-        //categorySelection.setAdapter(new AccountSpinnerAdapter(Manager.getSections(Manager.Type.EXPENSE)));
+        CategorySpinnerAdapter expenseAdapter = new CategorySpinnerAdapter(adapter.getExpenseCategoriesMap().values());
+        CategorySpinnerAdapter incomeAdapter = new CategorySpinnerAdapter(adapter.getIncomeCategoriesMap().values());
 
         noteInput = (EditText) rootView.findViewById(R.id.transaction_note_input);
 
@@ -117,9 +125,9 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         submitButton = (TextView) rootView.findViewById(R.id.transaction_submit_btn);
 
-        directionRadio = (RadioGroup) rootView.findViewById(R.id.transaction_radio);
-        directionRadio.check(R.id.transaction_radio_expense);
-        selectedType = Manager.Type.EXPENSE;
+        catTypeRadio = (RadioGroup) rootView.findViewById(R.id.transaction_radio);
+        catTypeRadio.check(R.id.transaction_radio_expense);
+        categorySelection.setAdapter(expenseAdapter);
 
         dateDisplay = (TextView) rootView.findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
@@ -143,36 +151,25 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         decimal = (TextView) rootView.findViewById(R.id.transaction_numpad_decimal);
         //=========================================================================================================//
 
-        /*
-        noteInput.clearFocus();
-
-        //TODO - dynamically link with corresponding RadioGroup, to avoid errors in case of future change of default selection.
-        selectedType = Manager.Type.EXPENSE;
-
-        //Show the current date in a "d MMMM, YYYY" format.
-        date = LocalDate.now();
-        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
-        dateDisplay.setText(date.toString(dateFormat));
-
-        Bundle arguments = getArguments();
-        //Intent intent = getActivity().getIntent();
-        if (arguments != null && arguments.containsKey(getString(R.string.EXTRA_SECTION))) {
-            selectedSection = (Section) getArguments().getSerializable(getString(R.string.EXTRA_SECTION));
-            switch (selectedSection.getType()) {
-                case INCOMING:
-                    directionRadio.check(R.id.transaction_radio_income);
-                    break;
-                case EXPENSE:
-                    directionRadio.check(R.id.transaction_radio_expense);
-                    break;
-            }
-            selectedType = selectedSection.getType();
-            submitButton.setText(getString(R.string.transaction_add_to) + " " + selectedSection.getName());
-            startedWithSection = true;
-        }*/
-
-        Intent intent = getActivity().getIntent();
-        checkForCategoryExtra(intent);
+        //TODO - this needs team desicion on framgnet-comunication method.
+//        Bundle arguments = getArguments();
+//        Intent intent = getActivity().getIntent();
+//        if (arguments != null && arguments.containsKey(getString(R.string.EXTRA_SECTION))) {
+//            selectedSection = (Section) getArguments().getSerializable(getString(R.string.EXTRA_SECTION));
+//            switch (selectedSection.getType()) {
+//                case INCOMING:
+//                    catTypeRadio.check(R.id.transaction_radio_income);
+//                    break;
+//                case EXPENSE:
+//                    catTypeRadio.check(R.id.transaction_radio_expense);
+//                    break;
+//            }
+//            submitButton.setText(getString(R.string.transaction_add_to) + " " + selectedSection.getName());
+//            startedWithSection = true;
+//        }
+//
+//        Intent intent = getActivity().getIntent();
+//        checkForCategoryExtra(intent);
 
 
         //============onClickListeners=============================================================================//
@@ -267,20 +264,20 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             }
         });
 
-        directionRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        catTypeRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
                     case R.id.transaction_radio_expense:
                         colorizeUI(getActivity(), R.color.colorOrange, R.drawable.orange_button_9);
-                        selectedType = Manager.Type.EXPENSE;
+                       // selectedType = Manager.Type.EXPENSE;
                         submitButton.setText(getString(R.string.transaction_select_section));
                         break;
                     case R.id.transaction_radio_income:
                         colorizeUI(getActivity(), R.color.colorGreen, R.drawable.green_button_9);
 
-                        selectedType = Manager.Type.INCOMING;
-                        selectedAccount = (Section) accountSelection.getSelectedItem();
+                      //  selectedType = Manager.Type.INCOMING;
+                        selectedAccount = (Account) accountSelection.getSelectedItem();
                         submitButton.setText(getString(R.string.transaction_add_to) + " " + selectedAccount.getName());
                         break;
                 }
@@ -293,10 +290,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         accountSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Section s = (Section) accountSelection.getItemAtPosition(position);
+                Account s = (Account) accountSelection.getItemAtPosition(position);
                 selectedAccount = s;
-                if (selectedType == Manager.Type.INCOMING)
-                    submitButton.setText(getString(R.string.transaction_add_to) + " " + s.getName());
             }
 
             @Override
@@ -307,39 +302,40 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         categorySelection.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedCategory = (Section) categorySelection.getAdapter().getItem(position);
-                createEntry();
+                selectedCategory = (CategoryExpense) categorySelection.getAdapter().getItem(position);
+                createTransaction();
             }
         });
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (startedWithSection) {
-                    createEntry();
-                    return;
-                }
-                if (selectedType == Manager.Type.INCOMING) {
-                    selectedAccount = (Section) accountSelection.getSelectedItem();
-                    if (selectedAccount == null) {
-                        accountSelection.requestFocus();
-                        Message.message(getActivity(), getString(R.string.transaction_select_account));
-                        return;
-                    }
-                    createEntry();
-                } else {
-                    numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            numpad.setVisibility(View.GONE);
-                            rootView.findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
-                            rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
-                            isNumpadDown = true;
-                        }
-                    });
-                }
-            }
-        });
+        //TODO - REDO listener
+//        submitButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (startedWithSection) {
+//                    createTransaction();
+//                    return;
+//                }
+//                if (getSelectedType() == Category.Type.EXPENSE) {
+//                    selectedAccount = (Account) accountSelection.getSelectedItem();
+//                    if (selectedAccount == null) {
+//                        accountSelection.requestFocus();
+//                        Message.message(getActivity(), getString(R.string.transaction_select_account));
+//                        return;
+//                    }
+//                    createTransaction();
+//                } else {
+//                    numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            numpad.setVisibility(View.GONE);
+//                            rootView.findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
+//                            rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
+//                            isNumpadDown = true;
+//                        }
+//                    });
+//                }
+//            }
+//        });
         //=========================================================================================================//
 
         return rootView;
@@ -347,12 +343,12 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     private void checkForCategoryExtra(Intent intent) {
         if (intent != null && intent.hasExtra(getString(R.string.EXTRA_SECTION))) {
-            Section s = (Section) intent.getSerializableExtra(getString(R.string.EXTRA_SECTION));
-            if (s == null || s.getType() == Manager.Type.INCOMING) return;
+            CategoryExpense s = (CategoryExpense) intent.getSerializableExtra(getString(R.string.EXTRA_SECTION));
+            if (s == null) return;
 
-            selectedType = s.getType();
+            //selectedType = s.getType();
             selectedCategory = s;
-            directionRadio.check(R.id.transaction_radio_expense);
+            catTypeRadio.check(R.id.transaction_radio_expense);
 
             submitButton.setText(getString(R.string.transaction_add_to) + " " + s.getName());
             startedWithSection = true;
@@ -387,20 +383,17 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     /**
      * Creates a LogEntry with the note, sum, type and date selected in the Activity and a passed Section.
      */
-    private void createEntry() {
+    private void createTransaction() {
         double sum = Double.parseDouble(numDisplay.getText().toString());
         String note = noteInput.getText().toString();
 
-        Section category = selectedType == Manager.Type.INCOMING ? null : selectedCategory;
+        Category category =  selectedCategory;
 
-        LogEntry entry = new LogEntry(date, sum, note, selectedType, selectedAccount, category);
+        Transaction transaction = new Transaction(date, sum, note, selectedAccount, category);
 
-        if (Manager.addLogEntry(entry)) {
-            Message.message(getActivity(), getString(R.string.transaction_success));
-            startActivity(new Intent(getActivity(), MainActivity.class));
-        } else {
-            Message.message(getActivity(), getString(R.string.transaction_failure));
-        }
+        adapter.addTransaction(transaction,Manager.getLoggedUser().getId());
+        startActivity(new Intent(this.getActivity(), MainActivity.class));
+
     }
 
     /**
@@ -464,25 +457,25 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     class AccountSpinnerAdapter extends BaseAdapter {
 
-        private Section[] dataSet;
+        private ArrayList<Account> dataSet;
 
-        public AccountSpinnerAdapter(Section[] dataSet) {
-            this.dataSet = dataSet;
+        public AccountSpinnerAdapter(Collection<Account> dataSet) {
+            this.dataSet = new ArrayList<>(dataSet);
         }
 
         @Override
         public int getCount() {
-            return dataSet.length;
+            return dataSet.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return dataSet[position];
+            return dataSet.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return position;
+            return dataSet.get(position).getId();
         }
 
         @Override
@@ -490,15 +483,56 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             if (convertView == null)
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.spinner_transaction_category, parent, false);
 
-            Section s = dataSet[position];
+            Account acc = dataSet.get(position);
 
             TextView t = (TextView) convertView.findViewById(R.id.account_spinner_text);
-            t.setText(s.getName());
+            t.setText(acc.getName());
 
             ImageView i = (ImageView) convertView.findViewById(R.id.account_spinner_icon);
-            i.setImageResource(s.getIconID());
+            i.setImageResource(acc.getIconID());
 
             return convertView;
         }
     }
+
+    class CategorySpinnerAdapter extends BaseAdapter {
+
+        private ArrayList<Category> dataSet;
+
+        public CategorySpinnerAdapter(Collection<Category> dataSet) {
+            this.dataSet = new ArrayList<>(dataSet);
+        }
+
+        @Override
+        public int getCount() {
+            return dataSet.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return dataSet.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return dataSet.get(position).getId();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null)
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.spinner_transaction_category, parent, false);
+
+            Category cat = dataSet.get(position);
+
+            TextView t = (TextView) convertView.findViewById(R.id.account_spinner_text);
+            t.setText(cat.getName());
+
+            ImageView i = (ImageView) convertView.findViewById(R.id.account_spinner_icon);
+            i.setImageResource(cat.getIconId());
+
+            return convertView;
+        }
+    }
+
 }

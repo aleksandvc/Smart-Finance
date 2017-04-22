@@ -2,12 +2,11 @@ package com.vladimircvetanov.smartfinance;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
@@ -79,23 +78,22 @@ public class LoginActivity extends AppCompatActivity {
     private void logIn() {
        final   String email = userEmail.getText().toString();
        final  String pass = userPass.getText().toString();
-        final User u = new User(email,pass);
+        final User u = new User(email, pass);
         final boolean[] flag = new boolean[1];
         new AsyncTask<Void,Void,Void>(){
 
             @Override
             protected Void doInBackground(Void... params) {
-                flag[0] = adapter.getUser(email,pass);
+                flag[0] = adapter.getUser(email, pass);
                 if(flag[0] && !session.loggedIn()){
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("user",u);
+                    intent.putExtra("user", u);
                     startActivity(intent);
-                    u.setId(adapter.getUserId(email));
                     Manager.setLoggedUser(u);
+                    u.setId(adapter.getId(u.getEmail()));
+
                     session.setLoggedin(true);
-
                 }
-
                 return null;
             }
 

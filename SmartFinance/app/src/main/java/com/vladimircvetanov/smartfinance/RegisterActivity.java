@@ -48,7 +48,6 @@ public class RegisterActivity extends AppCompatActivity {
                if(signUp()){
                    startActivity(new Intent(RegisterActivity.this,MainActivity.class));
                }
-
             }
         });
     }

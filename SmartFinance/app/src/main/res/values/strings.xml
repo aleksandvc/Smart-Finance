@@ -43,6 +43,7 @@
     <!-- FRAGMENT TAGS -->
     <string name="transaction_fragment_tag">Transaction Fragment</string>
     <string name="diagram_fragment_tag">Diagram Fragment</string>
+    <string name="favourites_fragment_tag">Favourites Fragment</string>
     <string name="calendar_fragment_tag">Calendar</string>
 
     <!-- MESSAGES -->
