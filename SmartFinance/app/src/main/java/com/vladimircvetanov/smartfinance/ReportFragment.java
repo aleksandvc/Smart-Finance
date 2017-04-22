@@ -30,7 +30,7 @@ public class ReportFragment extends Fragment {
 
         expandableListView = (ExpandableListView) v.findViewById(R.id.inquiry_expandable_list);
         ArrayList<Account> sections = new ArrayList<>();
-        sections.addAll(DBAdapter.getInstance(getActivity()).getAccountsMap().values());
+        sections.addAll(DBAdapter.getInstance(getActivity()).getCachedAccounts().values());
 
         expandableListView.setAdapter(new ExpandableListAdapter(getActivity(), sections));
 
@@ -97,7 +97,7 @@ public class ReportFragment extends Fragment {
             Account acc = dataSet.get(groupPosition);
 
             ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_group_icon);
-            i.setImageResource(acc.getIconID());
+            i.setImageResource(acc.getIconId());
 
             TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_group_name);
             t1.setText(acc.getName());

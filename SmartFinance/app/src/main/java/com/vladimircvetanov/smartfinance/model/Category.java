@@ -1,10 +1,12 @@
 package com.vladimircvetanov.smartfinance.model;
 
+import com.vladimircvetanov.smartfinance.RowDisplayable;
+
 /**
  * Created by vladimircvetanov on 18.04.17.
  */
 
-public abstract class Category {
+public abstract class Category implements RowDisplayable {
 
     public enum Type {INCOME, EXPENSE}
 

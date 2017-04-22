@@ -2,6 +2,8 @@ package com.vladimircvetanov.smartfinance.model;
 
 import android.support.annotation.NonNull;
 
+import com.vladimircvetanov.smartfinance.RowDisplayable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,31 +11,29 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Section class represents an Income Account or an Expense Category.
- * Sections should be unique by name + type.
  */
-public class Account implements Serializable, Comparable<Account> {
+public class Account implements Serializable, Comparable<Account>,RowDisplayable {
 
     private String name;
     private int id;
-    private int iconID;
+    private int iconId;
     private double sum;
     private HashMap<Category.Type,ArrayList<Transaction>> transactions;
 
     /**
-     * Section constructor.
-     * @param name Section name : a non-null and not-empty String.
-     * @param iconID Resource ID for icon image.
+     * Account constructor.
+     * @param name Account name : a non-null and not-empty String.
+     * @param iconId Resource ID for icon image.
      */
-    public Account(@NonNull String name, int iconID) {
+    public Account(@NonNull String name, int iconId) {
         if (name == null || name.isEmpty())
             throw new IllegalArgumentException("The Section name must be a non-null and not-empty string!");
-        if (iconID == -1)
+        if (iconId == -1)
             throw new IllegalArgumentException();
 
         this.sum = 0.0;
         this.name = name;
-        this.iconID = iconID;
+        this.iconId = iconId;
 
         transactions = new HashMap<>();
     }
@@ -74,8 +74,8 @@ public class Account implements Serializable, Comparable<Account> {
         return name;
     }
 
-    public int getIconID() {
-        return iconID;
+    public int getIconId() {
+        return iconId;
     }
 
 
@@ -87,8 +87,8 @@ public class Account implements Serializable, Comparable<Account> {
         this.name = name;
     }
 
-    public void setIconID(int iconID) {
-        this.iconID = iconID;
+    public void setIconId(int iconId) {
+        this.iconId = iconId;
     }
 
     public double getSum(){ return sum; }

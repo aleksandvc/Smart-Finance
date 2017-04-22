@@ -9,9 +9,7 @@
         android:id="@+id/transaction_top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-
-       >
+        android:layout_marginTop="50dp">
 
         <TextView
             android:id="@+id/transaction_date_display"

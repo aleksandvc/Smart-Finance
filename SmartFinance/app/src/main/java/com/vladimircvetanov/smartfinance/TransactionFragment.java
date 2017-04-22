@@ -12,12 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -35,13 +33,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    private DBAdapter adapter;
-
+    private DBAdapter dbAdapter;
 
     //Selection radio between income and expense;
     private RadioGroup catTypeRadio;
@@ -105,54 +99,49 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     //=======CALCULATOR==============//
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
+        initializeUiObjects();
 
-        adapter = DBAdapter.getInstance(this.getActivity());
+        int uId = (int) Manager.getLoggedUser().getId();
 
-        //==============================Initializations============================================================//
+        dbAdapter = DBAdapter.getInstance(this.getActivity());
 
-        accountSelection = (Spinner) rootView.findViewById(R.id.transaction_account_spinner);
-        accountSelection.setAdapter(new AccountSpinnerAdapter(adapter.getAccountsMap().values()));
+        dbAdapter.addAccount(new Account("Cash", R.mipmap.smartfinance_icon), uId);
+        dbAdapter.addAccount(new Account("Bash", R.mipmap.smartfinance_icon), uId);
+        dbAdapter.addAccount(new Account("Rash", R.mipmap.smartfinance_icon), uId);
 
-        categorySelection = (ListView) rootView.findViewById(R.id.transaction_account_selection);
-        final CategorySpinnerAdapter expenseAdapter = new CategorySpinnerAdapter(adapter.getExpenseCategoriesMap().values());
-        final CategorySpinnerAdapter incomeAdapter = new CategorySpinnerAdapter(adapter.getIncomeCategoriesMap().values());
+//        dbAdapter.addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("House", true, R.mipmap.home),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),uId);
+//        dbAdapter.addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),uId);
 
-        noteInput = (EditText) rootView.findViewById(R.id.transaction_note_input);
+        dbAdapter.getAllAccounts();
+        dbAdapter.getAllExpenseCategories();
+        dbAdapter.getAllIncomeCategories();
+        dbAdapter.getAllFavCategories();
 
-        numDisplayBase = rootView.findViewById(R.id.transaction_number_display);
-        numpad = rootView.findViewById(R.id.transaction_numpad);
-
-        submitButton = (TextView) rootView.findViewById(R.id.transaction_submit_btn);
-
-        catTypeRadio = (RadioGroup) rootView.findViewById(R.id.transaction_radio);
         catTypeRadio.check(R.id.transaction_radio_expense);
+
+        accountSelection.setAdapter(new RowViewAdapter<Account>(inflater, dbAdapter.getCachedAccounts().values()));
+
+        final RowViewAdapter<Category> expenseAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedExpenseCategories().values());
+        final RowViewAdapter<Category> incomeAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedIncomeCategories().values());
         categorySelection.setAdapter(expenseAdapter);
 
-        dateDisplay = (TextView) rootView.findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
-        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
+        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
 
-        numDisplay = (TextView) rootView.findViewById(R.id.transaction_number_display_text);
-        backspace = (ImageButton) rootView.findViewById(R.id.transaction_number_display_backspace);
-
-        //Seeing as they act almost identically, put all numeric buttons in an array for easier manipulation.
-        numButtons = new TextView[10];
-        for (int i = 0; i <= 9; i++)
-            numButtons[i] = (TextView) rootView.findViewById(getResources().getIdentifier("transaction_numpad_" + i, "id", getActivity().getPackageName()));
-
-        equals = (TextView) rootView.findViewById(R.id.transaction_numpad_equals);
-        divide = (TextView) rootView.findViewById(R.id.transaction_numpad_divide);
-        multiply = (TextView) rootView.findViewById(R.id.transaction_numpad_multiply);
-        plus = (TextView) rootView.findViewById(R.id.transaction_numpad_plus);
-        minus = (TextView) rootView.findViewById(R.id.transaction_numpad_minus);
-        decimal = (TextView) rootView.findViewById(R.id.transaction_numpad_decimal);
-        //=========================================================================================================//
 
 //        checkForCategoryExtra();
 
@@ -173,8 +162,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                 datePicker.show(getFragmentManager(), "testTag");
             }
         });
-
-
 
         catTypeRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -208,7 +195,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         categorySelection.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedCategory = (Category) categorySelection.getSelectedItem();
+                selectedCategory = (Category) categorySelection.getItemAtPosition(position);
+                selectedAccount = (Account) accountSelection.getSelectedItem();
                 createTransaction();
             }
         });
@@ -217,7 +205,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                     @Override
                     public void run() {
@@ -229,8 +216,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                 });
             }
         });
-        //=========================================================================================================//
 
+        //=========================================================================================================//
         //------------CALCULATOR_LISTENERS------------------------------------------------------------------//
         /**
          * On arithmetic button pressed -> execute stored {@link TransactionActivity#currentOperation}
@@ -329,7 +316,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     /**
      * Changes the colours and background of UI elements for the TransactionActivity.
-     * @param c Activity Context.
+     *
+     * @param c           Activity Context.
      * @param colourID
      * @param ninePatchID
      */
@@ -353,17 +341,20 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     }
 
     /**
-     * Creates a LogEntry with the note, sum, type and date selected in the Activity and a passed Section.
+     * Creates a Transaction with the note, sum, type and date selected in the Activity and a passed Section.
      */
     private void createTransaction() {
         double sum = Double.parseDouble(numDisplay.getText().toString());
         String note = noteInput.getText().toString();
 
-        Category category =  selectedCategory;
+        Account account = selectedAccount;
+        Category category = selectedCategory;
 
-        Transaction transaction = new Transaction(date, sum, note, selectedAccount, category);
+        Transaction transaction = new Transaction(date, sum, note, account, category);
 
-        adapter.addTransaction(transaction,Manager.getLoggedUser().getId());
+        dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
+        account.addTransaction(transaction);
+
         startActivity(new Intent(this.getActivity(), MainActivity.class));
 
     }
@@ -427,84 +418,34 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             super.getActivity().onBackPressed();
     }
 
-    class AccountSpinnerAdapter extends BaseAdapter {
+    /**
+     * Moved all the .findViewById([...]) methods here, because the onCreateView was getting a bit cluttered.
+     */
+    private void initializeUiObjects() {
+        catTypeRadio = (RadioGroup) rootView.findViewById(R.id.transaction_radio);
+        dateDisplay = (TextView) rootView.findViewById(R.id.transaction_date_display);
 
-        private ArrayList<Account> dataSet;
+        noteInput = (EditText) rootView.findViewById(R.id.transaction_note_input);
+        accountSelection = (Spinner) rootView.findViewById(R.id.transaction_account_spinner);
 
-        public AccountSpinnerAdapter(Collection<Account> dataSet) {
-            this.dataSet = new ArrayList<>(dataSet);
-        }
+        numDisplayBase = rootView.findViewById(R.id.transaction_number_display);
+        numDisplay = (TextView) rootView.findViewById(R.id.transaction_number_display_text);
+        backspace = (ImageButton) rootView.findViewById(R.id.transaction_number_display_backspace);
 
-        @Override
-        public int getCount() {
-            return dataSet.size();
-        }
+        numpad = rootView.findViewById(R.id.transaction_numpad);
 
-        @Override
-        public Object getItem(int position) {
-            return dataSet.get(position);
-        }
+        //Seeing as they act almost identically, put all numeric buttons in an array for easier manipulation.
+        numButtons = new TextView[10];
+        for (int i = 0; i <= 9; i++)
+            numButtons[i] = (TextView) rootView.findViewById(getResources().getIdentifier("transaction_numpad_" + i, "id", getActivity().getPackageName()));
+        decimal = (TextView) rootView.findViewById(R.id.transaction_numpad_decimal);
+        equals = (TextView) rootView.findViewById(R.id.transaction_numpad_equals);
+        divide = (TextView) rootView.findViewById(R.id.transaction_numpad_divide);
+        multiply = (TextView) rootView.findViewById(R.id.transaction_numpad_multiply);
+        plus = (TextView) rootView.findViewById(R.id.transaction_numpad_plus);
+        minus = (TextView) rootView.findViewById(R.id.transaction_numpad_minus);
 
-        @Override
-        public long getItemId(int position) {
-            return dataSet.get(position).getId();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.spinner_transaction_category, parent, false);
-
-            Account acc = dataSet.get(position);
-
-            TextView t = (TextView) convertView.findViewById(R.id.account_spinner_text);
-            t.setText(acc.getName());
-
-            ImageView i = (ImageView) convertView.findViewById(R.id.account_spinner_icon);
-            i.setImageResource(acc.getIconID());
-
-            return convertView;
-        }
+        categorySelection = (ListView) rootView.findViewById(R.id.transaction_account_selection);
+        submitButton = (TextView) rootView.findViewById(R.id.transaction_submit_btn);
     }
-
-    class CategorySpinnerAdapter extends BaseAdapter {
-
-        private ArrayList<Category> dataSet;
-
-        public CategorySpinnerAdapter(Collection<Category> dataSet) {
-            this.dataSet = new ArrayList<>(dataSet);
-        }
-
-        @Override
-        public int getCount() {
-            return dataSet.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return dataSet.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return dataSet.get(position).getId();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.spinner_transaction_category, parent, false);
-
-            Category cat = dataSet.get(position);
-
-            TextView t = (TextView) convertView.findViewById(R.id.account_spinner_text);
-            t.setText(cat.getName());
-
-            ImageView i = (ImageView) convertView.findViewById(R.id.account_spinner_icon);
-            i.setImageResource(cat.getIconId());
-
-            return convertView;
-        }
-    }
-
 }

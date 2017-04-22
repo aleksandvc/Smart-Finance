@@ -74,17 +74,17 @@ public class DBAdapter {
         return instance;
     }
 
-    public Map<String, Category> getIncomeCategoriesMap(){
+    public Map<String, Category> getCachedIncomeCategories(){
         HashMap<String, Category> temp = new HashMap<>();
         temp.putAll(incomeCategories);
         return Collections.unmodifiableMap(temp);
     }
-    public Map<String, Category> getExpenseCategoriesMap(){
+    public Map<String, Category> getCachedExpenseCategories(){
         HashMap<String, Category> temp = new HashMap<>();
         temp.putAll(expenseCategories);
         return Collections.unmodifiableMap(temp);
     }
-    public Map<String, Account> getAccountsMap(){
+    public Map<String, Account> getCachedAccounts(){
         return Collections.unmodifiableMap(accounts);
     }
 
@@ -327,7 +327,7 @@ public class DBAdapter {
                    ContentValues values = new ContentValues();
 
                    values.put(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,account.getName());
-                   values.put(DbHelper.ACCOUNTS_COLUMN_ICON,account.getIconID());
+                   values.put(DbHelper.ACCOUNTS_COLUMN_ICON,account.getIconId());
                    values.put(DbHelper.ACCOUNTS_COLUMN_USERFK,userId);
 
                    id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
@@ -374,7 +374,7 @@ public class DBAdapter {
                 values.put("iconId", newIconId);
 
                 a.setName(newName);
-                a.setIconID(newIconId);
+                a.setIconId(newIconId);
                 accounts.remove(oldName);
                 accounts.put(newName, a);
                 db.update("Accounts", values, "account_name = ?", new String[]{oldName});
