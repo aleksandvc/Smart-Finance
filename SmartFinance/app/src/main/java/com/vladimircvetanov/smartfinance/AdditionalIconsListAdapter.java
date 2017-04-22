@@ -46,20 +46,23 @@ public class AdditionalIconsListAdapter extends RecyclerView.Adapter<FavouritesL
                 holder.addButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        addCategoryIfRoom(holder.image);
+                        addCategoryIfRoom(holder.image, holder);
                     }
                 });
             }
         });
     }
 
-    private void addCategoryIfRoom(ImageView image) {
+    private void addCategoryIfRoom(ImageView image, FavouritesListAdapter.IconViewHolder holder) {
         if (favouriteCategories.size() < 9) {
             // popup dialog fragment
             //with icon image
             //and edit text for name
             //cancel and add btns
         } else {
+            holder.addButton.setVisibility(View.GONE);
+            image.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorTransparent));
+
             Toast.makeText(activity, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
         }
     }

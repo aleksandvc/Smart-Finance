@@ -184,7 +184,7 @@ public class DiagramFragment extends Fragment {
                     arguments.putSerializable(getString(R.string.EXTRA_SECTION), categoryExpense);
                     fragment.setArguments(arguments);
                     getFragmentManager().beginTransaction()
-                            .replace(R.id.master_layout, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
+                            .replace(R.id.master_layout, fragment, getString(R.string.transaction_fragment_tag))
                             .addToBackStack(getString(R.string.transaction_fragment_tag))
                             .commit();
 

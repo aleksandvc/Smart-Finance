@@ -29,7 +29,6 @@ public class FavouritesFragment extends Fragment {
         favouritesList.setAdapter(new FavouritesListAdapter(favouriteCategories, getActivity()));
         favouritesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
-
         additionalIconsList = (RecyclerView) root.findViewById(R.id.additional_icons_list);
         additionalIconsList.setAdapter(new AdditionalIconsListAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity()));
         additionalIconsList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
