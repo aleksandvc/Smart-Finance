@@ -13,7 +13,10 @@
     <TextView
         android:id="@+id/more_icons_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/appbar_height"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/all_text_size_standard"
         android:layout_below="@+id/favourites_list"
         android:text="Change favourite categories" />
 

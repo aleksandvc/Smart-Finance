@@ -76,7 +76,6 @@ public class User implements Serializable {
         for (CategoryExpense category : favouriteCategories) {
             addExpenseCategory(category, this.getId());
             addFavCategory(category, this.getId());
-            Manager.allExpenseIcons.add(category.getIconId());
         }
     }
 }
