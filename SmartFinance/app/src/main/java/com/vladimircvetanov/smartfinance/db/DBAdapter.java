@@ -68,9 +68,7 @@ public class DBAdapter {
             expenseCategories = new HashMap<>();
             incomeCategories = new HashMap<>();
             loadUsers();
-            loadAccounts();
-            loadExpenseCategories();
-            loadIncomeCategories();
+
 
         }
         return instance;
@@ -264,7 +262,7 @@ public class DBAdapter {
     }
 
 
-    private static void loadAccounts(){
+    public static void loadAccounts(){
 
         new AsyncTask<Void,Void,Void>(){
 
@@ -391,7 +389,7 @@ public class DBAdapter {
         }.execute(oldName);
 
     }
-    private static void loadExpenseCategories(){
+    public static void loadExpenseCategories(){
 
         new AsyncTask<Void,Void,Void>(){
 
@@ -514,7 +512,7 @@ public class DBAdapter {
         }.execute(oldName);
 
     }
-    private static void loadIncomeCategories(){
+    public static void loadIncomeCategories(){
 
         new AsyncTask<Void,Void,Void>(){
 

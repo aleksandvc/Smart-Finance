@@ -20,6 +20,7 @@ public class User implements Serializable {
     public static HashSet<Account> accounts;
     public static HashSet<CategoryExpense> favouriteCategories;
 
+
     public User(String email, String password) {
         if (email != null && !email.isEmpty()) {
             this.email = email;
@@ -31,6 +32,7 @@ public class User implements Serializable {
         accounts = new HashSet<>();
         favouriteCategories = new HashSet<>();
         addDefaultCategories();
+
     }
 
     public String getEmail() {
