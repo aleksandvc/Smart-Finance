@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:layout_marginTop="@dimen/appbar_height">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/favourites_list"
