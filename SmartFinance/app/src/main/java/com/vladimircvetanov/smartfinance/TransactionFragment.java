@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
@@ -195,7 +196,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (startedWithCategory) {
+                if (!startedWithCategory) {
                     numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                         @Override
                         public void run() {
@@ -294,11 +295,14 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     }
 
     private boolean checkForCategoryExtra() {
-        Category cat = (Category) getArguments().getSerializable(getString(R.string.EXTRA_CATEGORY));
+        Bundle args = getArguments();
+        if (args == null){
+            return false;
+        }
+        Category cat = (Category) args.getSerializable(getString(R.string.EXTRA_SECTION));
         if (cat != null){
             switch (cat.getType()){
                 case EXPENSE:
-                    catTypeRadio.check(R.id.transaction_radio_income);
                     catTypeRadio.check(R.id.transaction_radio_expense);
                     break;
                 case INCOME:
@@ -306,7 +310,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                     break;
             }
             selectedCategory = cat;
-            submitButton.setText(getString(R.string.transaction_add_to)+ cat.getName());
+            submitButton.setText(getString(R.string.transaction_add_to)+ " " + cat.getName());
             return true;
         }
         return false;

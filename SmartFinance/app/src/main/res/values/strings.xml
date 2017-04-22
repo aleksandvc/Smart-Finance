@@ -8,7 +8,7 @@
     <string name="settings">Settings</string>
 
     <!-- EXTRA'S KEYS -->
-    <string name="EXTRA_CATEGORY">KEY_CATEGORY</string>
+    <string name="EXTRA_SECTION">KEY_CATEGORY</string>
     <string name="EXTRA_DATE">KEY_DATE</string>
 
     <!-- NAVIGATION ITEMS -->
