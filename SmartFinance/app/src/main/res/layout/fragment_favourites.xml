@@ -18,10 +18,13 @@
         android:paddingLeft="@dimen/activity_vertical_margin"
         android:textSize="@dimen/all_text_size_standard"
         android:layout_below="@+id/favourites_list"
-        android:text="Change favourite categories" />
+        android:text="@string/change_favourite_categories"
+        android:background="@color/colorGrey"
+        android:textColor="@color/colorGreen"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/additional_icons_list"
+        android:layout_below="@id/more_icons_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
