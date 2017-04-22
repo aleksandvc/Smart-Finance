@@ -92,6 +92,9 @@ public class LoginActivity extends AppCompatActivity {
                     Manager.setLoggedUser(u);
                     u.setId(adapter.getId(u.getEmail()));
 
+                    adapter.loadAccounts();
+                    adapter.loadExpenseCategories();
+                    adapter.loadIncomeCategories();
                     session.setLoggedin(true);
                 }
                 return null;
