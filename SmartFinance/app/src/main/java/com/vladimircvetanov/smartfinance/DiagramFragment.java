@@ -173,7 +173,7 @@ public class DiagramFragment extends Fragment {
             icon.setLayoutParams(params);
 
             icon.setPadding(30, 30, 30, 30);
-            icon.setBackgroundColor(getActivity().getColor(R.color.colorTransparent));
+            icon.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorTransparent));
 
             circleLayout.addView(icon);
             circleLayout.setRotating(false);
@@ -191,7 +191,7 @@ public class DiagramFragment extends Fragment {
                             .commit();
 
                     pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
-                    pieChart.setHoleColor(getActivity().getColor(R.color.colorGrey));
+                    pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
                     icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
                 }
             });

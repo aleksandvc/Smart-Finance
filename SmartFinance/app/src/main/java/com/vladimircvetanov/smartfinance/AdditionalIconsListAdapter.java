@@ -1,6 +1,7 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,7 @@ public class AdditionalIconsListAdapter extends RecyclerView.Adapter<FavouritesL
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.image.setBackgroundColor(activity.getResources().getColor(R.color.colorGrey));
+                holder.image.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorGrey));
                 holder.addButton.setVisibility(View.VISIBLE);
 
                 holder.removeButton.setOnClickListener(new View.OnClickListener() {
