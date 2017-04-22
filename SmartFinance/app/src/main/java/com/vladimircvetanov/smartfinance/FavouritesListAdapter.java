@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
+import com.vladimircvetanov.smartfinance.model.Manager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -51,6 +52,8 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
                     public void onClick(View v) {
                         delete(position);
                         favouriteCategories.remove(categoryExpense);
+                        Manager.getInstance();
+                        Manager.addExpenseIcon(categoryExpense.getIconId());
                         DBAdapter.deleteFavCategory(categoryExpense);
                     }
                 });

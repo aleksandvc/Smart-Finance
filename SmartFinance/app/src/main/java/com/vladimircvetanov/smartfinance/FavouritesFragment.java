@@ -9,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.model.Manager;
+
 import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
 
 public class FavouritesFragment extends Fragment {
 
-    private RecyclerView favoutitesList;
+    private RecyclerView favouritesList;
     private RecyclerView additionalIconsList;
     private TextView moreIconsTitle;
 
@@ -23,15 +25,14 @@ public class FavouritesFragment extends Fragment {
 
         moreIconsTitle = (TextView) root.findViewById(R.id.more_icons_title);
 
-        favoutitesList = (RecyclerView) root.findViewById(R.id.favourites_list);
-        favoutitesList.setAdapter(new FavouritesListAdapter(favouriteCategories, getActivity()));
-        favoutitesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
+        favouritesList = (RecyclerView) root.findViewById(R.id.favourites_list);
+        favouritesList.setAdapter(new FavouritesListAdapter(favouriteCategories, getActivity()));
+        favouritesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
-        /*
+
         additionalIconsList = (RecyclerView) root.findViewById(R.id.additional_icons_list);
-        additionalIconsList.setAdapter(new AdditionalIconsListAddapter(allExpenseIcons, getActivity()));
+        additionalIconsList.setAdapter(new AdditionalIconsListAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity()));
         additionalIconsList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
-        */
 
         return root;
     }

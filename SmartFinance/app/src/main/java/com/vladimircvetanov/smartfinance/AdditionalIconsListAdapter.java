@@ -6,9 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
 
 public class AdditionalIconsListAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
 
@@ -39,13 +43,25 @@ public class AdditionalIconsListAdapter extends RecyclerView.Adapter<FavouritesL
                 holder.image.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorGrey));
                 holder.addButton.setVisibility(View.VISIBLE);
 
-                holder.removeButton.setOnClickListener(new View.OnClickListener() {
+                holder.addButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        addCategoryIfRoom(holder.image);
                     }
                 });
             }
         });
+    }
+
+    private void addCategoryIfRoom(ImageView image) {
+        if (favouriteCategories.size() < 9) {
+            // popup dialog fragment
+            //with icon image
+            //and edit text for name
+            //cancel and add btns
+        } else {
+            Toast.makeText(activity, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
