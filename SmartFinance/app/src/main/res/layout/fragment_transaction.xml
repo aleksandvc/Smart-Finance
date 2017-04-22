@@ -9,6 +9,7 @@
         android:id="@+id/transaction_top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
 
        >
 
@@ -21,7 +22,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/all_view_spacing_standard"
-
+            android:layout_gravity="center"
             android:focusable="false"
             android:inputType="date"
             android:textColor="@color/colorOrange"
