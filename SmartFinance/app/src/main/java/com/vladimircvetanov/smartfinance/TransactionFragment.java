@@ -23,9 +23,9 @@ import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Category;
-import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Transaction;
 
@@ -36,6 +36,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private DBAdapter dbAdapter;
+    private boolean startedWithCategory;
 
     //Selection radio between income and expense;
     private RadioGroup catTypeRadio;
@@ -53,7 +54,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     private TextView submitButton;
 
-    private boolean startedWithSection = false;
     private boolean isNumpadDown = false;
 
     private View rootView;
@@ -100,7 +100,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     //=======CALCULATOR==============//
 
     {
-
         int uId = (int) Manager.getLoggedUser().getId();
 
         dbAdapter = DBAdapter.getInstance(this.getActivity());
@@ -108,17 +107,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dbAdapter.addAccount(new Account("Cash", R.mipmap.smartfinance_icon), uId);
         dbAdapter.addAccount(new Account("Bash", R.mipmap.smartfinance_icon), uId);
         dbAdapter.addAccount(new Account("Rash", R.mipmap.smartfinance_icon), uId);
-
-//        dbAdapter.addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("House", true, R.mipmap.home),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),uId);
-//        dbAdapter.addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),uId);
 
         dbAdapter.getAllAccounts();
         dbAdapter.getAllExpenseCategories();
@@ -131,12 +119,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
         initializeUiObjects();
 
-
-
-
         catTypeRadio.check(R.id.transaction_radio_expense);
+        startedWithCategory = checkForCategoryExtra();
 
-        accountSelection.setAdapter(new RowViewAdapter<Account>(inflater, dbAdapter.getCachedAccounts().values()));
+        accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
         final RowViewAdapter<Category> expenseAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedExpenseCategories().values());
         final RowViewAdapter<Category> incomeAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedIncomeCategories().values());
@@ -148,7 +134,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dateDisplay.setText(date.toString(dateFormat));
 
 
-//        checkForCategoryExtra();
 
         //============onClickListeners=============================================================================//
 
@@ -174,17 +159,17 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                 switch (checkedId) {
                     case R.id.transaction_radio_expense:
                         colorizeUI(getActivity(), R.color.colorOrange, R.drawable.orange_button_9);
-                        selectedType = Category.Type.EXPENSE;
                         categorySelection.setAdapter(expenseAdapter);
+                        Message.message(getContext(),"This is here to test some stuff.");
                         break;
                     case R.id.transaction_radio_income:
                         colorizeUI(getActivity(), R.color.colorGreen, R.drawable.green_button_9);
-                        selectedType = Category.Type.INCOME;
                         categorySelection.setAdapter(incomeAdapter);
                         break;
                 }
             }
         });
+
         accountSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -210,15 +195,19 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        numpad.setVisibility(View.GONE);
-                        rootView.findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
-                        rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
-                        isNumpadDown = true;
-                    }
-                });
+                if (startedWithCategory) {
+                    numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            numpad.setVisibility(View.GONE);
+                            rootView.findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
+                            rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
+                            isNumpadDown = true;
+                        }
+                    });
+                } else {
+                  createTransaction();
+                }
             }
         });
 
@@ -277,7 +266,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         plus.setOnClickListener(arithmeticListener);
         minus.setOnClickListener(arithmeticListener);
 
-
         for (TextView btn : numButtons)
             btn.setOnClickListener(numberListener);
         decimal.setOnClickListener(numberListener);
@@ -305,18 +293,23 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         return rootView;
     }
 
-    private void checkForCategoryExtra(Intent intent) {
-        if (intent != null && intent.hasExtra(getString(R.string.EXTRA_SECTION))) {
-            CategoryExpense s = (CategoryExpense) intent.getSerializableExtra(getString(R.string.EXTRA_SECTION));
-            if (s == null) return;
-
-            //selectedType = s.getType();
-            selectedCategory = s;
-            catTypeRadio.check(R.id.transaction_radio_expense);
-
-            submitButton.setText(getString(R.string.transaction_add_to) + " " + s.getName());
-            startedWithSection = true;
+    private boolean checkForCategoryExtra() {
+        Category cat = (Category) getArguments().getSerializable(getString(R.string.EXTRA_CATEGORY));
+        if (cat != null){
+            switch (cat.getType()){
+                case EXPENSE:
+                    catTypeRadio.check(R.id.transaction_radio_income);
+                    catTypeRadio.check(R.id.transaction_radio_expense);
+                    break;
+                case INCOME:
+                    catTypeRadio.check(R.id.transaction_radio_income);
+                    break;
+            }
+            selectedCategory = cat;
+            submitButton.setText(getString(R.string.transaction_add_to)+ cat.getName());
+            return true;
         }
+        return false;
     }
 
     /**
@@ -401,7 +394,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
      */
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         date = new DateTime(year, month + 1, dayOfMonth, 0, 0);
-        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
+        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
     }
 
