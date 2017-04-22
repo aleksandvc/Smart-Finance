@@ -99,11 +99,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     //=======CALCULATOR==============//
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
-        initializeUiObjects();
+    {
 
         int uId = (int) Manager.getLoggedUser().getId();
 
@@ -128,6 +124,15 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dbAdapter.getAllExpenseCategories();
         dbAdapter.getAllIncomeCategories();
         dbAdapter.getAllFavCategories();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
+        initializeUiObjects();
+
+
+
 
         catTypeRadio.check(R.id.transaction_radio_expense);
 
