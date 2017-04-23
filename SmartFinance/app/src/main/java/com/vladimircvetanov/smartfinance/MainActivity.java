@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         userProfile = (TextView) findViewById(R.id.user_profile_link);
 
-        
+
 
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
