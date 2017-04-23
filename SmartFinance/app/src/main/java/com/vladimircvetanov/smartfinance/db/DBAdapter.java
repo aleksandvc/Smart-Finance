@@ -348,7 +348,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = " + account.getName(),null);
+                count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = ? ",new String[]{account.getName()});
                 return null;
             }
 
@@ -471,7 +471,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                count[0] = db.delete(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME + " = " + category.getName(),null);
+                count[0] = db.delete(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME + " = ? ",new String[]{category.getName()});
                 return null;
             }
 
@@ -593,7 +593,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                count[0] = db.delete(DbHelper.TABLE_NAME_INCOME_CATEGORIES,DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME + " = " + category.getName(),null);
+                count[0] = db.delete(DbHelper.TABLE_NAME_INCOME_CATEGORIES,DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME + " = ? " ,new String[]{category.getName()});
                 return null;
             }
 
@@ -692,7 +692,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = " + category.getName(),null);
+                count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = ? ",new String[]{category.getName()});
                 return null;
             }
 
