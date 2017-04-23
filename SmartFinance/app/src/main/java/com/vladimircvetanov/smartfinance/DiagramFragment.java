@@ -88,31 +88,6 @@ public class DiagramFragment extends Fragment {
         //Add and remove buttons as needed.
         //                                      ~Simo
 
-        Button toTransaction = (Button) rootView.findViewById(R.id.temp_to_transaction);
-        Button toProfile = (Button) rootView.findViewById(R.id.temp_to_profile);
-
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-
-                    case R.id.temp_to_transaction:
-                        //startActivity(new Intent(getActivity(), TransactionActivity.class));
-                        break;
-                    case R.id.temp_to_profile:
-                        User u = (User) getActivity().getIntent().getSerializableExtra("user");
-                        Intent i = new Intent(getActivity(), ProfileActivity.class);
-                        i.putExtra("user",u);
-                        startActivity(i);
-                        break;
-
-                }
-            }
-        };
-
-        toTransaction.setOnClickListener(onClickListener);
-        toProfile.setOnClickListener(onClickListener);
 
 
         return rootView;

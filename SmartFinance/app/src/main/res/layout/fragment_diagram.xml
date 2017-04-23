@@ -105,26 +105,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/temp_to_transaction"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="toTransaction" />
-
-                    <Button
-                        android:id="@+id/temp_to_profile"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="toprofile" />
-
-
-
-                </LinearLayout>
 
             </LinearLayout>
 
