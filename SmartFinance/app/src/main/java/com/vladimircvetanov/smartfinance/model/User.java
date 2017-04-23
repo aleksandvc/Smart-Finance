@@ -3,12 +3,10 @@ package com.vladimircvetanov.smartfinance.model;
 import android.accounts.Account;
 
 import com.vladimircvetanov.smartfinance.R;
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
 import java.io.Serializable;
 import java.util.HashSet;
-
-import static com.vladimircvetanov.smartfinance.db.DBAdapter.addExpenseCategory;
-import static com.vladimircvetanov.smartfinance.db.DBAdapter.addFavCategory;
 
 public class User implements Serializable {
 
@@ -76,8 +74,8 @@ public class User implements Serializable {
         favouriteCategories.add(new CategoryExpense("Phone", true, R.mipmap.phone));
 
         for (CategoryExpense category : favouriteCategories) {
-            addExpenseCategory(category, this.getId());
-            addFavCategory(category, this.getId());
+            DBAdapter.addExpenseCategory(category, this.getId());
+            DBAdapter.addFavCategory(category, this.getId());
         }
     }
 }
