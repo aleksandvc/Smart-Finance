@@ -18,12 +18,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.model.Manager;
-
-import com.vladimircvetanov.smartfinance.model.Manager;
-import com.vladimircvetanov.smartfinance.model.User;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -37,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     private TextView userProfile;
+    private View headerView;
     private View toolbarTitle;
     private View navigationHeader;
 
@@ -60,33 +57,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
 
-        View headerview = navigationView.getHeaderView(0);
-        TextView profilename = (TextView) headerview.findViewById(R.id.user_profile_link);
-        profilename.setText(Manager.getLoggedUser().getEmail());
+        headerView = navigationView.getHeaderView(0);
+        userProfile = (TextView) headerView.findViewById(R.id.user_profile_link);
+        userProfile.setText(Manager.getLoggedUser().getEmail());
 
-        LinearLayout header = (LinearLayout) headerview.findViewById(R.id.header);
+        LinearLayout header = (LinearLayout) headerView.findViewById(R.id.header);
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
 
-        
-
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
-//        dateDisplay.setText(date.toString(dateFormat));
+        //dateDisplay.setText(date.toString(dateFormat));
 
         fragmentManager = getSupportFragmentManager();
         if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
@@ -95,9 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
         }
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,11 +126,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()) {
-
-            case R.id.nav_profile:
-                startActivity(new Intent(MainActivity.this,ProfileActivity.class));
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
             case R.id.nav_accounts:
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
