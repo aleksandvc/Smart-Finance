@@ -88,22 +88,15 @@ public class DiagramFragment extends Fragment {
         //Add and remove buttons as needed.
         //                                      ~Simo
 
-        Button toLogIn = (Button) rootView.findViewById(R.id.temp_to_login);
-        Button toRegister = (Button) rootView.findViewById(R.id.temp_to_register);
         Button toTransaction = (Button) rootView.findViewById(R.id.temp_to_transaction);
         Button toProfile = (Button) rootView.findViewById(R.id.temp_to_profile);
-        Button toInquiry = (Button) rootView.findViewById(R.id.to_main_with_report);
+
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.temp_to_login:
-                        startActivity(new Intent(getActivity(), LoginActivity.class));
-                        break;
-                    case R.id.temp_to_register:
-                        startActivity(new Intent(getActivity(), RegisterActivity.class));
-                        break;
+
                     case R.id.temp_to_transaction:
                         //startActivity(new Intent(getActivity(), TransactionActivity.class));
                         break;
@@ -113,17 +106,14 @@ public class DiagramFragment extends Fragment {
                         i.putExtra("user",u);
                         startActivity(i);
                         break;
-                    case R.id.to_main_with_report:
-                       // startActivity(new Intent(getActivity(), MainWithReportActivity.class));
-                        break;
+
                 }
             }
         };
-        toLogIn.setOnClickListener(onClickListener);
-        toRegister.setOnClickListener(onClickListener);
+
         toTransaction.setOnClickListener(onClickListener);
         toProfile.setOnClickListener(onClickListener);
-        toInquiry.setOnClickListener(onClickListener);
+
 
         return rootView;
     }

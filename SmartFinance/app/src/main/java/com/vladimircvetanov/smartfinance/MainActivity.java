@@ -22,6 +22,9 @@ import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.model.Manager;
 
+import com.vladimircvetanov.smartfinance.model.Manager;
+import com.vladimircvetanov.smartfinance.model.User;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -57,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
@@ -75,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        
+
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
@@ -88,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
         }
     }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,10 +121,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -125,6 +137,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()) {
+
+            case R.id.nav_profile:
+                startActivity(new Intent(MainActivity.this,ProfileActivity.class));
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
             case R.id.nav_accounts:
                 drawer.closeDrawer(GravityCompat.START);
                 return true;

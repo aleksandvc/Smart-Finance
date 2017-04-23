@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorDark"
+    android:id="@+id/profile_activity"
     tools:context="com.vladimircvetanov.smartfinance.ProfileActivity">
 
     <ImageView

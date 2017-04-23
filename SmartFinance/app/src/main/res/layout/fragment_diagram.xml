@@ -111,18 +111,6 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/temp_to_login"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="toLogIn" />
-
-                    <Button
-                        android:id="@+id/temp_to_register"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="toRegister" />
-
-                    <Button
                         android:id="@+id/temp_to_transaction"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -134,11 +122,7 @@
                         android:layout_height="wrap_content"
                         android:text="toprofile" />
 
-                    <Button
-                        android:id="@+id/to_main_with_report"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="tomainwithreport" />
+
 
                 </LinearLayout>
 
