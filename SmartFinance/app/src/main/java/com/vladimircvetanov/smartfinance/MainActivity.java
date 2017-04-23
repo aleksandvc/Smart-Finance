@@ -16,7 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.vladimircvetanov.smartfinance.model.Manager;
 
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.User;
@@ -33,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     private TextView userProfile;
-    private TextView toolbarTitle;
+    private View toolbarTitle;
+    private View navigationHeader;
 
     private FragmentManager fragmentManager;
     private Bundle dataBetweenFragments;
@@ -61,8 +66,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
 
-        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        userProfile = (TextView) findViewById(R.id.user_profile_link);
+        View headerview = navigationView.getHeaderView(0);
+        TextView profilename = (TextView) headerview.findViewById(R.id.user_profile_link);
+        profilename.setText(Manager.getLoggedUser().getEmail());
+
+        LinearLayout header = (LinearLayout) headerview.findViewById(R.id.header);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
 
 
 
@@ -71,12 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         date = DateTime.now();
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
 //        dateDisplay.setText(date.toString(dateFormat));
-
-        /*
-        Bundle bundle = getIntent().getExtras();
-        if (!bundle.isEmpty() && bundle.getSerializable("user") != null) {
-
-        }*/
 
         fragmentManager = getSupportFragmentManager();
         if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {

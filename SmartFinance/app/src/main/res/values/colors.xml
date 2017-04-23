@@ -6,10 +6,13 @@
     <color name="colorDark">#FF2F4159</color>
     <color name="colorWhite">#f9fafc</color>
     <color name="colorTransparent">#00ffffff</color>
+    <color name="colorTransparentWhite">#a7ffffff</color>
     <color name="colorLightGreen">#6f62a7a7</color>
     <color name="colorGreen">#FF009999</color>
     <color name="colorDarkGreen">#007f7f</color>
     <color name="colorLightOrange">#facbc1</color>
     <color name="colorOrange">#FFFCB2A1</color>
+    <color name="colorLightGrey">#f1f1f2</color>
     <color name="colorGrey">#e3e3e6</color>
+    <color name="colorDarkGrey">#a8a8a9</color>
 </resources>
