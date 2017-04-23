@@ -9,8 +9,7 @@
     android:padding="@dimen/activity_vertical_margin"
     android:id="@+id/header"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-    <!--
+    
     <ImageView
         android:id="@+id/imageView"
         android:layout_gravity="bottom"
@@ -18,7 +17,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:srcCompat="@mipmap/smartfinance_icon" />
-    -->
 
     <TextView
         android:id="@+id/user_profile_link"
