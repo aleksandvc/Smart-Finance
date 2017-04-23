@@ -10,7 +10,7 @@ import android.support.v4.app.DialogFragment;
 
 public class LogoutDialogFragment extends DialogFragment {
 
-    Context context;
+    private Context context;
 
     public LogoutDialogFragment() {
         context = getActivity();
@@ -37,7 +37,6 @@ public class LogoutDialogFragment extends DialogFragment {
         alertDialogBuilder.setPositiveButton(getString(R.string.logout_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //dialog.dismiss();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
             }

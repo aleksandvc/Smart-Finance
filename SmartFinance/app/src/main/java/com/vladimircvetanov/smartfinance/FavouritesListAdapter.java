@@ -40,6 +40,7 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
     public void onBindViewHolder(final FavouritesListAdapter.IconViewHolder holder, final int position) {
         final CategoryExpense categoryExpense = categories.get(position);
         holder.image.setImageResource(categoryExpense.getIconId());
+        holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.fav_icon_backgroud));
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override

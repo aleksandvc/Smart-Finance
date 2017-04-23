@@ -14,12 +14,12 @@ import java.util.HashSet;
 
 import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
 
-public class AdditionalIconsListAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
+public class AdditionalIconsAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
 
     private ArrayList<Integer> additionalIcons;
     private Activity activity;
 
-    AdditionalIconsListAdapter(HashSet<Integer> allExpenseIcons, Activity activity) {
+    AdditionalIconsAdapter(HashSet<Integer> allExpenseIcons, Activity activity) {
         this.activity = activity;
         additionalIcons = new ArrayList<Integer> (allExpenseIcons);
     }
@@ -36,11 +36,12 @@ public class AdditionalIconsListAdapter extends RecyclerView.Adapter<FavouritesL
     public void onBindViewHolder(final FavouritesListAdapter.IconViewHolder holder, final int position) {
         final Integer icon = additionalIcons.get(position);
         holder.image.setImageResource(icon);
+        holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.unselected_icon_background));
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.image.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorGrey));
+                holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.selected_icon_background));
                 holder.addButton.setVisibility(View.VISIBLE);
 
                 holder.addButton.setOnClickListener(new View.OnClickListener() {
@@ -59,9 +60,10 @@ public class AdditionalIconsListAdapter extends RecyclerView.Adapter<FavouritesL
             //with icon image
             //and edit text for name
             //cancel and add btns
+
         } else {
             holder.addButton.setVisibility(View.GONE);
-            image.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorTransparent));
+            holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.unselected_icon_background));
 
             Toast.makeText(activity, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
         }
