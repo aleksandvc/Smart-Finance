@@ -107,19 +107,26 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
         initializeUiObjects();
+        dbAdapter = DBAdapter.getInstance(this.getActivity());
 
         catTypeRadio.check(R.id.transaction_radio_expense);
         startedWithCategory = checkForCategoryExtra();
 
         int uId = (int) Manager.getLoggedUser().getId();
 
-        dbAdapter = DBAdapter.getInstance(this.getActivity());
-
+        dbAdapter.getAllTransactions();
+        dbAdapter.loadAccounts();
+        dbAdapter.getAllAccounts();
         dbAdapter.addAccount(new Account("TEST0",R.mipmap.books),uId);
         dbAdapter.addAccount(new Account("TEST1",R.mipmap.football),uId);
         dbAdapter.addAccount(new Account("TEST2",R.mipmap.bowling),uId);
+        dbAdapter.loadAccounts();
+        dbAdapter.getAllAccounts();
+        dbAdapter.getAllTransactions();
 
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
+
+        Message.message(getContext(),dbAdapter.getCachedTransactions().values().size()+"");
 
         ArrayList<Category> expenseCategories = new ArrayList<>();
         expenseCategories.addAll(dbAdapter.getCachedExpenseCategories().values());
@@ -403,24 +410,25 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
     }
-    //TODO - handle through Activity
-    /**
-     * Animates transition between CategorySelector and number-pad, if number-pad is hidden.
-     */
-    public void onBackPressed() {
-        if (isNumpadDown)
-            rootView.findViewById(R.id.transaction_section_selection_layout).animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
-                @Override
-                public void run() {
-                    rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.GONE);
-                    numpad.setAlpha(1F);
-                    numpad.setVisibility(View.VISIBLE);
-                    isNumpadDown = false;
-                }
-            });
-        else
-            super.getActivity().onBackPressed();
-    }
+
+//    //TODO - handle through Activity
+//    /**
+//     * Animates transition between CategorySelector and number-pad, if number-pad is hidden.
+//     */
+//    public void onBackPressed() {
+//        if (isNumpadDown)
+//            rootView.findViewById(R.id.transaction_section_selection_layout).animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
+//                @Override
+//                public void run() {
+//                    rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.GONE);
+//                    numpad.setAlpha(1F);
+//                    numpad.setVisibility(View.VISIBLE);
+//                    isNumpadDown = false;
+//                }
+//            });
+//        else
+//            getActivity().onBackPressed();
+//    }
 
     /**
      * Moved all the .findViewById([...]) methods here, because the onCreateView was getting a bit cluttered.

@@ -37,8 +37,10 @@ public class ReportFragment extends Fragment {
         ArrayList<Category> sections = new ArrayList<>();
         sections.addAll(dbAdapter.getCachedFavCategories().values());
         sections.addAll(dbAdapter.getCachedExpenseCategories().values());
+        sections.addAll(dbAdapter.getCachedIncomeCategories().values());
 
         expandableListView.setAdapter(new ExpandableListAdapter(getContext()));
+        dbAdapter.getAllTransactions();
 
         return v;
     }
@@ -60,10 +62,13 @@ public class ReportFragment extends Fragment {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             children = new HashMap<>();
 
-            HashMap<Long, ArrayList<Transaction>> temp = new HashMap<>(dbAdapter.getCachedTransactions());
+            HashMap<Long, ArrayList<Transaction>> transactionCache = new HashMap<>(dbAdapter.getCachedTransactions());
+
             for (Category c : groups) {
-                ArrayList<Transaction> tempTrans = temp.containsKey(c.getId()) ? temp.get(c.getId()) : new ArrayList<Transaction>();
-                children.put(c, tempTrans);
+                long key = c.getId();
+                ArrayList<Transaction> temp = transactionCache.get(key);
+                if (temp == null) temp = new ArrayList<>();
+                children.put(c, temp);
             }
         }
 
