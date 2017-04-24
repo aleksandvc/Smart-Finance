@@ -75,7 +75,7 @@ public class User implements Serializable {
 
         for (CategoryExpense category : favouriteCategories) {
             DBAdapter.addExpenseCategory(category, this.getId());
-            DBAdapter.addFavCategory(category, this.getId());
+            DBAdapter.addFavCategory(category,this.getId());
         }
     }
 }

@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
@@ -98,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item_currency:
-                return true;
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
@@ -144,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
 
-            case R.id.nav_calculator:
+            case R.id.nav_expense:
                 if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
                     fragmentManager.beginTransaction()
                         .replace(R.id.master_layout, new TransactionFragment(), getString(R.string.transaction_fragment_tag))

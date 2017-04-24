@@ -5,11 +5,6 @@
     app:theme="@style/OverflowMenu">
 
     <item
-        android:title="@string/currency"
-        
-        android:id="@+id/item_currency" />
-
-    <item
         android:title="@string/settings"
         android:id="@+id/item_settings"/>
 

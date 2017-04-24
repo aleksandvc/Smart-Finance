@@ -22,9 +22,11 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
 
     private ArrayList<CategoryExpense> categories;
     private Activity activity;
+    private FavouritesFragment fragment;
 
-    FavouritesListAdapter(HashSet<CategoryExpense> favouriteCategories, Activity activity) {
+    FavouritesListAdapter(HashSet<CategoryExpense> favouriteCategories, Activity activity, FavouritesFragment fragment) {
         this.activity = activity;
+        this.fragment = fragment;
         categories = new ArrayList<CategoryExpense> (favouriteCategories);
     }
 
@@ -51,11 +53,17 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
                 holder.removeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        delete(position);
+
+                        categories.remove(holder.getAdapterPosition());
+                        notifyItemRemoved(position);
+
                         favouriteCategories.remove(categoryExpense);
+                        DBAdapter.deleteFavCategory(categoryExpense);
+
                         Manager.getInstance();
                         Manager.addExpenseIcon(categoryExpense.getIconId());
-                        DBAdapter.deleteFavCategory(categoryExpense);
+
+                        //fragment.updateLists();
                     }
                 });
             }
@@ -65,12 +73,6 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
     @Override
     public int getItemCount() {
         return categories.size();
-    }
-
-
-    public void delete(int position) {
-        categories.remove(position);
-        notifyItemRemoved(position);
     }
 
     public static class IconViewHolder extends RecyclerView.ViewHolder{

@@ -19,20 +19,33 @@ public class FavouritesFragment extends Fragment {
     private RecyclerView additionalIconsList;
     private TextView moreIconsTitle;
 
+    private FavouritesListAdapter favouritesListAdapter;
+    private AdditionalIconsAdapter additionalIconsAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.fragment_favourites, container, false);
 
         moreIconsTitle = (TextView) root.findViewById(R.id.more_icons_title);
 
+        favouritesListAdapter = new FavouritesListAdapter(favouriteCategories, getActivity(), FavouritesFragment.this);
+        additionalIconsAdapter = new AdditionalIconsAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity());
+
         favouritesList = (RecyclerView) root.findViewById(R.id.favourites_list);
-        favouritesList.setAdapter(new FavouritesListAdapter(favouriteCategories, getActivity()));
+        favouritesList.setAdapter(favouritesListAdapter);
         favouritesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
         additionalIconsList = (RecyclerView) root.findViewById(R.id.additional_icons_list);
-        additionalIconsList.setAdapter(new AdditionalIconsAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity()));
+        additionalIconsList.setAdapter(additionalIconsAdapter);
         additionalIconsList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
         return root;
+    }
+
+    void updateLists() {
+
+        favouritesListAdapter.notifyDataSetChanged();
+        additionalIconsAdapter.notifyDataSetChanged();
     }
 }

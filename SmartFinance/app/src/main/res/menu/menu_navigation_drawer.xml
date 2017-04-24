@@ -16,9 +16,9 @@
             android:icon="@drawable/income"
             android:title="@string/nav_item_income" />
         <item
-            android:id="@+id/nav_calculator"
+            android:id="@+id/nav_expense"
             android:icon="@drawable/calculator"
-            android:title="@string/nav_item_calculator" />
+            android:title="@string/nav_expense" />
         <item
             android:id="@+id/nav_calendar"
             android:icon="@drawable/calendar20"

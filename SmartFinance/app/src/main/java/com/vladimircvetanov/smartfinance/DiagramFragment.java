@@ -1,6 +1,5 @@
 package com.vladimircvetanov.smartfinance;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +23,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.szugyi.circlemenu.view.CircleLayout;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
-import com.vladimircvetanov.smartfinance.model.User;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -49,13 +47,11 @@ public class DiagramFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //outState.putInt("someVarA", someVarA);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //someVarA = savedInstanceState.getInt("someVarA");
     }
 
     @Override
@@ -68,7 +64,7 @@ public class DiagramFragment extends Fragment {
         pieDataSet = new PieDataSet(entries, "");
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
 
-        //Temp button
+        /*Temp button
         addButton = (Button) rootView.findViewById(R.id.add_value_btn);
         addValue = (EditText) rootView.findViewById(R.id.add_value);
 
@@ -79,41 +75,10 @@ public class DiagramFragment extends Fragment {
                     addEntry(Integer.parseInt(addValue.getText().toString()));
                 }
             }
-        });
+        }); */
 
         drawDiagram();
         drawFavouriteIcons();
-
-        //I've added buttons to currently extant activities for ease of navigation during development.
-        //Add and remove buttons as needed.
-        //                                      ~Simo
-
-        Button toTransaction = (Button) rootView.findViewById(R.id.temp_to_transaction);
-        Button toProfile = (Button) rootView.findViewById(R.id.temp_to_profile);
-
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-
-                    case R.id.temp_to_transaction:
-                        //startActivity(new Intent(getActivity(), TransactionActivity.class));
-                        break;
-                    case R.id.temp_to_profile:
-                        User u = (User) getActivity().getIntent().getSerializableExtra("user");
-                        Intent i = new Intent(getActivity(), ProfileActivity.class);
-                        i.putExtra("user",u);
-                        startActivity(i);
-                        break;
-
-                }
-            }
-        };
-
-        toTransaction.setOnClickListener(onClickListener);
-        toProfile.setOnClickListener(onClickListener);
-
 
         return rootView;
     }
