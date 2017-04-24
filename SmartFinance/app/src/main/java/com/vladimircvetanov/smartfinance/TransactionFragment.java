@@ -117,10 +117,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dbAdapter.addAccount(new Account("Bash", R.mipmap.smartfinance_icon), uId);
         dbAdapter.addAccount(new Account("Rash", R.mipmap.smartfinance_icon), uId);
 
-     //dbAdapter.loadAccounts();
-       // dbAdapter.loadExpenseCategories();
-       // dbAdapter.loadIncomeCategories();
-       // dbAdapter.loadFavouriteCategories();
+
 
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
