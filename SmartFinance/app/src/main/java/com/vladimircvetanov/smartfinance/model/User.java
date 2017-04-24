@@ -16,7 +16,6 @@ public class User implements Serializable {
     private String email;
     private String password;
     private long id;
-    private int imageId;
     public float totalSum;
     public static HashSet<Account> accounts;
     public static HashSet<CategoryExpense> favouriteCategories;

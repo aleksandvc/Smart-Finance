@@ -18,6 +18,7 @@ public class Account implements Serializable, Comparable<Account>,RowDisplayable
     private int id;
     private int iconId;
     private double sum;
+    private long userFk;
     private HashMap<Category.Type,ArrayList<Transaction>> transactions;
 
     /**
@@ -41,6 +42,14 @@ public class Account implements Serializable, Comparable<Account>,RowDisplayable
 
     public int getId() {
         return id;
+    }
+
+    public long getUserFk() {
+        return userFk;
+    }
+
+    public void setUserFk(long userFk) {
+        this.userFk = userFk;
     }
 
     @Override

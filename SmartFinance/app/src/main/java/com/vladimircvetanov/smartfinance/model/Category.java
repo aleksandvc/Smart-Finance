@@ -15,12 +15,21 @@ public abstract class Category implements RowDisplayable {
     private int id;
     private int iconId;
     private double sum;
+    private long userFk;
 
     public Category(Type type, String name,int iconId) {
         this.type = type;
         this.name = name;
         this.iconId = iconId;
         this.sum = 0.0d;
+    }
+
+    public long getUserFk() {
+        return userFk;
+    }
+
+    public void setUserFk(long userFk) {
+        this.userFk = userFk;
     }
 
     public Type getType() {
