@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                     u.setId(adapter.getId(u.getEmail()));
 
                     adapter.loadAccounts();
-                    adapter.loadExpenseCategories();
-                    adapter.loadIncomeCategories();
+                   // adapter.getAllAccounts();
+                    adapter.getAllFavCategories();
                 }
                 return null;
             }

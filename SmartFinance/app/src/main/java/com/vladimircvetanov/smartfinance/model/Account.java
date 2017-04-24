@@ -15,7 +15,7 @@ import java.util.List;
 public class Account implements Serializable, Comparable<Account>,RowDisplayable {
 
     private String name;
-    private int id;
+    private long id;
     private int iconId;
     private double sum;
     private long userFk;
@@ -40,7 +40,7 @@ public class Account implements Serializable, Comparable<Account>,RowDisplayable
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -88,7 +88,7 @@ public class Account implements Serializable, Comparable<Account>,RowDisplayable
     }
 
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

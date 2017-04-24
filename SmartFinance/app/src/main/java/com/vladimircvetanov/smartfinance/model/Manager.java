@@ -20,10 +20,10 @@ public class Manager {
 
     //temp changed
     private HashSet<Integer> allExpenseIcons;
-    private ArrayList<Transaction> transactions;
+
 
     private Manager() {
-        transactions = new ArrayList<>();
+
         allExpenseIcons = new HashSet<>();
         addMoreExpenseIcons();
     }
@@ -62,9 +62,7 @@ public class Manager {
         return sum;
     }*/
 
-    public static boolean addTransaction(Transaction transaction) {
-        return transaction != null && getInstance().transactions.add(transaction);
-    }
+
 
     public static void addExpenseIcon(int icon) {
         getInstance().allExpenseIcons.add(icon);

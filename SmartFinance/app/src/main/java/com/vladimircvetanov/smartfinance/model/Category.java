@@ -12,7 +12,7 @@ public abstract class Category implements RowDisplayable {
 
     private Type type;
     private String name;
-    private int id;
+    private long id;
     private int iconId;
     private double sum;
     private long userFk;
@@ -48,11 +48,11 @@ public abstract class Category implements RowDisplayable {
         this.name = name;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

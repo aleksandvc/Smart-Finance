@@ -18,7 +18,7 @@ public class User implements Serializable {
     private long id;
     public float totalSum;
     public static HashSet<Account> accounts;
-    public static HashSet<CategoryExpense> favouriteCategories;
+
 
 
     public User(String email, String password) {
@@ -30,7 +30,7 @@ public class User implements Serializable {
         }
         totalSum = 0f;
         accounts = new HashSet<>();
-        favouriteCategories = new HashSet<>();
+
         addDefaultCategories();
 
     }
@@ -64,20 +64,16 @@ public class User implements Serializable {
     }
 
     private void addDefaultCategories() {
-        favouriteCategories.add(new CategoryExpense("Vehicle", true, R.mipmap.car));
-        favouriteCategories.add(new CategoryExpense("Clothes", true, R.mipmap.clothes));
-        favouriteCategories.add(new CategoryExpense("Health", true, R.mipmap.heart));
-        favouriteCategories.add(new CategoryExpense("Travel", true, R.mipmap.plane));
-        favouriteCategories.add(new CategoryExpense("House", true, R.mipmap.home));
-        favouriteCategories.add(new CategoryExpense("Sport", true, R.mipmap.swimming));
-        favouriteCategories.add(new CategoryExpense("Food", true, R.mipmap.restaurant));
-        favouriteCategories.add(new CategoryExpense("Transport", true, R.mipmap.train));
-        favouriteCategories.add(new CategoryExpense("Entertainment", true, R.mipmap.cocktail));
-        favouriteCategories.add(new CategoryExpense("Phone", true, R.mipmap.phone));
+        DBAdapter.addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("House", true, R.mipmap.home),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),this.id);
+        DBAdapter.addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),this.id);
 
-        for (CategoryExpense category : favouriteCategories) {
-            DBAdapter.addExpenseCategory(category, this.getId());
-            DBAdapter.addFavCategory(category,this.getId());
-        }
     }
 }

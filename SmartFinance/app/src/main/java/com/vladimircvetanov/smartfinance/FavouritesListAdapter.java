@@ -16,7 +16,7 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
+
 
 public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
 
@@ -52,7 +52,6 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
                     @Override
                     public void onClick(View v) {
                         delete(position);
-                        favouriteCategories.remove(categoryExpense);
                         Manager.getInstance();
                         Manager.addExpenseIcon(categoryExpense.getIconId());
                         DBAdapter.deleteFavCategory(categoryExpense);
