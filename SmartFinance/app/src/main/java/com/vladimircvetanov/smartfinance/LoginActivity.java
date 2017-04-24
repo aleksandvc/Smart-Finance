@@ -70,10 +70,10 @@ public class LoginActivity extends AppCompatActivity {
                     u.setId(adapter.getId(u.getEmail()));
 
 
-                    adapter.getAllAccounts();
-                    adapter.getAllExpenseCategories();
-                    adapter.getAllIncomeCategories();
-                    adapter.getAllFavCategories();
+                    //adapter.getAllAccounts();
+                   //adapter.getAllExpenseCategories();
+                    //adapter.getAllIncomeCategories();
+                   adapter.getAllFavCategories();
                 }
                 return null;
             }
