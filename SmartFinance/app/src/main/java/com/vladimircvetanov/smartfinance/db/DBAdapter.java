@@ -304,7 +304,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,DbHelper.ACCOUNTS_COLUMN_ICON};
+                String[] columns = {DbHelper.COLUMN_ID,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,DbHelper.ACCOUNTS_COLUMN_ICON};
                 String userFk = DbHelper.ACCOUNTS_COLUMN_USERFK +"=?";
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_ACCOUNTS,columns,DbHelper.ACCOUNTS_COLUMN_USERFK + " = " + Manager.getLoggedUser().getId(),null,null,null,null);
 
@@ -312,10 +312,14 @@ public class DBAdapter {
                     Log.e("TAG"," ima cursorche we");
                     int index = cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ICON);
+                    int index3 = cursor.getColumnIndex(DbHelper.COLUMN_ID);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
+                    long accountId = cursor.getLong(index3);
+                    Account account = new Account(name,icon);
+                    account.setId(accountId);
 
-                    accounts.put(name+"",new Account(name,icon));
+                    accounts.put(name+"",account);
 
                 }
                 return null;
@@ -561,7 +565,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.INCOME_CATEGORIES_COLUMN_ICON};
+                String[] columns = {DbHelper.COLUMN_ID,DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.INCOME_CATEGORIES_COLUMN_ICON};
 
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_INCOME_CATEGORIES,columns,null,null,null,null,null);
 
@@ -569,10 +573,14 @@ public class DBAdapter {
 
                     int index = cursor.getColumnIndex(DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.INCOME_CATEGORIES_COLUMN_ICON);
+                    int index3 = cursor.getColumnIndex(DbHelper.COLUMN_ID);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
+                    long categoryId = cursor.getLong(index3);
 
-                    incomeCategories.put(name+"",new CategoryIncome(name,icon));
+                    CategoryIncome category = new CategoryIncome(name,icon);
+                    category.setId(categoryId);
+                    incomeCategories.put(name+"",category);
 
                 }
                 return null;
