@@ -8,7 +8,7 @@
     android:paddingStart="@dimen/all_view_spacing_huge">
 
     <ImageView
-        android:id="@+id/inquiry_item_icon"
+        android:id="@+id/report_item_icon"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/all_view_spacing_large"
         android:layout_marginRight="@dimen/all_view_spacing_small"
@@ -16,7 +16,7 @@
         android:src="@drawable/radio_income_true" />
 
     <TextView
-        android:id="@+id/inquiry_item_sum"
+        android:id="@+id/report_item_account"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -25,7 +25,7 @@
         android:textSize="@dimen/all_text_size_standard" />
 
     <TextView
-        android:id="@+id/inquiry_item_date"
+        android:id="@+id/report_item_date"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"

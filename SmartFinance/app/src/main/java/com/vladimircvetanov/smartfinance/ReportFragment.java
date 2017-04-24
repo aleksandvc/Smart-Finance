@@ -19,7 +19,6 @@ import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeMap;
 
 public class ReportFragment extends Fragment {
 
@@ -117,9 +116,11 @@ public class ReportFragment extends Fragment {
             t1.setText(cat.getName());
 
             TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_group_sum);
-            t2.setText("$" + cat.getSum());
+            double sum = 0;
+            for (Transaction t : children.get(cat)) sum += t.getSum();
+            t2.setText("$" + sum);
 
-            if (cat.getSum() < 0)
+            if (cat.getType() == Category.Type.EXPENSE)
                 t2.setTextColor(ContextCompat.getColor(context, R.color.colorOrange));
             else
                 t2.setTextColor(ContextCompat.getColor(context, R.color.colorGreen));
@@ -134,10 +135,13 @@ public class ReportFragment extends Fragment {
 
             Transaction t = (Transaction) getChild(groupPosition, childPosition);
 
-            TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_item_sum);
-            t1.setText("$" + t.getSum());
+            ImageView i = (ImageView) convertView.findViewById(R.id.report_item_icon);
+            i.setImageResource(t.getAccount().getIconId());
 
-            TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_item_date);
+            TextView t1 = (TextView) convertView.findViewById(R.id.report_item_account);
+            t1.setText(t.getAccount().getName());
+
+            TextView t2 = (TextView) convertView.findViewById(R.id.report_item_date);
             t2.setText(t.getDate().toString("dd/MM/YY"));
 
             return convertView;
