@@ -19,6 +19,7 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.User;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class DBAdapter {
     private static HashMap<String, CategoryExpense> expenseCategories;
     private static HashMap<String, CategoryIncome> incomeCategories;
     private static HashMap<String,CategoryExpense> favouriteCategories;
-    private static HashMap<Long,Transaction> transactions;
+    private static HashMap<Long, ArrayList<Transaction>> transactions;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
      */
@@ -73,8 +74,6 @@ public class DBAdapter {
             favouriteCategories = new HashMap<>();
             transactions = new HashMap<>();
             loadUsers();
-
-
         }
         return instance;
     }
@@ -90,13 +89,14 @@ public class DBAdapter {
         return Collections.unmodifiableMap(temp);
     }
     public Map<String, CategoryExpense> getCachedFavCategories(){
-
         return Collections.unmodifiableMap(favouriteCategories);
     }
     public Map<String, Account> getCachedAccounts(){
         return Collections.unmodifiableMap(accounts);
     }
-
+    public Map<Long, ArrayList<Transaction>> getCachedTransactions(){
+        return Collections.unmodifiableMap(transactions);
+    }
     public long getId(String email){
         return registeredUsers.get(email).getId();
     }
@@ -152,7 +152,7 @@ public class DBAdapter {
             }
 
         }.execute();
-            return id[0];
+        return id[0];
     }
     private  String getData(final String username){
 
@@ -244,7 +244,7 @@ public class DBAdapter {
         new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... strings) {
-               SQLiteDatabase db = helper.getWritableDatabase();
+                SQLiteDatabase db = helper.getWritableDatabase();
                 String oldEmail = strings[0];
                 User u = registeredUsers.get(oldEmail);
                 //update
@@ -327,24 +327,24 @@ public class DBAdapter {
     public long addAccount(final Account account,final long userId){
         final long[] id = new long[1];
 
-       new AsyncTask<Void,Void,Void>(){
-           @Override
-           protected Void doInBackground(Void... params) {
-               if(!accounts.containsKey(account.getName())) {
-                   SQLiteDatabase db = helper.getWritableDatabase();
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                if(!accounts.containsKey(account.getName())) {
+                    SQLiteDatabase db = helper.getWritableDatabase();
 
-                   ContentValues values = new ContentValues();
+                    ContentValues values = new ContentValues();
 
-                   values.put(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,account.getName());
-                   values.put(DbHelper.ACCOUNTS_COLUMN_ICON,account.getIconId());
-                   values.put(DbHelper.ACCOUNTS_COLUMN_USERFK,userId);
+                    values.put(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,account.getName());
+                    values.put(DbHelper.ACCOUNTS_COLUMN_ICON,account.getIconId());
+                    values.put(DbHelper.ACCOUNTS_COLUMN_USERFK,userId);
 
-                   id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
-                   accounts.put(account.getName(),account);
-               }
-               return null;
-           }
-       }.execute();
+                    id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
+                    accounts.put(account.getName(),account);
+                }
+                return null;
+            }
+        }.execute();
 
         return id[0];
     }
@@ -768,7 +768,9 @@ public class DBAdapter {
                 values.put(DbHelper.TRANSACTIONS_COLUMN_CATEGORYFK,transaction.getCategory().getId());
 
                 id[0] = db.insert(DbHelper.TABLE_NAME_TRANSACTIONS,null,values);
-                transactions.put(transaction.getCategory().getId(),transaction);
+                long catId = transaction.getCategory().getId();
+                if (!transactions.containsKey(catId)) transactions.put(catId, new ArrayList<Transaction>());
+                transactions.get(catId).add(transaction);
                 return null;
             }
 
@@ -898,7 +900,7 @@ public class DBAdapter {
         public static final String CREATE_TABLE_TRANASCTIONS = "CREATE TABLE " + TABLE_NAME_TRANSACTIONS + "(" + COLUMN_ID +
                 " INTEGER PRIMARY KEY AUTOINCREMENT, " + TRANSACTIONS_COLUMN_NOTE + " VARCHAR(255), " +
                 TRANSACTIONS_COLUMN_SUM + " REAL, " + TRANSACTIONS_COLUMN_DATE + " INTEGER, " + TRANSACTIONS_COLUMN_CATEGORYFK + " INTEGER," +
-                 TRANSACTIONS_COLUMN_USERFK + " INTEGER, " + TRANSACTIONS_COLUMN_ACCOUNTFK + " INTEGER);";
+                TRANSACTIONS_COLUMN_USERFK + " INTEGER, " + TRANSACTIONS_COLUMN_ACCOUNTFK + " INTEGER);";
 
 
         /**
@@ -919,7 +921,7 @@ public class DBAdapter {
          *
          * @param context
          */
-       private DbHelper(Context context) {
+        private DbHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);
             this.context = context;
         }

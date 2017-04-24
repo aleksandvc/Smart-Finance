@@ -33,6 +33,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+
 public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private DBAdapter dbAdapter;
@@ -113,15 +115,13 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         dbAdapter = DBAdapter.getInstance(this.getActivity());
 
-        dbAdapter.addAccount(new Account("Cash", R.mipmap.smartfinance_icon), uId);
-        dbAdapter.addAccount(new Account("Bash", R.mipmap.smartfinance_icon), uId);
-        dbAdapter.addAccount(new Account("Rash", R.mipmap.smartfinance_icon), uId);
-
-
-
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
-        final RowViewAdapter<Category> expenseAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedExpenseCategories().values());
+        ArrayList<Category> expenseCategories = new ArrayList<>();
+        expenseCategories.addAll(dbAdapter.getCachedExpenseCategories().values());
+        expenseCategories.addAll(dbAdapter.getCachedFavCategories().values());
+
+        final RowViewAdapter<Category> expenseAdapter = new RowViewAdapter<>(inflater, expenseCategories);
         final RowViewAdapter<Category> incomeAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedIncomeCategories().values());
         categorySelection.setAdapter(expenseAdapter);
 
