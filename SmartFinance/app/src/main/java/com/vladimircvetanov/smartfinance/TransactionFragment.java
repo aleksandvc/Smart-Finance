@@ -361,7 +361,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         //TODO - don't restart Activity
         startActivity(new Intent(this.getActivity(), MainActivity.class));
-
     }
 
     /**

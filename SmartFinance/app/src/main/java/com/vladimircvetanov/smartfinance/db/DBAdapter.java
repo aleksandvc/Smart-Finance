@@ -433,23 +433,21 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON};
+                String[] columns = {DbHelper.COLUMN_ID,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON};
 
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,columns,null,null,null,null,null);
 
                 while(cursor.moveToNext()){
-
+                    Log.e("TAG" ,"all expense categories");
                     int index = cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON);
-                    int indexId = cursor.getColumnIndex(DbHelper.COLUMN_ID);
-
+                    int index3 =cursor.getColumnIndex(DbHelper.COLUMN_ID);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
-                    int id = cursor.getInt(indexId);
-
-                    CategoryExpense c = new CategoryExpense(name, false,icon);
-                    c.setId(id);
-                    expenseCategories.put(name+"", c);
+                    long categoryId = cursor.getLong(index3);
+                    CategoryExpense category = new CategoryExpense(name, false,icon);
+                    category.setId(categoryId);
+                    expenseCategories.put(name+"",category);
 
                 }
                 return null;
@@ -691,24 +689,23 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,DbHelper.FAVCATEGORIES_COLUMN_ICON, DbHelper.COLUMN_ID};
+                String[] columns = {DbHelper.COLUMN_ID,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,DbHelper.FAVCATEGORIES_COLUMN_ICON};
 
+                //String [] fk = {String.valueOf(Manager.getLoggedUser().getId())};
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_FAVCATEGORIES,columns,null,null,null,null,null);
 
                 while(cursor.moveToNext()){
-                    Log.e("TAG","ima ima");
+                    Log.e("TAG" ,"all favourite categories");
                     int index = cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON);
-                    int indexId = cursor.getColumnIndex(DbHelper.COLUMN_ID);
-
+                    int index3 = cursor.getColumnIndex(DbHelper.COLUMN_ID);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
+                    long categoryId = cursor.getLong(index3);
+                    CategoryExpense category = new CategoryExpense(name, true,icon);
+                    category.setId(categoryId);
 
-                    int id = cursor.getInt(indexId);
-
-                    CategoryExpense c = new CategoryExpense(name, true,icon);
-                    c.setId(id);
-                    favouriteCategories.put(name+"", c);
+                    favouriteCategories.put(name+"",category);
 
                 }
                 return null;
@@ -732,6 +729,7 @@ public class DBAdapter {
                     values.put(DbHelper.FAVCATEGORIES_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_FAVCATEGORIES,null,values);
+                    category.setUserFk(userId);
                     favouriteCategories.put(category.getName(),category);
                 }
                 return null;
