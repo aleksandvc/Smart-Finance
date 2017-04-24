@@ -15,9 +15,10 @@ import java.util.List;
 public class Account implements Serializable, Comparable<Account>,RowDisplayable {
 
     private String name;
-    private int id;
+    private long id;
     private int iconId;
     private double sum;
+    private long userFk;
     private HashMap<Category.Type,ArrayList<Transaction>> transactions;
 
     /**
@@ -39,8 +40,16 @@ public class Account implements Serializable, Comparable<Account>,RowDisplayable
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
+    }
+
+    public long getUserFk() {
+        return userFk;
+    }
+
+    public void setUserFk(long userFk) {
+        this.userFk = userFk;
     }
 
     @Override
@@ -79,7 +88,7 @@ public class Account implements Serializable, Comparable<Account>,RowDisplayable
     }
 
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

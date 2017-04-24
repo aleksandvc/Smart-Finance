@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.message.Message;
@@ -38,6 +39,8 @@ public class DBAdapter {
     private static HashMap<String, Account> accounts;
     private static HashMap<String, CategoryExpense> expenseCategories;
     private static HashMap<String, CategoryIncome> incomeCategories;
+    private static HashMap<String,CategoryExpense> favouriteCategories;
+    private static HashMap<Long,Transaction> transactions;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
      */
@@ -67,6 +70,8 @@ public class DBAdapter {
             accounts = new HashMap<>();
             expenseCategories = new HashMap<>();
             incomeCategories = new HashMap<>();
+            favouriteCategories = new HashMap<>();
+            transactions = new HashMap<>();
             loadUsers();
 
 
@@ -83,6 +88,10 @@ public class DBAdapter {
         HashMap<String, Category> temp = new HashMap<>();
         temp.putAll(expenseCategories);
         return Collections.unmodifiableMap(temp);
+    }
+    public Map<String, CategoryExpense> getCachedFavCategories(){
+
+        return Collections.unmodifiableMap(favouriteCategories);
     }
     public Map<String, Account> getCachedAccounts(){
         return Collections.unmodifiableMap(accounts);
@@ -296,11 +305,11 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 String[] columns = {DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,DbHelper.ACCOUNTS_COLUMN_ICON};
-
-                Cursor cursor = db.query(DbHelper.TABLE_NAME_ACCOUNTS,columns,null,null,null,null,null);
+                String userFk = DbHelper.ACCOUNTS_COLUMN_USERFK +"=?";
+                Cursor cursor = db.query(DbHelper.TABLE_NAME_ACCOUNTS,columns,DbHelper.ACCOUNTS_COLUMN_USERFK + " = " + Manager.getLoggedUser().getId(),null,null,null,null);
 
                 while(cursor.moveToNext()){
-
+                    Log.e("TAG"," ima cursorche we");
                     int index = cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ICON);
                     String name = cursor.getString(index);
@@ -331,6 +340,7 @@ public class DBAdapter {
                    values.put(DbHelper.ACCOUNTS_COLUMN_USERFK,userId);
 
                    id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
+                   accounts.put(account.getName(),account);
                }
                return null;
            }
@@ -349,6 +359,7 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = ? ",new String[]{account.getName()});
+                accounts.remove(account.getName());
                 return null;
             }
 
@@ -414,6 +425,7 @@ public class DBAdapter {
     public boolean existsExpenseCat(CategoryExpense category){
         return expenseCategories.containsKey(category.getName());
     }
+
     public void getAllExpenseCategories(){
 
         new AsyncTask<Void,Void,Void>(){
@@ -432,7 +444,7 @@ public class DBAdapter {
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
 
-                   expenseCategories.put(name+"",new CategoryExpense(name, false,icon));
+                    expenseCategories.put(name+"",new CategoryExpense(name, false,icon));
 
                 }
                 return null;
@@ -456,6 +468,7 @@ public class DBAdapter {
                     values.put(DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,null,values);
+                    expenseCategories.put(category.getName(),category);
                 }
                 return null;
             }
@@ -472,6 +485,7 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME + " = ? ",new String[]{category.getName()});
+                expenseCategories.remove(category.getName());
                 return null;
             }
 
@@ -536,6 +550,7 @@ public class DBAdapter {
     public boolean existsIncomeCat(CategoryIncome category){
         return incomeCategories.containsKey(category.getName());
     }
+
     public void getAllIncomeCategories(){
 
         new AsyncTask<Void,Void,Void>(){
@@ -578,6 +593,7 @@ public class DBAdapter {
                     values.put(DbHelper.INCOME_CATEGORIES_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_INCOME_CATEGORIES,null,values);
+                    incomeCategories.put(category.getName(),category);
                 }
                 return null;
             }
@@ -594,6 +610,7 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_INCOME_CATEGORIES,DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME + " = ? " ,new String[]{category.getName()});
+                incomeCategories.remove(category.getName());
                 return null;
             }
 
@@ -635,6 +652,33 @@ public class DBAdapter {
         }.execute(oldName);
 
     }
+    public static void loadFavouriteCategories(){
+
+        new AsyncTask<Void,Void,Void>(){
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
+                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,fav_category_name,fav_category_icon FROM " + DbHelper.TABLE_NAME_FAVCATEGORIES + " WHERE " + DbHelper.FAVCATEGORIES_COLUMN_USERFK +" = ? ;",fk);
+
+                while(cursor.moveToNext()){
+                    Log.e("TAG","ima metod");
+                    long id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME));
+                    int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON));
+                    CategoryExpense category = new CategoryExpense(categoryName, true, iconId);
+                    favouriteCategories.put(categoryName + "", category);//pravim go dva puti i pri getAllExpenseCategories
+                }
+                return null;
+            }
+        }.execute();
+
+
+    }
+    public boolean existsFavCat(CategoryIncome category){
+        return favouriteCategories.containsKey(category.getName());
+    }
+
     public void getAllFavCategories(){
 
         new AsyncTask<Void,Void,Void>(){
@@ -647,13 +691,13 @@ public class DBAdapter {
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_FAVCATEGORIES,columns,null,null,null,null,null);
 
                 while(cursor.moveToNext()){
-
+                    Log.e("TAG","ima ima");
                     int index = cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
 
-                    expenseCategories.put(name+"",new CategoryExpense(name, true,icon));
+                    favouriteCategories.put(name+"",new CategoryExpense(name, true,icon));
 
                 }
                 return null;
@@ -667,7 +711,7 @@ public class DBAdapter {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                if(!expenseCategories.containsKey(category.getName())) {
+                if(!favouriteCategories.containsKey(category.getName())) {
                     SQLiteDatabase db = helper.getWritableDatabase();
 
                     ContentValues values = new ContentValues();
@@ -677,6 +721,7 @@ public class DBAdapter {
                     values.put(DbHelper.FAVCATEGORIES_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_FAVCATEGORIES,null,values);
+                    favouriteCategories.put(category.getName(),category);
                 }
                 return null;
             }
@@ -693,6 +738,7 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = ? ",new String[]{category.getName()});
+                favouriteCategories.remove(category.getName());
                 return null;
             }
 
@@ -722,6 +768,7 @@ public class DBAdapter {
                 values.put(DbHelper.TRANSACTIONS_COLUMN_CATEGORYFK,transaction.getCategory().getId());
 
                 id[0] = db.insert(DbHelper.TABLE_NAME_TRANSACTIONS,null,values);
+                transactions.put(transaction.getCategory().getId(),transaction);
                 return null;
             }
 

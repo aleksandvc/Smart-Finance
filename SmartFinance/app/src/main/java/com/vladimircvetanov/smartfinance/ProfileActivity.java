@@ -44,9 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
         adapter = DBAdapter.getInstance(this);
 
 
-
-        final User u = (User) getIntent().getSerializableExtra("user");
-
         changeEmail.setText(Manager.getLoggedUser().getEmail());
         changePass.setText(Manager.getLoggedUser().getPassword());
 

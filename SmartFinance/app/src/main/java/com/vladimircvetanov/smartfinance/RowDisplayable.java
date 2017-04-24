@@ -2,7 +2,7 @@ package com.vladimircvetanov.smartfinance;
 
 public interface RowDisplayable {
 
-    int getId();
+    long getId();
 
     String getName();
 

@@ -99,20 +99,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     //=======CALCULATOR==============//
 
-    {
-        int uId = (int) Manager.getLoggedUser().getId();
 
-        dbAdapter = DBAdapter.getInstance(this.getActivity());
-
-        dbAdapter.addAccount(new Account("Cash", R.mipmap.smartfinance_icon), uId);
-        dbAdapter.addAccount(new Account("Bash", R.mipmap.smartfinance_icon), uId);
-        dbAdapter.addAccount(new Account("Rash", R.mipmap.smartfinance_icon), uId);
-
-        dbAdapter.getAllAccounts();
-        dbAdapter.getAllExpenseCategories();
-        dbAdapter.getAllIncomeCategories();
-        dbAdapter.getAllFavCategories();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,6 +108,19 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         catTypeRadio.check(R.id.transaction_radio_expense);
         startedWithCategory = checkForCategoryExtra();
+
+        int uId = (int) Manager.getLoggedUser().getId();
+
+        dbAdapter = DBAdapter.getInstance(this.getActivity());
+
+        dbAdapter.addAccount(new Account("Cash", R.mipmap.smartfinance_icon), uId);
+        dbAdapter.addAccount(new Account("Bash", R.mipmap.smartfinance_icon), uId);
+        dbAdapter.addAccount(new Account("Rash", R.mipmap.smartfinance_icon), uId);
+
+     //dbAdapter.loadAccounts();
+       // dbAdapter.loadExpenseCategories();
+       // dbAdapter.loadIncomeCategories();
+       // dbAdapter.loadFavouriteCategories();
 
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 

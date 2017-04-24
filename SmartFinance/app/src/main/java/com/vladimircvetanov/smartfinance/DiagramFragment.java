@@ -22,13 +22,14 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.szugyi.circlemenu.view.CircleLayout;
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.vladimircvetanov.smartfinance.model.Manager.getLoggedUser;
-import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
+
 
 public class DiagramFragment extends Fragment {
 
@@ -43,6 +44,7 @@ public class DiagramFragment extends Fragment {
     private EditText addValue;
     private Button addButton;
     private CircleLayout circleLayout;
+    private DBAdapter adapter;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -63,6 +65,7 @@ public class DiagramFragment extends Fragment {
         entries = new ArrayList<>();
         pieDataSet = new PieDataSet(entries, "");
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
+        adapter = DBAdapter.getInstance(getActivity());
 
         /*Temp button
         addButton = (Button) rootView.findViewById(R.id.add_value_btn);
@@ -117,7 +120,7 @@ public class DiagramFragment extends Fragment {
     }
 
     void drawFavouriteIcons() {
-        for (final CategoryExpense categoryExpense : favouriteCategories) {
+        for (final CategoryExpense categoryExpense : adapter.getCachedFavCategories().values()) {
             final ImageView icon = new ImageView(getActivity());
             icon.setImageResource(categoryExpense.getIconId());
 

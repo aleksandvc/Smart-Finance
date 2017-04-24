@@ -9,15 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
-import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
+import java.util.HashSet;
+
+//import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
 
 public class FavouritesFragment extends Fragment {
 
     private RecyclerView favouritesList;
     private RecyclerView additionalIconsList;
     private TextView moreIconsTitle;
+    private DBAdapter adapter;
 
     private FavouritesListAdapter favouritesListAdapter;
     private AdditionalIconsAdapter additionalIconsAdapter;
@@ -27,9 +32,13 @@ public class FavouritesFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_favourites, container, false);
 
+        adapter=DBAdapter.getInstance(getActivity());
         moreIconsTitle = (TextView) root.findViewById(R.id.more_icons_title);
 
-        favouritesListAdapter = new FavouritesListAdapter(favouriteCategories, getActivity(), FavouritesFragment.this);
+        HashSet<CategoryExpense> categories = new HashSet<>();
+        categories.addAll(adapter.getCachedFavCategories().values());
+
+        favouritesListAdapter = new FavouritesListAdapter(categories, getActivity(), FavouritesFragment.this);
         additionalIconsAdapter = new AdditionalIconsAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity());
 
         favouritesList = (RecyclerView) root.findViewById(R.id.favourites_list);

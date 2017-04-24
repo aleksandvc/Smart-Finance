@@ -9,19 +9,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
+
 
 public class AdditionalIconsAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
 
     private ArrayList<Integer> additionalIcons;
     private Activity activity;
+    private DBAdapter adapter;
 
     AdditionalIconsAdapter(HashSet<Integer> allExpenseIcons, Activity activity) {
         this.activity = activity;
         additionalIcons = new ArrayList<Integer> (allExpenseIcons);
+         adapter = DBAdapter.getInstance(activity);
     }
 
     @Override
@@ -55,7 +59,7 @@ public class AdditionalIconsAdapter extends RecyclerView.Adapter<FavouritesListA
     }
 
     private void addCategoryIfRoom(ImageView image, FavouritesListAdapter.IconViewHolder holder) {
-        if (favouriteCategories.size() < 9) {
+        if (adapter.getCachedFavCategories().size() < 9) {
             // popup dialog fragment
             //with icon image
             //and edit text for name
