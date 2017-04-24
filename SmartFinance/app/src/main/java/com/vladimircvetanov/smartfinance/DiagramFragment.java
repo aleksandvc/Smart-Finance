@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import static com.vladimircvetanov.smartfinance.model.Manager.getLoggedUser;
 
-
 public class DiagramFragment extends Fragment {
 
     private FrameLayout frameLayout;

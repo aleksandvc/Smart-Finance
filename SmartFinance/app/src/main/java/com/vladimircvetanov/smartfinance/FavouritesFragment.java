@@ -15,8 +15,6 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 
 import java.util.HashSet;
 
-//import static com.vladimircvetanov.smartfinance.model.User.favouriteCategories;
-
 public class FavouritesFragment extends Fragment {
 
     private RecyclerView favouritesList;

@@ -25,7 +25,7 @@ public class AdditionalIconsAdapter extends RecyclerView.Adapter<FavouritesListA
     AdditionalIconsAdapter(HashSet<Integer> allExpenseIcons, Activity activity) {
         this.activity = activity;
         additionalIcons = new ArrayList<Integer> (allExpenseIcons);
-         adapter = DBAdapter.getInstance(activity);
+        adapter = DBAdapter.getInstance(activity);
     }
 
     @Override
