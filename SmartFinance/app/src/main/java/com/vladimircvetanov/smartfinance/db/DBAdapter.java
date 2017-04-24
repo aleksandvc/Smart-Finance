@@ -441,10 +441,15 @@ public class DBAdapter {
 
                     int index = cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON);
+                    int indexId = cursor.getColumnIndex(DbHelper.COLUMN_ID);
+
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
+                    int id = cursor.getInt(indexId);
 
-                    expenseCategories.put(name+"",new CategoryExpense(name, false,icon));
+                    CategoryExpense c = new CategoryExpense(name, false,icon);
+                    c.setId(id);
+                    expenseCategories.put(name+"", c);
 
                 }
                 return null;
@@ -686,7 +691,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,DbHelper.FAVCATEGORIES_COLUMN_ICON};
+                String[] columns = {DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,DbHelper.FAVCATEGORIES_COLUMN_ICON, DbHelper.COLUMN_ID};
 
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_FAVCATEGORIES,columns,null,null,null,null,null);
 
@@ -694,10 +699,16 @@ public class DBAdapter {
                     Log.e("TAG","ima ima");
                     int index = cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON);
+                    int indexId = cursor.getColumnIndex(DbHelper.COLUMN_ID);
+
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
 
-                    favouriteCategories.put(name+"",new CategoryExpense(name, true,icon));
+                    int id = cursor.getInt(indexId);
+
+                    CategoryExpense c = new CategoryExpense(name, true,icon);
+                    c.setId(id);
+                    favouriteCategories.put(name+"", c);
 
                 }
                 return null;

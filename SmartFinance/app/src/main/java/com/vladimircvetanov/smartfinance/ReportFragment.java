@@ -14,13 +14,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
-import com.vladimircvetanov.smartfinance.model.Account;
+import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 public class ReportFragment extends Fragment {
 
+    private DBAdapter dbAdapter;
     private ExpandableListView expandableListView;
 
     @Nullable
@@ -28,60 +31,71 @@ public class ReportFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_report, container, false);
 
-        expandableListView = (ExpandableListView) v.findViewById(R.id.inquiry_expandable_list);
-        ArrayList<Account> sections = new ArrayList<>();
-        sections.addAll(DBAdapter.getInstance(getActivity()).getCachedAccounts().values());
+        dbAdapter = DBAdapter.getInstance(getActivity());
 
-        expandableListView.setAdapter(new ExpandableListAdapter(getActivity(), sections));
+        expandableListView = (ExpandableListView) v.findViewById(R.id.inquiry_expandable_list);
+
+        ArrayList<Category> sections = new ArrayList<>();
+        sections.addAll(dbAdapter.getCachedFavCategories().values());
+        sections.addAll(dbAdapter.getCachedExpenseCategories().values());
+
+        expandableListView.setAdapter(new ExpandableListAdapter(getContext()));
 
         return v;
     }
 
     class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-        private Context context;
-        private ArrayList<Account> dataSet;
+        private ArrayList<Category> groups;
+        private HashMap<Category, ArrayList<Transaction>> children;
         private LayoutInflater inflater;
+        private Context context;
 
-
-        public ExpandableListAdapter(Context context, ArrayList<Account> dataSet) {
-            if (context == null || dataSet == null)
-                throw new IllegalArgumentException("Parameter CAN NOT be null!");
+        ExpandableListAdapter(Context context) {
+            groups = new ArrayList<>();
+            groups.addAll(dbAdapter.getCachedExpenseCategories().values());
+            groups.addAll(dbAdapter.getCachedFavCategories().values());
 
             this.context = context;
-            this.dataSet = dataSet;
 
-            inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            children = new HashMap<>();
+
+            HashMap<Long, ArrayList<Transaction>> temp = new HashMap<>(dbAdapter.getCachedTransactions());
+            for (Category c : groups) {
+                ArrayList<Transaction> tempTrans = temp.containsKey(c.getId()) ? temp.get(c.getId()) : new ArrayList<Transaction>();
+                children.put(c, tempTrans);
+            }
         }
 
         @Override
         public int getGroupCount() {
-            return dataSet.size();
+            return groups.size();
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return dataSet.get(groupPosition).getTransactions().size();
+            return children.get(getGroup(groupPosition)).size();
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return dataSet.get(groupPosition);
+            return groups.get(groupPosition);
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return dataSet.get(groupPosition).getTransactions().get(childPosition);
+            return children.get(getGroup(groupPosition)).get(childPosition);
         }
 
         @Override
         public long getGroupId(int groupPosition) {
-            return groupPosition;
+            return groups.get(groupPosition).getId();
         }
 
         @Override
         public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
+            return ((Transaction) getChild(groupPosition, childPosition)).getId();
         }
 
         @Override
@@ -94,18 +108,18 @@ public class ReportFragment extends Fragment {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.report_list_group, parent, false);
 
-            Account acc = dataSet.get(groupPosition);
+            Category cat = (Category) getGroup(groupPosition);
 
             ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_group_icon);
-            i.setImageResource(acc.getIconId());
+            i.setImageResource(cat.getIconId());
 
             TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_group_name);
-            t1.setText(acc.getName());
+            t1.setText(cat.getName());
 
             TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_group_sum);
-            t2.setText("$" + acc.getSum());
+            t2.setText("$" + cat.getSum());
 
-            if (acc.getSum() <= 0)
+            if (cat.getSum() < 0)
                 t2.setTextColor(ContextCompat.getColor(context, R.color.colorOrange));
             else
                 t2.setTextColor(ContextCompat.getColor(context, R.color.colorGreen));
@@ -118,7 +132,7 @@ public class ReportFragment extends Fragment {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.report_list_item, parent, false);
 
-            Transaction t = dataSet.get(groupPosition).getTransactions().get(childPosition);
+            Transaction t = (Transaction) getChild(groupPosition, childPosition);
 
             TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_item_sum);
             t1.setText("$" + t.getSum());

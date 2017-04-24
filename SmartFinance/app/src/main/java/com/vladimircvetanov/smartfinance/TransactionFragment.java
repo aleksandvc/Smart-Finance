@@ -115,6 +115,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         dbAdapter = DBAdapter.getInstance(this.getActivity());
 
+        dbAdapter.addAccount(new Account("TEST0",R.mipmap.books),uId);
+        dbAdapter.addAccount(new Account("TEST1",R.mipmap.football),uId);
+        dbAdapter.addAccount(new Account("TEST2",R.mipmap.bowling),uId);
+
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
         ArrayList<Category> expenseCategories = new ArrayList<>();
@@ -353,6 +357,9 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
         account.addTransaction(transaction);
 
+        Message.message(getContext(),""+transaction.getCategory().getId());
+
+        //TODO - don't restart Activity
         startActivity(new Intent(this.getActivity(), MainActivity.class));
 
     }
@@ -397,7 +404,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
     }
-
+    //TODO - handle through Activity
     /**
      * Animates transition between CategorySelector and number-pad, if number-pad is hidden.
      */

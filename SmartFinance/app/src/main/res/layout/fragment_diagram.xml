@@ -31,17 +31,17 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/report_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorLightGreen"
         android:orientation="vertical"
-        android:id="@+id/diagram_other">
+        android:translationY="400dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
+            android:layout_height="wrap_content">
             <ImageView
                 android:src="@drawable/navigation_menu"
                 android:id="@+id/animation_list_left"
@@ -68,52 +68,13 @@
                 android:layout_weight="1"
                 android:padding="@dimen/all_view_spacing_standard"
                 android:layout_height="match_parent" />
-
         </LinearLayout>
-        <!--
-        <ScrollView
+
+        <fragment
+            android:id="@+id/report_fragment"
+            android:name="com.vladimircvetanov.smartfinance.ReportFragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/categories_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/add_value"
-                        android:layout_width="0dp"
-                        android:layout_weight="3"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"/>
-
-                    <Button
-                        android:id="@+id/add_value_btn"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="@dimen/appbar_height"
-                        android:text="Add"
-                        android:background="@drawable/balance_button"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/all_text_size_standard"
-                        android:layout_gravity="center"/>
-
-                </LinearLayout>
-
-<<<<<<< HEAD
-=======
-
->>>>>>> fc376fbb35375f29de71e041d1c86c1159a0f93c
-            </LinearLayout>
-
-        </ScrollView>
-        -->
+            android:layout_height="400dp" />
 
     </LinearLayout>
 
