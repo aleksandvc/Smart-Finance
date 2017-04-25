@@ -19,8 +19,6 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.User;
 
-import org.joda.time.DateTime;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -802,50 +800,6 @@ public class DBAdapter {
         return id[0];
     }
 
-    public void getAllTransactions(){
-
-        new AsyncTask<Void,Void,Void>(){
-            @Override
-            protected Void doInBackground(Void... params) {
-                SQLiteDatabase db = helper.getWritableDatabase();
-
-                String[] columns = {
-                        DbHelper.COLUMN_ID,
-                        DbHelper.TRANSACTIONS_COLUMN_DATE,
-                        DbHelper.TRANSACTIONS_COLUMN_SUM,
-                        DbHelper.TRANSACTIONS_COLUMN_NOTE,
-                        DbHelper.TRANSACTIONS_COLUMN_ACCOUNTFK,
-                        DbHelper.TRANSACTIONS_COLUMN_CATEGORYFK,
-                };
-
-                Cursor cursor = db.query(DbHelper.TABLE_NAME_TRANSACTIONS,columns,null,null,null,null,null);
-
-                int indexId = cursor.getColumnIndex(columns[0]);
-                int indexDate = cursor.getColumnIndex(columns[1]);
-                int indexSum = cursor.getColumnIndex(columns[2]);
-                int indexNote = cursor.getColumnIndex(columns[3]);
-                int indexAccId = cursor.getColumnIndex(columns[4]);
-                int indexCatId = cursor.getColumnIndex(columns[5]);
-
-                while(cursor.moveToNext()){
-                    long id = cursor.getInt(indexId);
-                    DateTime date = new DateTime(cursor.getInt(indexDate));
-                    double sum = cursor.getDouble(indexSum);
-                    String note = cursor.getString(indexNote);
-                    long AccId = cursor.getInt(indexAccId);
-                    long CatId = cursor.getInt(indexCatId);
-
-                    Transaction t = new Transaction(date,sum,note,null,null);
-                    t.setId(id);
-                    if (!transactions.containsKey(CatId)) transactions.put(CatId, new ArrayList<Transaction>());
-                    transactions.get(CatId).add(t);
-                    Log.wtf("Another one bites de_dust", "(ノಠ益ಠ)ノ彡┻━┻.." + CatId);
-                }
-                return null;
-            }
-        }.execute();
-
-    }
 
 
     /**

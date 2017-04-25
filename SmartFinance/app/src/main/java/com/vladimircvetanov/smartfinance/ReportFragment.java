@@ -40,7 +40,6 @@ public class ReportFragment extends Fragment {
         sections.addAll(dbAdapter.getCachedIncomeCategories().values());
 
         expandableListView.setAdapter(new ExpandableListAdapter(getContext()));
-        dbAdapter.getAllTransactions();
 
         return v;
     }

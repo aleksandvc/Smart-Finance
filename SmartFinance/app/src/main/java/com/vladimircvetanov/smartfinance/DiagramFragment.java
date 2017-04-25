@@ -71,19 +71,6 @@ public class DiagramFragment extends Fragment {
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
         adapter = DBAdapter.getInstance(getActivity());
 
-        /*Temp button
-        addButton = (Button) rootView.findViewById(R.id.add_value_btn);
-        addValue = (EditText) rootView.findViewById(R.id.add_value);
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!addValue.getText().toString().isEmpty() && Integer.parseInt(addValue.getText().toString()) > 0) {
-                    addEntry(Integer.parseInt(addValue.getText().toString()));
-                }
-            }
-        }); */
-
         drawDiagram();
         drawFavouriteIcons();
 

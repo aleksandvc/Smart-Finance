@@ -8,6 +8,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,16 +115,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         int uId = (int) Manager.getLoggedUser().getId();
 
-        dbAdapter.getAllTransactions();
-        dbAdapter.loadAccounts();
-        dbAdapter.getAllAccounts();
-        dbAdapter.addAccount(new Account("TEST0",R.mipmap.books),uId);
-        dbAdapter.addAccount(new Account("TEST1",R.mipmap.football),uId);
-        dbAdapter.addAccount(new Account("TEST2",R.mipmap.bowling),uId);
-        dbAdapter.loadAccounts();
-        dbAdapter.getAllAccounts();
-        dbAdapter.getAllTransactions();
-
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
         Message.message(getContext(),dbAdapter.getCachedTransactions().values().size()+"");
@@ -161,6 +152,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             }
         });
 
+
         catTypeRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -172,6 +164,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                         break;
                     case R.id.transaction_radio_income:
                         colorizeUI(getActivity(), R.color.colorGreen, R.drawable.green_button_9);
+
                         categorySelection.setAdapter(incomeAdapter);
                         break;
                 }
@@ -358,8 +351,13 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         Account account = selectedAccount;
         Category category = selectedCategory;
+        if (selectedAccount == null || selectedCategory == null){
+            Message.message(getContext(),"(╯ರ ~ ರ）╯︵ ┻━┻..");
+            return;
+        }
 
-        Transaction transaction = new Transaction(date, sum, note, account, category);
+
+            Transaction transaction = new Transaction(date, sum, note, account, category);
 
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
         account.addTransaction(transaction);
