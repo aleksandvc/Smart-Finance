@@ -8,6 +8,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,15 +108,16 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
         initializeUiObjects();
+        dbAdapter = DBAdapter.getInstance(this.getActivity());
 
         catTypeRadio.check(R.id.transaction_radio_expense);
         startedWithCategory = checkForCategoryExtra();
 
         int uId = (int) Manager.getLoggedUser().getId();
 
-        dbAdapter = DBAdapter.getInstance(this.getActivity());
-
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
+
+        Message.message(getContext(),dbAdapter.getCachedTransactions().values().size()+"");
 
         ArrayList<Category> expenseCategories = new ArrayList<>();
         expenseCategories.addAll(dbAdapter.getCachedExpenseCategories().values());
@@ -150,6 +152,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             }
         });
 
+
         catTypeRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -161,6 +164,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                         break;
                     case R.id.transaction_radio_income:
                         colorizeUI(getActivity(), R.color.colorGreen, R.drawable.green_button_9);
+
                         categorySelection.setAdapter(incomeAdapter);
                         break;
                 }
@@ -347,14 +351,21 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         Account account = selectedAccount;
         Category category = selectedCategory;
+        if (selectedAccount == null || selectedCategory == null){
+            Message.message(getContext(),"(╯ರ ~ ರ）╯︵ ┻━┻..");
+            return;
+        }
 
-        Transaction transaction = new Transaction(date, sum, note, account, category);
+
+            Transaction transaction = new Transaction(date, sum, note, account, category);
 
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
         account.addTransaction(transaction);
 
-        startActivity(new Intent(this.getActivity(), MainActivity.class));
+        Message.message(getContext(),""+transaction.getCategory().getId());
 
+        //TODO - don't restart Activity
+        startActivity(new Intent(this.getActivity(), MainActivity.class));
     }
 
     /**
@@ -398,23 +409,24 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dateDisplay.setText(date.toString(dateFormat));
     }
 
-    /**
-     * Animates transition between CategorySelector and number-pad, if number-pad is hidden.
-     */
-    public void onBackPressed() {
-        if (isNumpadDown)
-            rootView.findViewById(R.id.transaction_section_selection_layout).animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
-                @Override
-                public void run() {
-                    rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.GONE);
-                    numpad.setAlpha(1F);
-                    numpad.setVisibility(View.VISIBLE);
-                    isNumpadDown = false;
-                }
-            });
-        else
-            super.getActivity().onBackPressed();
-    }
+//    //TODO - handle through Activity
+//    /**
+//     * Animates transition between CategorySelector and number-pad, if number-pad is hidden.
+//     */
+//    public void onBackPressed() {
+//        if (isNumpadDown)
+//            rootView.findViewById(R.id.transaction_section_selection_layout).animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
+//                @Override
+//                public void run() {
+//                    rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.GONE);
+//                    numpad.setAlpha(1F);
+//                    numpad.setVisibility(View.VISIBLE);
+//                    isNumpadDown = false;
+//                }
+//            });
+//        else
+//            getActivity().onBackPressed();
+//    }
 
     /**
      * Moved all the .findViewById([...]) methods here, because the onCreateView was getting a bit cluttered.
