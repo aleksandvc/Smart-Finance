@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by vladimircvetanov on 04.04.17.
@@ -36,12 +37,12 @@ public class DBAdapter {
      */
     static DbHelper helper ;
 
-    private static HashMap<String, User> registeredUsers;
-    private static HashMap<String, Account> accounts;
-    private static HashMap<String, CategoryExpense> expenseCategories;
-    private static HashMap<String, CategoryIncome> incomeCategories;
-    private static HashMap<String,CategoryExpense> favouriteCategories;
-    private static HashMap<Long, ArrayList<Transaction>> transactions;
+    private static ConcurrentHashMap<String, User> registeredUsers;
+    private static ConcurrentHashMap<String, Account> accounts;
+    private static ConcurrentHashMap<String, CategoryExpense> expenseCategories;
+    private static ConcurrentHashMap<String, CategoryIncome> incomeCategories;
+    private static ConcurrentHashMap<String,CategoryExpense> favouriteCategories;
+    private static ConcurrentHashMap<Long, ArrayList<Transaction>> transactions;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
      */
@@ -67,12 +68,12 @@ public class DBAdapter {
     public static DBAdapter getInstance(Context context){
         if(instance == null){
             instance = new DBAdapter(context);
-            registeredUsers = new HashMap<>();
-            accounts = new HashMap<>();
-            expenseCategories = new HashMap<>();
-            incomeCategories = new HashMap<>();
-            favouriteCategories = new HashMap<>();
-            transactions = new HashMap<>();
+            registeredUsers = new ConcurrentHashMap<>();
+            accounts = new ConcurrentHashMap<>();
+            expenseCategories = new ConcurrentHashMap<>();
+            incomeCategories = new ConcurrentHashMap<>();
+            favouriteCategories = new ConcurrentHashMap<>();
+            transactions = new ConcurrentHashMap<>();
             loadUsers();
         }
         return instance;
@@ -411,9 +412,10 @@ public class DBAdapter {
             @Override
             protected Void doInBackground(Void... params) {
                 String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
-                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,expense_category_name,expense_category_icon FROM " + DbHelper.TABLE_NAME_EXPENSE_CATEGORIES + " WHERE " + DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK +" = ? ;",fk);
+                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,expense_category_name,expense_category_icon,expense_category_user FROM " + DbHelper.TABLE_NAME_EXPENSE_CATEGORIES + " WHERE " + DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK +" = ? ;",fk);
 
                 while(cursor.moveToNext()){
+                    Log.e("EXPENSE","BACHKA WE");
                     long id = cursor.getInt(cursor.getColumnIndex("_id"));
                     String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME));
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON));
@@ -670,15 +672,20 @@ public class DBAdapter {
             @Override
             protected Void doInBackground(Void... params) {
                 String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
-                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,fav_category_name,fav_category_icon FROM " + DbHelper.TABLE_NAME_FAVCATEGORIES + " WHERE " + DbHelper.FAVCATEGORIES_COLUMN_USERFK +" = ? ;",fk);
+                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,fav_category_name,fav_category_icon,fav_category_user FROM " + DbHelper.TABLE_NAME_FAVCATEGORIES + " WHERE " + DbHelper.FAVCATEGORIES_COLUMN_USERFK +" = ? ;",fk);
 
-                while(cursor.moveToNext()){
-                    Log.e("TAG","ima metod");
-                    long id = cursor.getInt(cursor.getColumnIndex("_id"));
-                    String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME));
-                    int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON));
-                    CategoryExpense category = new CategoryExpense(categoryName, true, iconId);
-                    favouriteCategories.put(categoryName + "", category);//pravim go dva puti i pri getAllExpenseCategories
+                if(favouriteCategories.isEmpty()) {
+                    while (cursor.moveToNext()) {
+                        Log.e("TAG", "ima metod");
+                        long id = cursor.getLong(cursor.getColumnIndex("_id"));
+                        String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME));
+                        int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON));
+                        CategoryExpense category = new CategoryExpense(categoryName, true, iconId);
+                        favouriteCategories.put(categoryName + "", category);//pravim go dva puti i pri getAllExpenseCategories
+                    }
+                }
+                else{
+
                 }
                 return null;
             }
@@ -754,7 +761,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = ? ",new String[]{category.getName()});
+                count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = ? AND " + DbHelper.FAVCATEGORIES_COLUMN_USERFK+ " = ?",new String[]{category.getName(), Manager.getLoggedUser().getId()+""});
                 favouriteCategories.remove(category.getName());
                 return null;
             }
