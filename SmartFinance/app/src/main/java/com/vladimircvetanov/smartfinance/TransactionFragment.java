@@ -294,6 +294,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         return rootView;
     }
 
+    /**
+     * Checks if the Transaction input has been started from a specific category and adjusts UI and data accordingly.
+     * @return <code>true</code> if the Fragment has been started <b>with</b> an implicit {@alink com.vladimircvetanov.smartfinance.model.Category}.
+     */
     private boolean checkForCategoryExtra() {
         Bundle args = getArguments();
         if (args == null){
@@ -304,11 +308,14 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             switch (cat.getType()){
                 case EXPENSE:
                     catTypeRadio.check(R.id.transaction_radio_expense);
+                    selectedType = Category.Type.EXPENSE;
                     break;
                 case INCOME:
                     catTypeRadio.check(R.id.transaction_radio_income);
+                    selectedType = Category.Type.INCOME;
                     break;
             }
+            catTypeRadio.setVisibility(View.GONE);
             selectedCategory = cat;
             submitButton.setText(getString(R.string.transaction_add_to)+ " " + cat.getName());
             return true;
