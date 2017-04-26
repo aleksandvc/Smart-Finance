@@ -69,12 +69,11 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
 
 
-                    //adapter.getAllAccounts();
-
-                   //adapter.getAllExpenseCategories();
-                    //adapter.getAllIncomeCategories();
+                    adapter.loadAccounts();
+                    adapter.loadIncomeCategories();
+                    adapter.loadExpenseCategories();
                     adapter.loadFavouriteCategories();
-                    //adapter.getAllFavCategories();
+
                 }
                 return null;
             }
