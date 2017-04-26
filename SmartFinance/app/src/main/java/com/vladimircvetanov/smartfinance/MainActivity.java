@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
-                AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
+                LogoutDialogFragment dialog = new LogoutDialogFragment();
                 dialog.show(getSupportFragmentManager(), getString(R.string.logout_button));
                 return true;
         }

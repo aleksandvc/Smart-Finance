@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +21,11 @@ public class FavouritesFragment extends Fragment {
 
     private RecyclerView favouritesList;
     private RecyclerView additionalIconsList;
+    private RecyclerView allCategoriesList;
+
     private TextView moreIconsTitle;
+    private TextView favouritesTitle;
+    private TextView allCategoriesTitle;
     private DBAdapter adapter;
 
     private FavouritesListAdapter favouritesListAdapter;
@@ -37,14 +40,22 @@ public class FavouritesFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_favourites, container, false);
 
         adapter = DBAdapter.getInstance(getActivity());
+        favouritesTitle = (TextView) root.findViewById(R.id.fav_icons_title);
+        allCategoriesTitle = (TextView) root.findViewById(R.id.all_categories_title);
         moreIconsTitle = (TextView) root.findViewById(R.id.more_icons_title);
         context = getActivity();
 
         HashSet<CategoryExpense> categories = new HashSet<>();
         categories.addAll(adapter.getCachedFavCategories().values());
 
-        favouritesListAdapter = new FavouritesListAdapter(categories, getActivity(), FavouritesFragment.this);
+        favouritesListAdapter = new FavouritesListAdapter(categories, getActivity());
         additionalIconsAdapter = new AdditionalIconsAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity());
+
+        HashSet<CategoryExpense> allCategories = new HashSet<>();
+        allCategories.addAll(adapter.getCachedExpenseCategories().values());
+
+        allCategoriesList = (RecyclerView) root.findViewById(R.id.all_categories_list);
+        allCategoriesList.setAdapter(new FavouritesListAdapter(allCategories, getActivity()));
 
         favouritesList = (RecyclerView) root.findViewById(R.id.favourites_list);
         favouritesList.setAdapter(favouritesListAdapter);
@@ -61,18 +72,24 @@ public class FavouritesFragment extends Fragment {
 
                     //holder.image.setBackground(ContextCompat.getDrawable(context, R.drawable.selected_icon_background));
                     //holder.addButton.setVisibility(View.VISIBLE);
+                    //Toast.makeText(context, "Item clicked!", Toast.LENGTH_SHORT).show();
 
-                    AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
-                    Bundle arguments = new Bundle();
+                    if (adapter.getCachedFavCategories().size() < 9) {
+                        AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
+                        Bundle arguments = new Bundle();
 
-                    long id = additionalIconsAdapter.getItemId(position);
-                    arguments.putLong(getString(R.string.EXTRA_ICON), id);
+                        int id = view.getId();
+                        arguments.putInt(getString(R.string.EXTRA_ICON), id);
 
-                    //dialog.setArguments(arguments);
-                    dialog.show(getFragmentManager(), getString(R.string.logout_button));
+                        //dialog.setArguments(arguments);
+                        dialog.show(getFragmentManager(), getString(R.string.logout_button));
 
-                    //addCategoryIfRoom((ImageView) view, holder);
-                    Toast.makeText(context, "Item clicked!", Toast.LENGTH_SHORT).show();
+                    } else if (adapter.getCachedFavCategories().size() == 9) {
+                        //holder.addButton.setVisibility(View.GONE);
+                        //holder.image.setBackground(ContextCompat.getDrawable(context, R.drawable.unselected_icon_background));
+
+                        Toast.makeText(context, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
@@ -81,16 +98,5 @@ public class FavouritesFragment extends Fragment {
             })
         );
         return root;
-    }
-
-    private void addCategoryIfRoom(ImageView image, AdditionalIconsAdapter.IconViewHolder holder) {
-        if (adapter.getCachedFavCategories().size() < 9) {
-
-        } else if (adapter.getCachedFavCategories().size() == 9) {
-            //holder.addButton.setVisibility(View.GONE);
-            //holder.image.setBackground(ContextCompat.getDrawable(context, R.drawable.unselected_icon_background));
-
-            Toast.makeText(context, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
-        }
     }
 }

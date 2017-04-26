@@ -16,17 +16,13 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-
-
 public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
 
     private ArrayList<CategoryExpense> categories;
     private Activity activity;
-    private FavouritesFragment fragment;
 
-    FavouritesListAdapter(HashSet<CategoryExpense> favouriteCategories, Activity activity, FavouritesFragment fragment) {
+    FavouritesListAdapter(HashSet<CategoryExpense> favouriteCategories, Activity activity) {
         this.activity = activity;
-        this.fragment = fragment;
         categories = new ArrayList<CategoryExpense> (favouriteCategories);
     }
 
@@ -40,6 +36,7 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
 
     @Override
     public void onBindViewHolder(final FavouritesListAdapter.IconViewHolder holder, final int position) {
+
         final CategoryExpense categoryExpense = categories.get(position);
         holder.image.setImageResource(categoryExpense.getIconId());
         holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.fav_icon_backgroud));
@@ -60,8 +57,6 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
 
                         Manager.getInstance();
                         Manager.addExpenseIcon(categoryExpense.getIconId());
-
-                        //fragment.updateLists();
                     }
                 });
             }
