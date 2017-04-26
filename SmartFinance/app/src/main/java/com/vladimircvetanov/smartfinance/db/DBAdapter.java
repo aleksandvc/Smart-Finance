@@ -20,6 +20,8 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.User;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -647,9 +649,8 @@ public class DBAdapter {
 
 
         }.execute();
-
-
     }
+
     public boolean existsFavCat(String categoryName){
         return favouriteCategories.containsKey(categoryName);
     }
@@ -740,6 +741,78 @@ public class DBAdapter {
         return id[0];
     }
 
+    public void loadTransactions(){
+
+        new AsyncTask<Void,Void,Void>(){
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                String[] fk = {Manager.getLoggedUser().getId()+""};
+                Cursor cursor = helper.getWritableDatabase().rawQuery(
+                                "SELECT " +  helper.COLUMN_ID +
+                                " , " + helper.TRANSACTIONS_COLUMN_NOTE +
+                                " , " + helper.TRANSACTIONS_COLUMN_DATE +
+                                " , " + helper.TRANSACTIONS_COLUMN_SUM +
+                                " , " + helper.TRANSACTIONS_COLUMN_ACCOUNTFK +
+                                " , " + helper.TRANSACTIONS_COLUMN_CATEGORYFK +
+                                " , " + helper.TRANSACTIONS_COLUMN_USERFK +
+                                " FROM " + DbHelper.TABLE_NAME_TRANSACTIONS +
+                                " WHERE " + DbHelper.TRANSACTIONS_COLUMN_USERFK +" = ? ;",fk);
+
+                if(favouriteCategories.isEmpty()) {
+
+                    int noteIndex = cursor.getColumnIndex(helper.TRANSACTIONS_COLUMN_NOTE);
+                    int dateIndex = cursor.getColumnIndex(helper.TRANSACTIONS_COLUMN_DATE);
+                    int sumIndex = cursor.getColumnIndex(helper.TRANSACTIONS_COLUMN_SUM);
+                    int accountIndex = cursor.getColumnIndex(helper.TRANSACTIONS_COLUMN_ACCOUNTFK);
+                    int categoryIndex = cursor.getColumnIndex(helper.TRANSACTIONS_COLUMN_CATEGORYFK);
+                    int userIndex = cursor.getColumnIndex(helper.TRANSACTIONS_COLUMN_USERFK);
+                    int idIndex = cursor.getColumnIndex(helper.COLUMN_ID);
+
+
+                    while (cursor.moveToNext()) {
+
+                        long id = cursor.getLong(idIndex);
+                        String note = cursor.getString(noteIndex);
+                        long timestamp = cursor.getLong(dateIndex);
+                        DateTime date = new DateTime(timestamp);
+                        double sum = cursor.getDouble(sumIndex);
+                        long accFk = cursor.getLong(accountIndex);
+                        long catFk = cursor.getLong(categoryIndex);
+                        long userFk = cursor.getLong(userIndex);
+
+                        if (! (expenseCategories.containsKey(catFk) || favouriteCategories.containsKey(catFk) || incomeCategories.containsKey(catFk))){
+                            Log.wtf("LOAD TRANSACTIONS:", " NO CATEGORY FOR THIS TRANSACTION!");
+                            continue;
+                        }
+                        if (!accounts.containsKey(catFk)){
+                            Log.wtf("LOAD TRANSACTIONS:", " NO ACCOUNT FOR THIS TRANSACTION!");
+                            continue;
+                        }
+
+                        Account acc = accounts.get(accFk);
+                        Category cat = incomeCategories.get(catFk);
+                        if (cat == null) cat = expenseCategories.get(catFk);
+                        if (cat == null) cat = favouriteCategories.get(catFk);
+
+                        Transaction t = new Transaction(date, sum, note, acc, cat);
+                        acc.addTransaction(t);
+                        if (!transactions.contains(catFk)){
+                            transactions.put(catFk, new ArrayList<Transaction>());
+                        }
+
+                        transactions.get(catFk).add(t);
+                    }
+                }
+                else{
+
+                }
+                return null;
+            }
+
+
+        }.execute();
+    }
 
 
     /**

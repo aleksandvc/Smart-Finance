@@ -80,6 +80,10 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                //This load is here, because it requires that the Accounts and Categories load fully, in order function properly.
+                //Move it if you find it not-appropriate.
+                adapter.loadTransactions();
+
                 if(flag[0]){
                     finish();
                     Message.message(LoginActivity.this,"Successful logged in." + Manager.getLoggedUser().getId());
