@@ -80,6 +80,13 @@ public class DBAdapter {
         return instance;
     }
 
+    public void clearCache(){
+        accounts.clear();
+        expenseCategories.clear();
+        incomeCategories.clear();
+        favouriteCategories.clear();
+        transactions.clear();
+    }
     public Map<String, User> getCachedUsers(){
         return Collections.unmodifiableMap(registeredUsers);
     }
@@ -176,9 +183,9 @@ public class DBAdapter {
         addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),id);
         addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),id);
         addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),id);
-        addAccount(new Account("Cash",R.mipmap.smartfinance_icon),id);
-        addAccount(new Account("Debit",R.mipmap.smartfinance_icon),id);
-        addAccount(new Account("Credit",R.mipmap.smartfinance_icon),id);
+        addAccount(new Account("Cash",R.drawable.accounts),id);
+        addAccount(new Account("Debit",R.drawable.income),id);
+        addAccount(new Account("Credit",R.drawable.income),id);
     }
     private  String getData(final String username){
 
