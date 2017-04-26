@@ -26,6 +26,7 @@ public class AccountsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_accounts, container, false);
 
+        adapter = DBAdapter.getInstance(getActivity());
         accountsList = (RecyclerView) view.findViewById(R.id.accounts_list);
         HashSet<RowDisplayable> accounts = new HashSet<>();
         accounts.addAll(adapter.getCachedAccounts().values());

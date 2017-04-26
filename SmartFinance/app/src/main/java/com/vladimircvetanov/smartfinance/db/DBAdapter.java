@@ -314,7 +314,7 @@ public class DBAdapter {
 
             @Override
             protected Void doInBackground(Void... params) {
-                String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
+                String[] fk = {Manager.getLoggedUser().getId()+""};
                 Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,account_name,account_icon,account_user FROM " + DbHelper.TABLE_NAME_ACCOUNTS + " WHERE " + DbHelper.ACCOUNTS_COLUMN_USERFK +" = ? ;",fk);
 
                 while(cursor.moveToNext()){
