@@ -63,11 +63,9 @@ public class LoginActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
                 flag[0] = adapter.getUser(email, pass);
                 if(flag[0]){
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
                     Manager.setLoggedUser(u);
                     Manager.getLoggedUser().setId(adapter.getId(u.getEmail()));
-                    startActivity(intent);
-
 
                     adapter.loadAccounts();
                     adapter.loadIncomeCategories();
@@ -83,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(flag[0]){
                     finish();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
                     Message.message(LoginActivity.this,"Successful logged in." + Manager.getLoggedUser().getId());
 
                 } else{

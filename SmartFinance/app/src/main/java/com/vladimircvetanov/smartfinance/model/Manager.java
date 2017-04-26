@@ -123,5 +123,6 @@ public class Manager {
         allAccountIcons.add(R.mipmap.coins);
         allAccountIcons.add(R.drawable.accounts);
         allAccountIcons.add(R.drawable.income);
+        allAccountIcons.add(R.drawable.calculator);
     }
 }

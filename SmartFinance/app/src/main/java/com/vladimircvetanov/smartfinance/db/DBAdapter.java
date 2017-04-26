@@ -313,7 +313,7 @@ public class DBAdapter {
 
             @Override
             protected Void doInBackground(Void... params) {
-                String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
+                String[] fk = {Manager.getLoggedUser().getId()+""};
                 Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,account_name,account_icon,account_user FROM " + DbHelper.TABLE_NAME_ACCOUNTS + " WHERE " + DbHelper.ACCOUNTS_COLUMN_USERFK +" = ? ;",fk);
 
                 while(cursor.moveToNext()){
@@ -857,7 +857,7 @@ public class DBAdapter {
         /**
          * Constant integer of database`s version.
          */
-        private static final int DB_VERSION = 3;
+        private static final int DB_VERSION = 4;
 
         /**
          * Constant String of the table`s column for id;

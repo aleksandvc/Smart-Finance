@@ -25,6 +25,15 @@
         android:textSize="@dimen/all_text_size_standard" />
 
     <TextView
+        android:id="@+id/report_item_sum"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/test_text"
+        android:textSize="@dimen/all_text_size_standard" />
+
+    <TextView
         android:id="@+id/report_item_date"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

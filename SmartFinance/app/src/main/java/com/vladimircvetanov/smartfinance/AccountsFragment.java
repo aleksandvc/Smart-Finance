@@ -34,6 +34,7 @@ public class AccountsFragment extends Fragment {
         adapter = DBAdapter.getInstance(getActivity());
         context = getActivity();
 
+        accountsList = (RecyclerView) view.findViewById(R.id.accounts_list);
         HashSet<RowDisplayable> accounts = new HashSet<>();
         accounts.addAll(adapter.getCachedAccounts().values());
 
@@ -43,7 +44,7 @@ public class AccountsFragment extends Fragment {
         accountsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         accountsList.addOnItemTouchListener(
-                new RecyclerItemClickListener(context, moreAccountIconsList, new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(context, accountsList, new RecyclerItemClickListener.OnItemClickListener() {
 
                     @Override public void onItemClick(View view, int position) {
                         getFragmentManager().beginTransaction()
@@ -59,7 +60,7 @@ public class AccountsFragment extends Fragment {
         );
 
         iconsAdapter = new IconsAdapter(Manager.getInstance().getAllAccountIcons(), getActivity());
-        moreAccountIconsList = (RecyclerView) view.findViewById(R.id.additional_icons_list);
+        moreAccountIconsList = (RecyclerView) view.findViewById(R.id.accounts_icons_list);
         moreAccountIconsList.setAdapter(iconsAdapter);
         moreAccountIconsList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
@@ -83,7 +84,6 @@ public class AccountsFragment extends Fragment {
                     }
                 })
         );
-
         return view;
     }
 }

@@ -40,7 +40,9 @@ public class ReportFragment extends Fragment {
         sections.addAll(dbAdapter.getCachedExpenseCategories().values());
         sections.addAll(dbAdapter.getCachedIncomeCategories().values());
 
-        expandableListView.setAdapter(new ExpandableListAdapter(getContext()));
+        ExpandableListAdapter adapter = new ExpandableListAdapter(getContext());
+        expandableListView.setAdapter(adapter);
+        adapter.loadFromCache();
 
         return v;
     }
@@ -55,11 +57,7 @@ public class ReportFragment extends Fragment {
             this.context = context;
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            groups = new ArrayList<>();
-
-            groups.addAll(dbAdapter.getCachedExpenseCategories().values());
-            groups.addAll(dbAdapter.getCachedFavCategories().values());
-            groups.addAll(dbAdapter.getCachedIncomeCategories().values());
+            loadFromCache();
         }
 
         @Override
@@ -134,16 +132,19 @@ public class ReportFragment extends Fragment {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.report_list_item, parent, false);
 
-            Transaction t = (Transaction) getChild(groupPosition, childPosition);
+            Transaction trans = (Transaction) getChild(groupPosition, childPosition);
 
             ImageView i = (ImageView) convertView.findViewById(R.id.report_item_icon);
-            i.setImageResource(t.getAccount().getIconId());
+            i.setImageResource(trans.getAccount().getIconId());
 
-            TextView t1 = (TextView) convertView.findViewById(R.id.report_item_account);
-            t1.setText(t.getAccount().getName());
+            TextView t0 = (TextView) convertView.findViewById(R.id.report_item_account);
+            t0.setText(trans.getAccount().getName());
+
+            TextView t1 = (TextView) convertView.findViewById(R.id.report_item_sum);
+            t1.setText("$" + trans.getSum());
 
             TextView t2 = (TextView) convertView.findViewById(R.id.report_item_date);
-            t2.setText(t.getDate().toString("dd/MM/YY"));
+            t2.setText(trans.getDate().toString("dd/MM/YY"));
 
             return convertView;
         }
@@ -151,6 +152,14 @@ public class ReportFragment extends Fragment {
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
+        }
+
+        protected void loadFromCache(){
+            groups = new ArrayList<>();
+
+            groups.addAll(dbAdapter.getCachedExpenseCategories().values());
+            groups.addAll(dbAdapter.getCachedFavCategories().values());
+            groups.addAll(dbAdapter.getCachedIncomeCategories().values());
         }
     }
 }
