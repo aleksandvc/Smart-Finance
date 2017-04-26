@@ -49,7 +49,8 @@
             android:id="@+id/report_fragment"
             android:name="com.vladimircvetanov.smartfinance.ReportFragment"
             android:layout_width="match_parent"
-            android:layout_height="400dp" />
+            android:layout_height="400dp"
+            tools:layout="@layout/report_list_item" />
 
     </LinearLayout>
 </RelativeLayout>

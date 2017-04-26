@@ -1,5 +1,6 @@
 package com.vladimircvetanov.smartfinance;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -7,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
@@ -25,6 +28,9 @@ public class FavouritesFragment extends Fragment {
     private FavouritesListAdapter favouritesListAdapter;
     private AdditionalIconsAdapter additionalIconsAdapter;
 
+    private AdditionalIconsAdapter.IconViewHolder holder;
+    private Context context;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -32,6 +38,7 @@ public class FavouritesFragment extends Fragment {
 
         adapter = DBAdapter.getInstance(getActivity());
         moreIconsTitle = (TextView) root.findViewById(R.id.more_icons_title);
+        context = getActivity();
 
         HashSet<CategoryExpense> categories = new HashSet<>();
         categories.addAll(adapter.getCachedFavCategories().values());
@@ -47,11 +54,43 @@ public class FavouritesFragment extends Fragment {
         additionalIconsList.setAdapter(additionalIconsAdapter);
         additionalIconsList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
+        additionalIconsList.addOnItemTouchListener(
+            new RecyclerItemClickListener(context, additionalIconsList, new RecyclerItemClickListener.OnItemClickListener() {
+
+                @Override public void onItemClick(View view, int position) {
+
+                    //holder.image.setBackground(ContextCompat.getDrawable(context, R.drawable.selected_icon_background));
+                    //holder.addButton.setVisibility(View.VISIBLE);
+
+                    AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
+                    Bundle arguments = new Bundle();
+
+                    long id = additionalIconsAdapter.getItemId(position);
+                    arguments.putLong(getString(R.string.EXTRA_ICON), id);
+
+                    //dialog.setArguments(arguments);
+                    dialog.show(getFragmentManager(), getString(R.string.logout_button));
+
+                    //addCategoryIfRoom((ImageView) view, holder);
+                    Toast.makeText(context, "Item click!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onLongItemClick(View view, int position) {
+                }
+            })
+        );
         return root;
     }
 
-    void updateLists() {
-        favouritesListAdapter.notifyDataSetChanged();
-        additionalIconsAdapter.notifyDataSetChanged();
+    private void addCategoryIfRoom(ImageView image, AdditionalIconsAdapter.IconViewHolder holder) {
+        if (adapter.getCachedFavCategories().size() < 9) {
+
+        } else if (adapter.getCachedFavCategories().size() == 9) {
+            //holder.addButton.setVisibility(View.GONE);
+            //holder.image.setBackground(ContextCompat.getDrawable(context, R.drawable.unselected_icon_background));
+
+            Toast.makeText(context, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

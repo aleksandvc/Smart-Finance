@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
@@ -44,35 +43,6 @@ public class AdditionalIconsAdapter extends RecyclerView.Adapter<AdditionalIcons
         final Integer icon = additionalIcons.get(position);
         holder.image.setImageResource(icon);
         holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.unselected_icon_background));
-
-        /*
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-        public void onClick(View v) {
-                holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.selected_icon_background));
-                holder.addButton.setVisibility(View.VISIBLE);
-
-                holder.addButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        addCategoryIfRoom(holder.image, holder);
-
-                    }
-                });
-            }
-        });*/
-    }
-
-    private void addCategoryIfRoom(ImageView image, IconViewHolder holder) {
-        if (adapter.getCachedFavCategories().size() < 9) {
-            //Add dialog
-
-        } else if (adapter.getCachedFavCategories().size() == 9) {
-            holder.addButton.setVisibility(View.GONE);
-            holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.unselected_icon_background));
-
-            Toast.makeText(activity, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -91,7 +61,6 @@ public class AdditionalIconsAdapter extends RecyclerView.Adapter<AdditionalIcons
             image = (ImageView) itemView.findViewById(R.id.image);
             addButton = (ImageButton) itemView.findViewById(R.id.add_icon_btn);
             this.viewGroup = itemView.findViewById(R.id.viewGroup);
-            //itemView.setOnClickListener(this);
         }
     }
 }

@@ -30,6 +30,12 @@ public class AddCategoryDialogFragment extends DialogFragment {
         cancel = (Button) view.findViewById(R.id.cancel_addition);
         addCategory = (Button) view.findViewById(R.id.start_addition);
 
+        Bundle b = getArguments();
+        if (b != null && !b.isEmpty()) {
+            long id = b.getInt(getText(R.string.EXTRA_ICON).toString());
+            icon.setImageResource((int)id);
+        }
+
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

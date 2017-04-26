@@ -51,17 +51,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
         fragmentManager = getSupportFragmentManager();
         if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
             fragmentManager.beginTransaction()
                     .add(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
                     .commit();
         }
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -90,13 +90,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
-        //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         //dateDisplay.setText(date.toString(dateFormat));
-
 
     }
 
@@ -113,13 +110,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
-                LogoutDialogFragment dialog = LogoutDialogFragment.newInstance();
+                AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                 dialog.show(getSupportFragmentManager(), getString(R.string.logout_button));
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onBackPressed() {

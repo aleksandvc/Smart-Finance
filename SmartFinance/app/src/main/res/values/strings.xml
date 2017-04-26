@@ -10,6 +10,7 @@
     <!-- EXTRA'S KEYS -->
     <string name="EXTRA_SECTION">KEY_CATEGORY</string>
     <string name="EXTRA_DATE">KEY_DATE</string>
+    <string name="EXTRA_ICON">KEY_ICON</string>
 
     <!-- NAVIGATION ITEMS -->
     <string name="nav_item_accounts">Accounts</string>
