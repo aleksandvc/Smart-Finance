@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
             fragmentManager.beginTransaction()
-                    .add(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
+                    .add(R.id.main_fragment_frame, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
                     .commit();
         }
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 fragmentManager.beginTransaction()
-                        .replace(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
+                        .replace(R.id.main_fragment_frame, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
                         .commit();
             }
         });
@@ -110,20 +110,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
-                AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
+                LogoutDialogFragment dialog = new LogoutDialogFragment();
                 dialog.show(getSupportFragmentManager(), getString(R.string.logout_button));
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START))
-            drawer.closeDrawer(GravityCompat.START);
-        else super.onBackPressed();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START))
+//            drawer.closeDrawer(GravityCompat.START);
+//        else super.onBackPressed();
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_favourites:
                 if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.master_layout, new FavouritesFragment(), getString(R.string.favourites_fragment_tag))
+                            .replace(R.id.main_fragment_frame, new FavouritesFragment(), getString(R.string.favourites_fragment_tag))
                             .addToBackStack(getString(R.string.transaction_fragment_tag))
                             .commit();
                 }
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_expense:
                 if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
                     fragmentManager.beginTransaction()
-                        .replace(R.id.master_layout, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
+                        .replace(R.id.main_fragment_frame, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
                         .addToBackStack(getString(R.string.transaction_fragment_tag))
                         .commit();
                 }

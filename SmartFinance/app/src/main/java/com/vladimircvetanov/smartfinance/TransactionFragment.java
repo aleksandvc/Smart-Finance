@@ -370,13 +370,11 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
         account.addTransaction(transaction);
 
-        getActivity().onBackPressed();
         Message.message(getContext(),""+transaction.getCategory().getId());
+        getActivity().onBackPressed();
     }
 
-    /**
-     * Executes stored arithmetic operation.
-     */
+    /** Executes stored arithmetic operation. */
     private void calculate() {
         double currNumber = Double.valueOf(numDisplay.getText().toString());
 
@@ -406,37 +404,14 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     }
 
     @Override
-    /**
-     * Handles selection from the DatePickerFragment.
-     */
+    /** Handles selection from the DatePickerFragment. */
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         date = new DateTime(year, month + 1, dayOfMonth, 0, 0);
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
     }
 
-//    //TODO - handle through Activity
-//    /**
-//     * Animates transition between CategorySelector and number-pad, if number-pad is hidden.
-//     */
-//    public void onBackPressed() {
-//        if (isNumpadDown)
-//            rootView.findViewById(R.id.transaction_section_selection_layout).animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
-//                @Override
-//                public void run() {
-//                    rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.GONE);
-//                    numpad.setAlpha(1F);
-//                    numpad.setVisibility(View.VISIBLE);
-//                    isNumpadDown = false;
-//                }
-//            });
-//        else
-//            getActivity().onBackPressed();
-//    }
-
-    /**
-     * Moved all the .findViewById([...]) methods here, because the onCreateView was getting a bit cluttered.
-     */
+    /** Moved all the .findViewById([...]) methods here, because the onCreateView was getting a bit cluttered. */
     private void initializeUiObjects() {
         catTypeRadio = (RadioGroup) rootView.findViewById(R.id.transaction_radio);
         dateDisplay = (TextView) rootView.findViewById(R.id.transaction_date_display);

@@ -6,28 +6,72 @@
     tools:context=".MainActivity"
     android:layout_marginTop="@dimen/appbar_height">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/favourites_list"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorGrey"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/more_icons_title"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/appbar_height"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_vertical_margin"
-        android:textSize="@dimen/all_text_size_middle"
-        android:layout_below="@+id/favourites_list"
-        android:text="@string/change_favourite_categories"
-        android:background="@color/colorLightGreen"
-        android:textColor="@color/colorDarkGreen"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/additional_icons_list"
-        android:layout_below="@id/more_icons_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/fav_icons_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/appbar_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:textSize="@dimen/all_text_size_middle"
+                android:text="Favourite categories:"
+                android:background="@color/colorLightGreen"
+                android:textColor="@color/colorDarkGreen"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/favourites_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fav_icons_title"
+                android:background="@color/colorGrey"/>
+
+            <TextView
+                android:id="@+id/all_categories_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/appbar_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:textSize="@dimen/all_text_size_middle"
+                android:layout_below="@+id/favourites_list"
+                android:text="All categories:"
+                android:background="@color/colorLightGreen"
+                android:textColor="@color/colorDarkGreen"/>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/all_categories_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/all_categories_title"
+                android:background="@color/colorGrey"/>
+
+            <TextView
+                android:id="@+id/more_icons_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/appbar_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:textSize="@dimen/all_text_size_middle"
+                android:layout_below="@+id/all_categories_list"
+                android:text="Add more categories:"
+                android:background="@color/colorLightGreen"
+                android:textColor="@color/colorDarkGreen"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/additional_icons_list"
+                android:layout_below="@id/more_icons_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

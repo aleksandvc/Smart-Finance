@@ -11,6 +11,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
+
+import static android.R.attr.id;
+
 public class AddCategoryDialogFragment extends DialogFragment {
 
     private TextView dialogTitle;
@@ -31,9 +36,12 @@ public class AddCategoryDialogFragment extends DialogFragment {
         addCategory = (Button) view.findViewById(R.id.start_addition);
 
         Bundle b = getArguments();
-        if (b != null && !b.isEmpty()) {
-            long id = b.getInt(getText(R.string.EXTRA_ICON).toString());
-            icon.setImageResource((int)id);
+        final String iconKey = getText(R.string.EXTRA_ICON).toString();
+        //String nameKey = getText(R.string.EXTRA_SECTION).toString();
+
+        if (b != null && !b.isEmpty() && b.containsKey(iconKey)) {
+            int id = b.getInt(iconKey);
+            icon.setImageResource(id);
         }
 
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -46,10 +54,16 @@ public class AddCategoryDialogFragment extends DialogFragment {
         addCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //DBAdapter.addFavCategory(new CategoryExpense(name, iconId, true));
+                String nameStr = categoryName.getText().toString();
+                if (nameStr.isEmpty()) {
+                    categoryName.setError("Name cannot be empty!");
+                    categoryName.requestFocus();
+
+                } else {
+                    DBAdapter.addExpenseCategory(new CategoryExpense(nameStr, false, id), 1);
+                }
             }
         });
-
         return view;
     }
 }
