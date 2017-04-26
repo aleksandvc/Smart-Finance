@@ -108,7 +108,7 @@ public class ReportFragment extends Fragment {
             Category cat = (Category) getGroup(groupPosition);
 
             ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_group_icon);
-//            i.setImageResource(cat.getIconId());
+            i.setImageResource(cat.getIconId());
 
             TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_group_name);
             t1.setText(cat.getName());
