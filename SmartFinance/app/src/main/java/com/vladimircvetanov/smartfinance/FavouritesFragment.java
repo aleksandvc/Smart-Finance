@@ -72,7 +72,7 @@ public class FavouritesFragment extends Fragment {
                     dialog.show(getFragmentManager(), getString(R.string.logout_button));
 
                     //addCategoryIfRoom((ImageView) view, holder);
-                    Toast.makeText(context, "Item click!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Item clicked!", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
