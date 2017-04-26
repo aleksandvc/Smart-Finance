@@ -88,17 +88,19 @@
     </LinearLayout>
 
 
-    <EditText
+    <TextView
+        android:clickable="true"
+        android:padding="@dimen/all_view_spacing_tiny"
+        android:textAlignment="center"
+        android:background="@color/colorWhite"
+        android:elevation="@dimen/appbar_elevation"
         android:id="@+id/transaction_note_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/transaction_number_display"
         android:layout_marginLeft="@dimen/all_view_spacing_standard"
         android:layout_marginRight="@dimen/all_view_spacing_standard"
-        android:allowUndo="true"
-        android:hint="@string/transaction_input_note"
-        android:maxLength="256"
-        android:maxLines="5" />
+        android:hint="@string/transaction_input_note"/>
 
     <Spinner
         android:id="@+id/transaction_account_spinner"

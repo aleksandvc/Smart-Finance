@@ -61,4 +61,6 @@
     <string name="add">Add</string>
     <string name="set_name">Set name</string>
     <string name="nav_expense">Expense</string>
+    <string name="note_fragment_tag">Note_input_Fragment</string>
+    <string name="EXTRA_NOTE">temp</string>
 </resources>

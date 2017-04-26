@@ -8,14 +8,12 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioGroup;
@@ -36,7 +34,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 
-public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener, NoteInputFragment.NoteCommunicator {
 
     private DBAdapter dbAdapter;
     private boolean startedWithCategory;
@@ -53,7 +51,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     private TextView dateDisplay;
     private DateTime date;
 
-    private EditText noteInput;
+    private TextView noteInput;
 
     private TextView submitButton;
 
@@ -102,8 +100,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     //=======CALCULATOR==============//
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
@@ -112,8 +108,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         catTypeRadio.check(R.id.transaction_radio_expense);
         startedWithCategory = checkForCategoryExtra();
-
-        int uId = (int) Manager.getLoggedUser().getId();
 
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
@@ -132,13 +126,9 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         dateDisplay.setText(date.toString(dateFormat));
 
-
-
         //============onClickListeners=============================================================================//
 
-        /**
-         * On date click -> pop-up a DateDialogFragment and let user select different date.
-         */
+        /** On date click -> pop-up a DateDialogFragment and let user select different date. */
         dateDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +141,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                 datePicker.show(getFragmentManager(), "testTag");
             }
         });
-
 
         catTypeRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -177,9 +166,22 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                 Account acc = (Account) accountSelection.getItemAtPosition(position);
                 selectedAccount = acc;
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        noteInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment inputFragment = new NoteInputFragment();
+                String note = noteInput.getText().toString();
+                if (note != null && !note.isEmpty()){
+                    Bundle b = new Bundle();
+                    b.putString(getString(R.string.EXTRA_NOTE), note);
+                    inputFragment.setArguments(b);
+                }
+                inputFragment.show(getFragmentManager(), getString(R.string.note_fragment_tag));
             }
         });
 
@@ -363,16 +365,13 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             return;
         }
 
-
-            Transaction transaction = new Transaction(date, sum, note, account, category);
+        Transaction transaction = new Transaction(date, sum, note, account, category);
 
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
         account.addTransaction(transaction);
 
+        getActivity().onBackPressed();
         Message.message(getContext(),""+transaction.getCategory().getId());
-
-        //TODO - don't restart Activity
-        startActivity(new Intent(this.getActivity(), MainActivity.class));
     }
 
     /**
@@ -442,7 +441,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         catTypeRadio = (RadioGroup) rootView.findViewById(R.id.transaction_radio);
         dateDisplay = (TextView) rootView.findViewById(R.id.transaction_date_display);
 
-        noteInput = (EditText) rootView.findViewById(R.id.transaction_note_input);
+        noteInput = (TextView) rootView.findViewById(R.id.transaction_note_input);
         accountSelection = (Spinner) rootView.findViewById(R.id.transaction_account_spinner);
 
         numDisplayBase = rootView.findViewById(R.id.transaction_number_display);
@@ -464,5 +463,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         categorySelection = (ListView) rootView.findViewById(R.id.transaction_account_selection);
         submitButton = (TextView) rootView.findViewById(R.id.transaction_submit_btn);
+    }
+
+    @Override
+    public void setNote(String note) {
+        if (note != null && !note.isEmpty()) this.noteInput.setText(note);
     }
 }

@@ -25,7 +25,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener, NoteInputFragment.NoteCommunicator {
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
@@ -170,5 +170,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         TransactionFragment t = (TransactionFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.transaction_fragment_tag));
         if (t != null) t.onDateSet(view, year, month, dayOfMonth);
+    }
+
+    @Override
+    public void setNote(String note) {
+        TransactionFragment t = (TransactionFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.transaction_fragment_tag));
+        t.setNote(note);
     }
 }
