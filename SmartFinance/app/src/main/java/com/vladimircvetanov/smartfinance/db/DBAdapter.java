@@ -84,10 +84,8 @@ public class DBAdapter {
         temp.putAll(incomeCategories);
         return Collections.unmodifiableMap(temp);
     }
-    public Map<String, Category> getCachedExpenseCategories(){
-        HashMap<String, Category> temp = new HashMap<>();
-        temp.putAll(expenseCategories);
-        return Collections.unmodifiableMap(temp);
+    public Map<String, CategoryExpense> getCachedExpenseCategories(){
+        return Collections.unmodifiableMap(expenseCategories);
     }
     public Map<String, CategoryExpense> getCachedFavCategories(){
         return Collections.unmodifiableMap(favouriteCategories);

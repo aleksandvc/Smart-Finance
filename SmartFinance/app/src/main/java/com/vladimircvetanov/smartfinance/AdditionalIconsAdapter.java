@@ -32,7 +32,6 @@ public class AdditionalIconsAdapter extends RecyclerView.Adapter<AdditionalIcons
 
     @Override
     public IconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         LayoutInflater inflater = LayoutInflater.from(activity);
         View view = inflater.inflate(R.layout.icons_list_item, parent, false);
         return new IconViewHolder(view);
@@ -61,6 +60,10 @@ public class AdditionalIconsAdapter extends RecyclerView.Adapter<AdditionalIcons
             image = (ImageView) itemView.findViewById(R.id.image);
             addButton = (ImageButton) itemView.findViewById(R.id.add_icon_btn);
             this.viewGroup = itemView.findViewById(R.id.viewGroup);
+        }
+
+        public ImageView getImage() {
+            return image;
         }
     }
 }
