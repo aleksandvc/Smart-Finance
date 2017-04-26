@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button signUp;
 
     private DBAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         signUp = (Button)findViewById(R.id.loggin_signup_button);
 
         adapter = DBAdapter.getInstance(this);
-
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override

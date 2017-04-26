@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/add_category_title"
@@ -21,13 +21,14 @@
         android:padding="@dimen/all_view_spacing_large">
 
         <ImageView
-            android:id="@+id/fav_icon"
+            android:id="@+id/add_category_icon"
             android:src="@mipmap/cats"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent" />
 
         <EditText
+            android:id="@+id/add_category_name"
             android:layout_width="0dp"
             android:layout_weight="3"
             android:hint="@string/set_name"
@@ -50,7 +51,7 @@
             android:layout_marginRight="@dimen/all_view_spacing_large"/>
 
         <Button
-            android:id="@+id/add_button"
+            android:id="@+id/start_addition"
             android:text="@string/add"
             android:background="@drawable/balance_button"
             android:textColor="@color/colorWhite"

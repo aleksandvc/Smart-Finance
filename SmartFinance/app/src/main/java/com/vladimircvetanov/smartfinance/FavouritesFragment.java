@@ -30,7 +30,7 @@ public class FavouritesFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_favourites, container, false);
 
-        adapter=DBAdapter.getInstance(getActivity());
+        adapter = DBAdapter.getInstance(getActivity());
         moreIconsTitle = (TextView) root.findViewById(R.id.more_icons_title);
 
         HashSet<CategoryExpense> categories = new HashSet<>();
@@ -51,7 +51,6 @@ public class FavouritesFragment extends Fragment {
     }
 
     void updateLists() {
-
         favouritesListAdapter.notifyDataSetChanged();
         additionalIconsAdapter.notifyDataSetChanged();
     }

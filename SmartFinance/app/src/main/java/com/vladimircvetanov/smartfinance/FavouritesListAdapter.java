@@ -77,14 +77,12 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
 
         ImageView image;
         ImageButton removeButton;
-        ImageButton addButton;
         View viewGroup;
 
         public IconViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
             removeButton = (ImageButton) itemView.findViewById(R.id.remove_icon_btn);
-            addButton = (ImageButton) itemView.findViewById(R.id.add_icon_btn);
             this.viewGroup = itemView.findViewById(R.id.viewGroup);
         }
     }
