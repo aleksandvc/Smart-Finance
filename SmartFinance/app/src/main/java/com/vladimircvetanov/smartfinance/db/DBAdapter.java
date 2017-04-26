@@ -25,6 +25,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +46,7 @@ public class DBAdapter {
     private static ConcurrentHashMap<Long, CategoryExpense> expenseCategories;
     private static ConcurrentHashMap<Long, CategoryIncome> incomeCategories;
     private static ConcurrentHashMap<Long,CategoryExpense> favouriteCategories;
-    private static ConcurrentHashMap<Long, ArrayList<Transaction>> transactions;
+    private static ConcurrentHashMap<Long, LinkedList<Transaction>> transactions;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
      */
@@ -106,7 +107,7 @@ public class DBAdapter {
     public Map<Long, Account> getCachedAccounts(){
         return Collections.unmodifiableMap(accounts);
     }
-    public Map<Long, ArrayList<Transaction>> getCachedTransactions(){
+    public Map<Long, LinkedList<Transaction>> getCachedTransactions(){
         return Collections.unmodifiableMap(transactions);
     }
     public long getId(String email){
@@ -720,13 +721,15 @@ public class DBAdapter {
                 values.put(DbHelper.TRANSACTIONS_COLUMN_NOTE,transaction.getNote());
                 values.put(DbHelper.TRANSACTIONS_COLUMN_ACCOUNTFK,transaction.getAccount().getId());
                 values.put(DbHelper.TRANSACTIONS_COLUMN_CATEGORYFK,transaction.getCategory().getId());
+                values.put(DbHelper.TRANSACTIONS_COLUMN_USERFK, userId);
 
                 id[0] = db.insert(DbHelper.TABLE_NAME_TRANSACTIONS,null,values);
+                transaction.setId(id[0]);
 
                 long catId = transaction.getCategory().getId();
 
                 if (!transactions.containsKey(catId)){
-                    transactions.put(catId, new ArrayList<Transaction>());
+                    transactions.put(catId, new LinkedList<Transaction>());
                 }
                 transactions.get(catId).add(transaction);
                 return null;
@@ -735,6 +738,7 @@ public class DBAdapter {
             @Override
             protected void onPostExecute(Void aVoid) {
                 Message.message(context,"Transaction added in db successfully.");
+                Log.wtf("LOAD TRANSACTIONS:", " LOADED ");
             }
         }.execute();
 
@@ -747,7 +751,6 @@ public class DBAdapter {
 
             @Override
             protected Void doInBackground(Void... params) {
-                String[] fk = {Manager.getLoggedUser().getId()+""};
                 Cursor cursor = helper.getWritableDatabase().rawQuery(
                                 "SELECT " +  helper.COLUMN_ID +
                                 " , " + helper.TRANSACTIONS_COLUMN_NOTE +
@@ -757,9 +760,9 @@ public class DBAdapter {
                                 " , " + helper.TRANSACTIONS_COLUMN_CATEGORYFK +
                                 " , " + helper.TRANSACTIONS_COLUMN_USERFK +
                                 " FROM " + DbHelper.TABLE_NAME_TRANSACTIONS +
-                                " WHERE " + DbHelper.TRANSACTIONS_COLUMN_USERFK +" = ? ;",fk);
+                                " WHERE " + DbHelper.TRANSACTIONS_COLUMN_USERFK +" = " + Manager.getLoggedUser().getId(), null);
 
-                if(favouriteCategories.isEmpty()) {
+                if(transactions.isEmpty()) {
 
                     int noteIndex = cursor.getColumnIndex(helper.TRANSACTIONS_COLUMN_NOTE);
                     int dateIndex = cursor.getColumnIndex(helper.TRANSACTIONS_COLUMN_DATE);
@@ -785,7 +788,7 @@ public class DBAdapter {
                             Log.wtf("LOAD TRANSACTIONS:", " NO CATEGORY FOR THIS TRANSACTION!");
                             continue;
                         }
-                        if (!accounts.containsKey(catFk)){
+                        if (!accounts.containsKey(accFk)){
                             Log.wtf("LOAD TRANSACTIONS:", " NO ACCOUNT FOR THIS TRANSACTION!");
                             continue;
                         }
@@ -796,12 +799,16 @@ public class DBAdapter {
                         if (cat == null) cat = favouriteCategories.get(catFk);
 
                         Transaction t = new Transaction(date, sum, note, acc, cat);
+                        t.setId(id);
+                        t.setUserFk(userFk);
+
                         acc.addTransaction(t);
-                        if (!transactions.contains(catFk)){
-                            transactions.put(catFk, new ArrayList<Transaction>());
+                        if (!transactions.containsKey(catFk)){
+                            transactions.put(catFk, new LinkedList<Transaction>());
                         }
 
                         transactions.get(catFk).add(t);
+                        Log.wtf("LOAD TRANSACTIONS:", " LOADED " + cat.getName() + "   :   " + transactions.get(catFk).size());
                     }
                 }
                 else{

@@ -28,9 +28,11 @@ public class ReportFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_report, container, false);
 
         dbAdapter = DBAdapter.getInstance(getActivity());
+        dbAdapter.loadTransactions();
 
         expandableListView = (ExpandableListView) v.findViewById(R.id.inquiry_expandable_list);
 
@@ -47,28 +49,18 @@ public class ReportFragment extends Fragment {
     class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         private ArrayList<Category> groups;
-        private HashMap<Category, ArrayList<Transaction>> children;
         private LayoutInflater inflater;
         private Context context;
 
         ExpandableListAdapter(Context context) {
+            this.context = context;
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             groups = new ArrayList<>();
+
             groups.addAll(dbAdapter.getCachedExpenseCategories().values());
             groups.addAll(dbAdapter.getCachedFavCategories().values());
-
-            this.context = context;
-
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            children = new HashMap<>();
-
-            HashMap<Long, ArrayList<Transaction>> transactionCache = new HashMap<>(dbAdapter.getCachedTransactions());
-
-            for (Category c : groups) {
-                long key = c.getId();
-                ArrayList<Transaction> temp = transactionCache.get(key);
-                if (temp == null) temp = new ArrayList<>();
-                children.put(c, temp);
-            }
+            groups.addAll(dbAdapter.getCachedIncomeCategories().values());
         }
 
         @Override
@@ -78,7 +70,8 @@ public class ReportFragment extends Fragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return children.get(getGroup(groupPosition)).size();
+            long groupId = getGroupId(groupPosition);
+            return dbAdapter.getCachedTransactions().containsKey(groupId) ? dbAdapter.getCachedTransactions().get(groupId).size() : 0;
         }
 
         @Override
@@ -88,17 +81,18 @@ public class ReportFragment extends Fragment {
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return children.get(getGroup(groupPosition)).get(childPosition);
+            long groupId = getGroupId(groupPosition);
+            return dbAdapter.getCachedTransactions().get(groupId).get(childPosition);
         }
 
         @Override
         public long getGroupId(int groupPosition) {
-            return groups.get(groupPosition).getId();
+            return ((Category)getGroup(groupPosition)).getId();
         }
 
         @Override
         public long getChildId(int groupPosition, int childPosition) {
-            return ((Transaction) getChild(groupPosition, childPosition)).getId();
+            return ((Transaction)getChild(groupPosition, childPosition)).getId();
         }
 
         @Override
@@ -120,8 +114,12 @@ public class ReportFragment extends Fragment {
             t1.setText(cat.getName());
 
             TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_group_sum);
-            double sum = 0;
-            for (Transaction t : children.get(cat)) sum += t.getSum();
+            double sum = 0.0;
+
+            if (dbAdapter.getCachedTransactions().containsKey(cat.getId()))
+                for (Transaction t : dbAdapter.getCachedTransactions().get(cat.getId()))
+                    sum += t.getSum();
+
             t2.setText("$" + sum);
 
             if (cat.getType() == Category.Type.EXPENSE)

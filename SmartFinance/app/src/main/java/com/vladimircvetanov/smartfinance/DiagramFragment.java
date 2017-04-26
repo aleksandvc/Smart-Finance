@@ -56,9 +56,11 @@ public class DiagramFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        try {
+
+        try{
             rootView = inflater.inflate(R.layout.fragment_diagram, container, false);
-        } catch (InflateException e){}
+        } catch (InflateException e) {}
+
 
         circleLayout = (CircleLayout) rootView.findViewById(R.id.frame);
         pieChart = (PieChart) rootView.findViewById(R.id.pie_chart);
