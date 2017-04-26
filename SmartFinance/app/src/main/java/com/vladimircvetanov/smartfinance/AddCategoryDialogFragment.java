@@ -24,6 +24,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
     private Button addCategory;
     private Button cancel;
 
+    private DBAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         cancel = (Button) view.findViewById(R.id.cancel_addition);
         addCategory = (Button) view.findViewById(R.id.start_addition);
 
+        adapter= DBAdapter.getInstance(getActivity());
         Bundle b = getArguments();
         final String iconKey = getText(R.string.EXTRA_ICON).toString();
         //String nameKey = getText(R.string.EXTRA_SECTION).toString();
@@ -60,7 +62,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
                     categoryName.requestFocus();
 
                 } else {
-                    DBAdapter.addExpenseCategory(new CategoryExpense(nameStr, false, id), 1);
+                    adapter.addExpenseCategory(new CategoryExpense(nameStr, false, id), 1);
                 }
             }
         });
