@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
@@ -79,6 +80,9 @@ public class DBAdapter {
         return instance;
     }
 
+    public Map<String, User> getCachedUsers(){
+        return Collections.unmodifiableMap(registeredUsers);
+    }
     public Map<String, Category> getCachedIncomeCategories(){
         HashMap<String, Category> temp = new HashMap<>();
         temp.putAll(incomeCategories);
@@ -103,11 +107,11 @@ public class DBAdapter {
     }
     /**
      * A method used to insert data in the database.
-     * @param username
-     * @param password
+    // * @param username
+    // * @param password
      * @return long id if the method was successful and -1 if it fails
      */
-    public long insertData(final String username,final String password){
+    public long insertData(final User u){
 
         final long[] id = new long[1];
         final boolean[] flag = new boolean[1];
@@ -120,6 +124,7 @@ public class DBAdapter {
             protected Void doInBackground(Long... params) {
 
                 if (!flag[0]) {
+
                     /**
                      *  A reference from inner class is used to create a Database object.
                      */
@@ -135,8 +140,8 @@ public class DBAdapter {
                      * Three columns are inserted;
                      */
 
-                    values.put(DbHelper.COLUMN_USERNAME, username);
-                    values.put(DbHelper.COLUMN_PASSWORD, password);
+                    values.put(DbHelper.COLUMN_USERNAME, u.getEmail());
+                    values.put(DbHelper.COLUMN_PASSWORD, u.getPassword());
 
                     /**
                      * The insert method with three parameters(String TableName,String NullColumnHack,ContentValues values)
@@ -144,16 +149,38 @@ public class DBAdapter {
                      * It returns the ID of the inserted row or -1 if the operation fails.
                      */
                     id[0] = db.insert(DbHelper.TABLE_NAME_USERS, null, values);
-
-
+                    u.setId(id[0]);
+                    registeredUsers.put(u.getEmail(),u);
+                    Manager.setLoggedUser(u);
 
                 }
 
                 return null;
             }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                addDefaultCategories(u);
+            }
         }.execute();
         return id[0];
+    }
+    private void addDefaultCategories(User u) {
+        long id =u.getId();
+        addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car),id);
+        addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes),id);
+        addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart),id);
+        addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane),id);
+        addFavCategory(new CategoryExpense("House", true, R.mipmap.home),id);
+        addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming),id);
+        addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant),id);
+        addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),id);
+        addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),id);
+        addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),id);
+        addAccount(new Account("Cash",R.mipmap.smartfinance_icon),id);
+        addAccount(new Account("Debit",R.mipmap.smartfinance_icon),id);
+        addAccount(new Account("Credit",R.mipmap.smartfinance_icon),id);
     }
     private  String getData(final String username){
 
@@ -272,7 +299,7 @@ public class DBAdapter {
     }
 
 
-    public static void loadAccounts(){
+    public void loadAccounts(){
 
         new AsyncTask<Void,Void,Void>(){
 
@@ -315,6 +342,8 @@ public class DBAdapter {
                     values.put(DbHelper.ACCOUNTS_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
+                    account.setId(id[0]);
+                    account.setUserFk(userId);
                     accounts.put(account.getName(),account);
                 }
                 return null;
@@ -375,7 +404,7 @@ public class DBAdapter {
         }.execute(oldName);
 
     }
-    public static void loadExpenseCategories(){
+    public void loadExpenseCategories(){
 
         new AsyncTask<Void,Void,Void>(){
 
@@ -404,7 +433,7 @@ public class DBAdapter {
     }
 
 
-    public static long addExpenseCategory(final CategoryExpense category, final long userId){
+    public long addExpenseCategory(final CategoryExpense category, final long userId){
         final long[] id = new long[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -420,6 +449,8 @@ public class DBAdapter {
                     values.put(DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,null,values);
+                    category.setUserFk(userId);
+                    category.setId(id[0]);
                     expenseCategories.put(category.getName(),category);
                 }
                 return null;
@@ -428,7 +459,7 @@ public class DBAdapter {
 
         return id[0];
     }
-    public static int deleteExpenseCategory(final CategoryExpense category){
+    public int deleteExpenseCategory(final CategoryExpense category){
         final int[] count = new int[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -478,7 +509,7 @@ public class DBAdapter {
         }.execute(oldName);
 
     }
-    public static void loadIncomeCategories(){
+    public void loadIncomeCategories(){
 
         new AsyncTask<Void,Void,Void>(){
 
@@ -520,6 +551,8 @@ public class DBAdapter {
                     values.put(DbHelper.INCOME_CATEGORIES_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_INCOME_CATEGORIES,null,values);
+                    category.setUserFk(userId);
+                    category.setId(id[0]);
                     incomeCategories.put(category.getName(),category);
                 }
                 return null;
@@ -579,7 +612,7 @@ public class DBAdapter {
         }.execute(oldName);
 
     }
-    public static void loadFavouriteCategories(){
+    public void loadFavouriteCategories(){
 
         new AsyncTask<Void,Void,Void>(){
 
@@ -632,6 +665,7 @@ public class DBAdapter {
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_FAVCATEGORIES,null,values);
                     category.setUserFk(userId);
+                    category.setId(id[0]);
                     favouriteCategories.put(category.getName(),category);
                 }
                 return null;
