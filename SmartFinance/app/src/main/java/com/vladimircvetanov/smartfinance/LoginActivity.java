@@ -65,15 +65,17 @@ public class LoginActivity extends AppCompatActivity {
                 if(flag[0]){
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("user", u);
-                    startActivity(intent);
                     Manager.setLoggedUser(u);
                     u.setId(adapter.getId(u.getEmail()));
+                    startActivity(intent);
 
 
-                    adapter.getAllAccounts();
-                    adapter.getAllExpenseCategories();
-                    adapter.getAllIncomeCategories();
-                    adapter.getAllFavCategories();
+                    //adapter.getAllAccounts();
+
+                   //adapter.getAllExpenseCategories();
+                    //adapter.getAllIncomeCategories();
+                    adapter.loadFavouriteCategories();
+                    //adapter.getAllFavCategories();
                 }
                 return null;
             }

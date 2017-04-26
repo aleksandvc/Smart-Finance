@@ -19,9 +19,11 @@ import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.User;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by vladimircvetanov on 04.04.17.
@@ -35,12 +37,12 @@ public class DBAdapter {
      */
     static DbHelper helper ;
 
-    private static HashMap<String, User> registeredUsers;
-    private static HashMap<String, Account> accounts;
-    private static HashMap<String, CategoryExpense> expenseCategories;
-    private static HashMap<String, CategoryIncome> incomeCategories;
-    private static HashMap<String,CategoryExpense> favouriteCategories;
-    private static HashMap<Long,Transaction> transactions;
+    private static ConcurrentHashMap<String, User> registeredUsers;
+    private static ConcurrentHashMap<String, Account> accounts;
+    private static ConcurrentHashMap<String, CategoryExpense> expenseCategories;
+    private static ConcurrentHashMap<String, CategoryIncome> incomeCategories;
+    private static ConcurrentHashMap<String,CategoryExpense> favouriteCategories;
+    private static ConcurrentHashMap<Long, ArrayList<Transaction>> transactions;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
      */
@@ -66,15 +68,13 @@ public class DBAdapter {
     public static DBAdapter getInstance(Context context){
         if(instance == null){
             instance = new DBAdapter(context);
-            registeredUsers = new HashMap<>();
-            accounts = new HashMap<>();
-            expenseCategories = new HashMap<>();
-            incomeCategories = new HashMap<>();
-            favouriteCategories = new HashMap<>();
-            transactions = new HashMap<>();
+            registeredUsers = new ConcurrentHashMap<>();
+            accounts = new ConcurrentHashMap<>();
+            expenseCategories = new ConcurrentHashMap<>();
+            incomeCategories = new ConcurrentHashMap<>();
+            favouriteCategories = new ConcurrentHashMap<>();
+            transactions = new ConcurrentHashMap<>();
             loadUsers();
-
-
         }
         return instance;
     }
@@ -90,13 +90,14 @@ public class DBAdapter {
         return Collections.unmodifiableMap(temp);
     }
     public Map<String, CategoryExpense> getCachedFavCategories(){
-
         return Collections.unmodifiableMap(favouriteCategories);
     }
     public Map<String, Account> getCachedAccounts(){
         return Collections.unmodifiableMap(accounts);
     }
-
+    public Map<Long, ArrayList<Transaction>> getCachedTransactions(){
+        return Collections.unmodifiableMap(transactions);
+    }
     public long getId(String email){
         return registeredUsers.get(email).getId();
     }
@@ -152,7 +153,7 @@ public class DBAdapter {
             }
 
         }.execute();
-            return id[0];
+        return id[0];
     }
     private  String getData(final String username){
 
@@ -244,7 +245,7 @@ public class DBAdapter {
         new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... strings) {
-               SQLiteDatabase db = helper.getWritableDatabase();
+                SQLiteDatabase db = helper.getWritableDatabase();
                 String oldEmail = strings[0];
                 User u = registeredUsers.get(oldEmail);
                 //update
@@ -304,7 +305,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,DbHelper.ACCOUNTS_COLUMN_ICON};
+                String[] columns = {DbHelper.COLUMN_ID,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,DbHelper.ACCOUNTS_COLUMN_ICON};
                 String userFk = DbHelper.ACCOUNTS_COLUMN_USERFK +"=?";
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_ACCOUNTS,columns,DbHelper.ACCOUNTS_COLUMN_USERFK + " = " + Manager.getLoggedUser().getId(),null,null,null,null);
 
@@ -312,10 +313,14 @@ public class DBAdapter {
                     Log.e("TAG"," ima cursorche we");
                     int index = cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ICON);
+                    int index3 = cursor.getColumnIndex(DbHelper.COLUMN_ID);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
+                    long accountId = cursor.getLong(index3);
+                    Account account = new Account(name,icon);
+                    account.setId(accountId);
 
-                    accounts.put(name+"",new Account(name,icon));
+                    accounts.put(name+"",account);
 
                 }
                 return null;
@@ -327,24 +332,24 @@ public class DBAdapter {
     public long addAccount(final Account account,final long userId){
         final long[] id = new long[1];
 
-       new AsyncTask<Void,Void,Void>(){
-           @Override
-           protected Void doInBackground(Void... params) {
-               if(!accounts.containsKey(account.getName())) {
-                   SQLiteDatabase db = helper.getWritableDatabase();
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                if(!accounts.containsKey(account.getName())) {
+                    SQLiteDatabase db = helper.getWritableDatabase();
 
-                   ContentValues values = new ContentValues();
+                    ContentValues values = new ContentValues();
 
-                   values.put(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,account.getName());
-                   values.put(DbHelper.ACCOUNTS_COLUMN_ICON,account.getIconId());
-                   values.put(DbHelper.ACCOUNTS_COLUMN_USERFK,userId);
+                    values.put(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME,account.getName());
+                    values.put(DbHelper.ACCOUNTS_COLUMN_ICON,account.getIconId());
+                    values.put(DbHelper.ACCOUNTS_COLUMN_USERFK,userId);
 
-                   id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
-                   accounts.put(account.getName(),account);
-               }
-               return null;
-           }
-       }.execute();
+                    id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
+                    accounts.put(account.getName(),account);
+                }
+                return null;
+            }
+        }.execute();
 
         return id[0];
     }
@@ -407,9 +412,10 @@ public class DBAdapter {
             @Override
             protected Void doInBackground(Void... params) {
                 String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
-                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,expense_category_name,expense_category_icon FROM " + DbHelper.TABLE_NAME_EXPENSE_CATEGORIES + " WHERE " + DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK +" = ? ;",fk);
+                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,expense_category_name,expense_category_icon,expense_category_user FROM " + DbHelper.TABLE_NAME_EXPENSE_CATEGORIES + " WHERE " + DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK +" = ? ;",fk);
 
                 while(cursor.moveToNext()){
+                    Log.e("EXPENSE","BACHKA WE");
                     long id = cursor.getInt(cursor.getColumnIndex("_id"));
                     String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME));
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON));
@@ -433,18 +439,21 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON};
+                String[] columns = {DbHelper.COLUMN_ID,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON};
 
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,columns,null,null,null,null,null);
 
                 while(cursor.moveToNext()){
-
+                    Log.e("TAG" ,"all expense categories");
                     int index = cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON);
+                    int index3 =cursor.getColumnIndex(DbHelper.COLUMN_ID);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
-
-                    expenseCategories.put(name+"",new CategoryExpense(name, false,icon));
+                    long categoryId = cursor.getLong(index3);
+                    CategoryExpense category = new CategoryExpense(name, false,icon);
+                    category.setId(categoryId);
+                    expenseCategories.put(name+"",category);
 
                 }
                 return null;
@@ -558,7 +567,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.INCOME_CATEGORIES_COLUMN_ICON};
+                String[] columns = {DbHelper.COLUMN_ID,DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME,DbHelper.INCOME_CATEGORIES_COLUMN_ICON};
 
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_INCOME_CATEGORIES,columns,null,null,null,null,null);
 
@@ -566,10 +575,14 @@ public class DBAdapter {
 
                     int index = cursor.getColumnIndex(DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.INCOME_CATEGORIES_COLUMN_ICON);
+                    int index3 = cursor.getColumnIndex(DbHelper.COLUMN_ID);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
+                    long categoryId = cursor.getLong(index3);
 
-                    incomeCategories.put(name+"",new CategoryIncome(name,icon));
+                    CategoryIncome category = new CategoryIncome(name,icon);
+                    category.setId(categoryId);
+                    incomeCategories.put(name+"",category);
 
                 }
                 return null;
@@ -659,15 +672,20 @@ public class DBAdapter {
             @Override
             protected Void doInBackground(Void... params) {
                 String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
-                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,fav_category_name,fav_category_icon FROM " + DbHelper.TABLE_NAME_FAVCATEGORIES + " WHERE " + DbHelper.FAVCATEGORIES_COLUMN_USERFK +" = ? ;",fk);
+                Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,fav_category_name,fav_category_icon,fav_category_user FROM " + DbHelper.TABLE_NAME_FAVCATEGORIES + " WHERE " + DbHelper.FAVCATEGORIES_COLUMN_USERFK +" = ? ;",fk);
 
-                while(cursor.moveToNext()){
-                    Log.e("TAG","ima metod");
-                    long id = cursor.getInt(cursor.getColumnIndex("_id"));
-                    String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME));
-                    int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON));
-                    CategoryExpense category = new CategoryExpense(categoryName, true, iconId);
-                    favouriteCategories.put(categoryName + "", category);//pravim go dva puti i pri getAllExpenseCategories
+                if(favouriteCategories.isEmpty()) {
+                    while (cursor.moveToNext()) {
+                        Log.e("TAG", "ima metod");
+                        long id = cursor.getLong(cursor.getColumnIndex("_id"));
+                        String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME));
+                        int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON));
+                        CategoryExpense category = new CategoryExpense(categoryName, true, iconId);
+                        favouriteCategories.put(categoryName + "", category);//pravim go dva puti i pri getAllExpenseCategories
+                    }
+                }
+                else{
+
                 }
                 return null;
             }
@@ -686,18 +704,23 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                String[] columns = {DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,DbHelper.FAVCATEGORIES_COLUMN_ICON};
+                String[] columns = {DbHelper.COLUMN_ID,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME,DbHelper.FAVCATEGORIES_COLUMN_ICON};
 
+                //String [] fk = {String.valueOf(Manager.getLoggedUser().getId())};
                 Cursor cursor = db.query(DbHelper.TABLE_NAME_FAVCATEGORIES,columns,null,null,null,null,null);
 
                 while(cursor.moveToNext()){
-                    Log.e("TAG","ima ima");
+                    Log.e("TAG" ,"all favourite categories");
                     int index = cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME);
                     int index2 =cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON);
+                    int index3 = cursor.getColumnIndex(DbHelper.COLUMN_ID);
                     String name = cursor.getString(index);
                     int icon = cursor.getInt(index2);
+                    long categoryId = cursor.getLong(index3);
+                    CategoryExpense category = new CategoryExpense(name, true,icon);
+                    category.setId(categoryId);
 
-                    favouriteCategories.put(name+"",new CategoryExpense(name, true,icon));
+                    favouriteCategories.put(name+"",category);
 
                 }
                 return null;
@@ -721,6 +744,7 @@ public class DBAdapter {
                     values.put(DbHelper.FAVCATEGORIES_COLUMN_USERFK,userId);
 
                     id[0] = db.insert(DbHelper.TABLE_NAME_FAVCATEGORIES,null,values);
+                    category.setUserFk(userId);
                     favouriteCategories.put(category.getName(),category);
                 }
                 return null;
@@ -737,7 +761,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = ? ",new String[]{category.getName()});
+                count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = ? AND " + DbHelper.FAVCATEGORIES_COLUMN_USERFK+ " = ?",new String[]{category.getName(), Manager.getLoggedUser().getId()+""});
                 favouriteCategories.remove(category.getName());
                 return null;
             }
@@ -768,7 +792,9 @@ public class DBAdapter {
                 values.put(DbHelper.TRANSACTIONS_COLUMN_CATEGORYFK,transaction.getCategory().getId());
 
                 id[0] = db.insert(DbHelper.TABLE_NAME_TRANSACTIONS,null,values);
-                transactions.put(transaction.getCategory().getId(),transaction);
+                long catId = transaction.getCategory().getId();
+                if (!transactions.containsKey(catId)) transactions.put(catId, new ArrayList<Transaction>());
+                transactions.get(catId).add(transaction);
                 return null;
             }
 
@@ -898,7 +924,7 @@ public class DBAdapter {
         public static final String CREATE_TABLE_TRANASCTIONS = "CREATE TABLE " + TABLE_NAME_TRANSACTIONS + "(" + COLUMN_ID +
                 " INTEGER PRIMARY KEY AUTOINCREMENT, " + TRANSACTIONS_COLUMN_NOTE + " VARCHAR(255), " +
                 TRANSACTIONS_COLUMN_SUM + " REAL, " + TRANSACTIONS_COLUMN_DATE + " INTEGER, " + TRANSACTIONS_COLUMN_CATEGORYFK + " INTEGER," +
-                 TRANSACTIONS_COLUMN_USERFK + " INTEGER, " + TRANSACTIONS_COLUMN_ACCOUNTFK + " INTEGER);";
+                TRANSACTIONS_COLUMN_USERFK + " INTEGER, " + TRANSACTIONS_COLUMN_ACCOUNTFK + " INTEGER);";
 
 
         /**
@@ -919,7 +945,7 @@ public class DBAdapter {
          *
          * @param context
          */
-       private DbHelper(Context context) {
+        private DbHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);
             this.context = context;
         }

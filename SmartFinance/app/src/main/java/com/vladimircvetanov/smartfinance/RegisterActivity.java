@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.User;
 
@@ -102,12 +103,6 @@ public class RegisterActivity extends AppCompatActivity {
         flag = true;
         new AsyncTask<Boolean, Void, Boolean>() {
 
-            @Override
-            protected void onPreExecute() {
-
-                Message.message(RegisterActivity.this, "User registered!");
-
-            }
 
             @Override
             protected Boolean doInBackground(Boolean... params) {
@@ -120,10 +115,27 @@ public class RegisterActivity extends AppCompatActivity {
                 return true;
             }
 
-
-
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                Message.message(RegisterActivity.this, "User registered!");
+                addDefaultCategories();
+            }
         }.execute();
 
         return flag;
+    }
+    private void addDefaultCategories() {
+        DBAdapter.addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("House", true, R.mipmap.home),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),Manager.getLoggedUser().getId());
+        DBAdapter.addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),Manager.getLoggedUser().getId());
+
     }
 }

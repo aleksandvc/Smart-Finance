@@ -25,7 +25,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener, NoteInputFragment.NoteCommunicator {
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView userProfile;
     private View headerView;
     private View toolbarTitle;
-    private View navigationHeader;
 
     private FragmentManager fragmentManager;
     private Bundle dataBetweenFragments;
@@ -51,6 +50,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        fragmentManager = getSupportFragmentManager();
+        if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
+            fragmentManager.beginTransaction()
+                    .add(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
+                    .commit();
+        }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -74,6 +80,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        toolbarTitle = findViewById(R.id.diagram_fragment_link);
+        toolbarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
+                        .commit();
+            }
+        });
+
 
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
         //Show the current date in a "d MMMM, YYYY" format.
@@ -81,12 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         //dateDisplay.setText(date.toString(dateFormat));
 
-        fragmentManager = getSupportFragmentManager();
-        if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
-            fragmentManager.beginTransaction()
-                .add(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
-                .commit();
-        }
+
     }
 
     @Override
@@ -113,12 +124,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-
+        if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        else super.onBackPressed();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -173,5 +181,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         TransactionFragment t = (TransactionFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.transaction_fragment_tag));
         if (t != null) t.onDateSet(view, year, month, dayOfMonth);
+    }
+
+    @Override
+    public void setNote(String note) {
+        TransactionFragment t = (TransactionFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.transaction_fragment_tag));
+        t.setNote(note);
     }
 }
