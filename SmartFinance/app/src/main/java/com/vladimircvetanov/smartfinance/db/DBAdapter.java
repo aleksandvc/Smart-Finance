@@ -22,6 +22,7 @@ import com.vladimircvetanov.smartfinance.model.Transaction;
 import com.vladimircvetanov.smartfinance.model.User;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -716,7 +717,7 @@ public class DBAdapter {
 
                 ContentValues values = new ContentValues();
 
-                values.put(DbHelper.TRANSACTIONS_COLUMN_DATE,transaction.getDate().toString());
+                values.put(DbHelper.TRANSACTIONS_COLUMN_DATE,transaction.getDate().getMillis());
                 values.put(DbHelper.TRANSACTIONS_COLUMN_SUM,transaction.getSum());
                 values.put(DbHelper.TRANSACTIONS_COLUMN_NOTE,transaction.getNote());
                 values.put(DbHelper.TRANSACTIONS_COLUMN_ACCOUNTFK,transaction.getAccount().getId());
@@ -778,7 +779,7 @@ public class DBAdapter {
                         long id = cursor.getLong(idIndex);
                         String note = cursor.getString(noteIndex);
                         long timestamp = cursor.getLong(dateIndex);
-                        DateTime date = new DateTime(timestamp);
+                        DateTime date = new DateTime(timestamp, DateTimeZone.UTC);
                         double sum = cursor.getDouble(sumIndex);
                         long accFk = cursor.getLong(accountIndex);
                         long catFk = cursor.getLong(categoryIndex);
