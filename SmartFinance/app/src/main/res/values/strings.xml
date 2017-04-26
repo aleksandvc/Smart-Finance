@@ -11,6 +11,8 @@
     <string name="EXTRA_SECTION">KEY_CATEGORY</string>
     <string name="EXTRA_DATE">KEY_DATE</string>
     <string name="EXTRA_ICON">KEY_ICON</string>
+    <string name="EXTRA_LIST">KEY_LIST</string>
+    <string name="EXTRA_NOTE">temp</string>
 
     <!-- NAVIGATION ITEMS -->
     <string name="nav_item_accounts">Accounts</string>
@@ -63,5 +65,4 @@
     <string name="set_name">Set name</string>
     <string name="nav_expense">Expense</string>
     <string name="note_fragment_tag">Note_input_Fragment</string>
-    <string name="EXTRA_NOTE">temp</string>
 </resources>

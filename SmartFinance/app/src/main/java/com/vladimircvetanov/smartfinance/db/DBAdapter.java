@@ -613,7 +613,7 @@ public class DBAdapter {
     }
 
 
-    public  long addFavCategory(final CategoryExpense category, final long userId){
+    public static long addFavCategory(final CategoryExpense category, final long userId){
         final long[] id = new long[1];
 
         new AsyncTask<Void,Void,Void>(){

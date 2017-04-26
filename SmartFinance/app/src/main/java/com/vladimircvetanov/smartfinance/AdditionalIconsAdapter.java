@@ -61,9 +61,5 @@ public class AdditionalIconsAdapter extends RecyclerView.Adapter<AdditionalIcons
             addButton = (ImageButton) itemView.findViewById(R.id.add_icon_btn);
             this.viewGroup = itemView.findViewById(R.id.viewGroup);
         }
-
-        public ImageView getImage() {
-            return image;
-        }
     }
 }

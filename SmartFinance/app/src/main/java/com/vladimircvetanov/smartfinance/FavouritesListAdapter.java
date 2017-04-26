@@ -11,10 +11,11 @@ import android.widget.ImageView;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
-import com.vladimircvetanov.smartfinance.model.Manager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+
+
 
 public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
 
@@ -36,7 +37,6 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
 
     @Override
     public void onBindViewHolder(final FavouritesListAdapter.IconViewHolder holder, final int position) {
-
         final CategoryExpense categoryExpense = categories.get(position);
         holder.image.setImageResource(categoryExpense.getIconId());
         holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.fav_icon_backgroud));
@@ -55,8 +55,10 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
                         notifyItemRemoved(position);
                         DBAdapter.deleteFavCategory(categoryExpense);
 
-                        Manager.getInstance();
-                        Manager.addExpenseIcon(categoryExpense.getIconId());
+                        //Manager.getInstance();
+                        //Manager.addExpenseIcon(categoryExpense.getIconId());
+
+                        //fragment.updateLists();
                     }
                 });
             }
@@ -72,12 +74,14 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
 
         ImageView image;
         ImageButton removeButton;
+        ImageButton addButton;
         View viewGroup;
 
         public IconViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
             removeButton = (ImageButton) itemView.findViewById(R.id.remove_icon_btn);
+            addButton = (ImageButton) itemView.findViewById(R.id.add_icon_btn);
             this.viewGroup = itemView.findViewById(R.id.viewGroup);
         }
     }

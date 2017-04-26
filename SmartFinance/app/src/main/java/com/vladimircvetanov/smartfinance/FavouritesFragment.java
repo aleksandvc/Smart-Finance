@@ -49,18 +49,35 @@ public class FavouritesFragment extends Fragment {
         categories.addAll(adapter.getCachedFavCategories().values());
 
         favouritesListAdapter = new FavouritesListAdapter(categories, getActivity());
-        additionalIconsAdapter = new AdditionalIconsAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity());
-
-        HashSet<CategoryExpense> allCategories = new HashSet<>();
-        allCategories.addAll(adapter.getCachedExpenseCategories().values());
-
-        allCategoriesList = (RecyclerView) root.findViewById(R.id.all_categories_list);
-        allCategoriesList.setAdapter(new FavouritesListAdapter(allCategories, getActivity()));
-
         favouritesList = (RecyclerView) root.findViewById(R.id.favourites_list);
         favouritesList.setAdapter(favouritesListAdapter);
         favouritesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
+        allCategoriesList = (RecyclerView) root.findViewById(R.id.all_categories_list);
+        final HashSet<CategoryExpense> allCategories = new HashSet<>();
+        allCategories.addAll(adapter.getCachedExpenseCategories().values());
+        allCategoriesList.setAdapter(new FavouritesListAdapter(allCategories, getActivity()));
+
+        allCategoriesList.addOnItemTouchListener(
+                new RecyclerItemClickListener(context, allCategoriesList, new RecyclerItemClickListener.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (adapter.getCachedFavCategories().size() < 9) {
+                            //DBAdapter.addFavCategory();
+
+                        } else if (adapter.getCachedFavCategories().size() == 9) {
+                            Toast.makeText(context, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                    }
+                })
+        );
+
+        additionalIconsAdapter = new AdditionalIconsAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity());
         additionalIconsList = (RecyclerView) root.findViewById(R.id.additional_icons_list);
         additionalIconsList.setAdapter(additionalIconsAdapter);
         additionalIconsList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
@@ -69,27 +86,14 @@ public class FavouritesFragment extends Fragment {
             new RecyclerItemClickListener(context, additionalIconsList, new RecyclerItemClickListener.OnItemClickListener() {
 
                 @Override public void onItemClick(View view, int position) {
-
-                    //holder.image.setBackground(ContextCompat.getDrawable(context, R.drawable.selected_icon_background));
-                    //holder.addButton.setVisibility(View.VISIBLE);
-                    //Toast.makeText(context, "Item clicked!", Toast.LENGTH_SHORT).show();
-
-                    if (adapter.getCachedFavCategories().size() < 9) {
                         AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                         Bundle arguments = new Bundle();
 
                         int id = view.getId();
-                        arguments.putInt(getString(R.string.EXTRA_ICON), id);
+                        //arguments.putInt(getString(R.string.EXTRA_ICON), id);
 
                         //dialog.setArguments(arguments);
                         dialog.show(getFragmentManager(), getString(R.string.logout_button));
-
-                    } else if (adapter.getCachedFavCategories().size() == 9) {
-                        //holder.addButton.setVisibility(View.GONE);
-                        //holder.image.setBackground(ContextCompat.getDrawable(context, R.drawable.unselected_icon_background));
-
-                        Toast.makeText(context, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
-                    }
                 }
 
                 @Override

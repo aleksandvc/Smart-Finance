@@ -10,9 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
+import com.vladimircvetanov.smartfinance.model.Manager;
 
 import static android.R.attr.id;
 
@@ -37,9 +39,9 @@ public class AddCategoryDialogFragment extends DialogFragment {
 
         Bundle b = getArguments();
         final String iconKey = getText(R.string.EXTRA_ICON).toString();
-        //String nameKey = getText(R.string.EXTRA_SECTION).toString();
+        String listKey = getText(R.string.EXTRA_LIST).toString();
 
-        if (b != null && !b.isEmpty() && b.containsKey(iconKey)) {
+        if (b != null && !b.isEmpty() && b.containsKey(iconKey) && b.containsKey(listKey)) {
             int id = b.getInt(iconKey);
             icon.setImageResource(id);
         }
@@ -60,7 +62,9 @@ public class AddCategoryDialogFragment extends DialogFragment {
                     categoryName.requestFocus();
 
                 } else {
-                    DBAdapter.addExpenseCategory(new CategoryExpense(nameStr, false, id), 1);
+                    DBAdapter.addExpenseCategory(new CategoryExpense(nameStr, false, id), Manager.getLoggedUser().getId());
+                    Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
+                    dismiss();
                 }
             }
         });
