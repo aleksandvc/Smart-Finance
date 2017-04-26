@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,8 +12,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,51 +27,52 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.szugyi.circlemenu.view.CircleLayout;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
+import com.vladimircvetanov.smartfinance.model.Manager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
-import static com.vladimircvetanov.smartfinance.model.Manager.getLoggedUser;
+import java.util.HashSet;
 
 public class DiagramFragment extends Fragment {
 
-    private FrameLayout frameLayout;
+    private HashSet<CategoryExpense> displayedCategories;
+
     private PieChart pieChart;
     private ArrayList<PieEntry> entries;
     private PieData pieData;
     private PieDataSet pieDataSet;
     private Button totalSumButton;
 
-    //Temp
-    private EditText addValue;
-    private Button addButton;
     private CircleLayout circleLayout;
     private DBAdapter adapter;
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 
+    private View rootView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_diagram, container, false);
+        try {
+            rootView = inflater.inflate(R.layout.fragment_diagram, container, false);
+        } catch (InflateException e){}
 
         circleLayout = (CircleLayout) rootView.findViewById(R.id.frame);
         pieChart = (PieChart) rootView.findViewById(R.id.pie_chart);
+
         entries = new ArrayList<>();
         pieDataSet = new PieDataSet(entries, "");
+
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
         adapter = DBAdapter.getInstance(getActivity());
 
         drawDiagram();
         drawFavouriteIcons();
 
+
+        /** Animator for the Report Drawer */
         final LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.report_layout);
         final float[] startY = new float[1];
         final float[] translationY = new float[1];
@@ -126,8 +126,8 @@ public class DiagramFragment extends Fragment {
         pieChart.setData(pieData);
         pieChart.invalidate();
 
-        getLoggedUser().totalSum += entrySum;
-        totalSumButton.setText(String.valueOf(getLoggedUser().totalSum));
+        Manager.getLoggedUser().totalSum += entrySum;
+        totalSumButton.setText(String.valueOf(Manager.getLoggedUser().totalSum));
     }
 
     void drawDiagram() {
@@ -149,37 +149,41 @@ public class DiagramFragment extends Fragment {
     }
 
     void drawFavouriteIcons() {
+        if (displayedCategories == null) displayedCategories = new HashSet<>();
         for (final CategoryExpense categoryExpense : adapter.getCachedFavCategories().values()) {
-            final ImageView icon = new ImageView(getActivity());
-            icon.setImageResource(categoryExpense.getIconId());
+            if (!displayedCategories.contains(categoryExpense)) {
+                displayedCategories.add(categoryExpense);
+                final ImageView icon = new ImageView(getActivity());
+                icon.setImageResource(categoryExpense.getIconId());
 
-            icon.setScaleType(ImageButton.ScaleType.FIT_CENTER);
-            CircleLayout.LayoutParams params = new CircleLayout.LayoutParams(120, 120);
-            icon.setLayoutParams(params);
+                icon.setScaleType(ImageButton.ScaleType.FIT_CENTER);
+                CircleLayout.LayoutParams params = new CircleLayout.LayoutParams(120, 120);
+                icon.setLayoutParams(params);
 
-            icon.setPadding(30, 30, 30, 30);
-            icon.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorTransparent));
+                icon.setPadding(30, 30, 30, 30);
+                icon.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorTransparent));
 
-            circleLayout.addView(icon);
-            circleLayout.setRotating(false);
+                circleLayout.addView(icon);
+                circleLayout.setRotating(false);
 
-            icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TransactionFragment fragment = new TransactionFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putSerializable(getString(R.string.EXTRA_SECTION), categoryExpense);
-                    fragment.setArguments(arguments);
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.master_layout, fragment, getString(R.string.transaction_fragment_tag))
-                            .addToBackStack(getString(R.string.transaction_fragment_tag))
-                            .commit();
+                icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TransactionFragment fragment = new TransactionFragment();
+                        Bundle arguments = new Bundle();
+                        arguments.putSerializable(getString(R.string.EXTRA_SECTION), categoryExpense);
+                        fragment.setArguments(arguments);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.main_fragment_frame, fragment, getString(R.string.transaction_fragment_tag))
+                                .addToBackStack(getString(R.string.transaction_fragment_tag))
+                                .commit();
 
-                    pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
-                    pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
-                    icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
-                }
-            });
+                        pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
+                        pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
+                        icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
+                    }
+                });
+            }
         }
     }
 

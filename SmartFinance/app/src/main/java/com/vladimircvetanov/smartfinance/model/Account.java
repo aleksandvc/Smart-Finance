@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  */
-public class Account implements Serializable, Comparable<Account>,RowDisplayable {
+public class Account implements Serializable, Comparable<Account>, RowDisplayable {
 
     private String name;
     private long id;

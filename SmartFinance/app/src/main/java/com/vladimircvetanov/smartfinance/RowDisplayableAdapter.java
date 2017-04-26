@@ -10,25 +10,25 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
-import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
+public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAdapter.IconViewHolder>{
 
-
-public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAdapter.IconViewHolder>{
-
-    private ArrayList<CategoryExpense> categories;
+    private ArrayList<RowDisplayable> categories;
     private Activity activity;
 
-    FavouritesListAdapter(HashSet<CategoryExpense> favouriteCategories, Activity activity) {
+    private DBAdapter adapter;
+
+    RowDisplayableAdapter(HashSet<RowDisplayable> favouriteCategories, Activity activity) {
         this.activity = activity;
-        categories = new ArrayList<CategoryExpense> (favouriteCategories);
+        categories = new ArrayList<RowDisplayable> (favouriteCategories);
+        adapter = DBAdapter.getInstance(activity);
     }
 
     @Override
-    public FavouritesListAdapter.IconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RowDisplayableAdapter.IconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(activity);
         View view = inflater.inflate(R.layout.icons_list_item, parent, false);
@@ -36,8 +36,8 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
     }
 
     @Override
-    public void onBindViewHolder(final FavouritesListAdapter.IconViewHolder holder, final int position) {
-        final CategoryExpense categoryExpense = categories.get(position);
+    public void onBindViewHolder(final RowDisplayableAdapter.IconViewHolder holder, final int position) {
+        final RowDisplayable categoryExpense = categories.get(position);
         holder.image.setImageResource(categoryExpense.getIconId());
         holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.fav_icon_backgroud));
 
@@ -53,7 +53,7 @@ public class FavouritesListAdapter extends RecyclerView.Adapter<FavouritesListAd
 
                         categories.remove(holder.getAdapterPosition());
                         notifyItemRemoved(position);
-                        DBAdapter.deleteFavCategory(categoryExpense);
+                        adapter.deleteFavCategory(categoryExpense);
 
                         //Manager.getInstance();
                         //Manager.addExpenseIcon(categoryExpense.getIconId());

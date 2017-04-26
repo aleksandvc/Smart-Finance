@@ -81,8 +81,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 if(flag[0]){
+                    finish();
                     Message.message(LoginActivity.this,"Successful logged in." + Manager.getLoggedUser().getId());
-                    Message.message(LoginActivity.this,adapter.existsFavCat("Food")+"");
+
                 } else{
                     Message.message(LoginActivity.this,"Wrong email or password.");
                 }

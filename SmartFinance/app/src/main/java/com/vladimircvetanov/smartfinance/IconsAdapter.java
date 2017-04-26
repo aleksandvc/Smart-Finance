@@ -14,7 +14,7 @@ import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class AdditionalIconsAdapter extends RecyclerView.Adapter<AdditionalIconsAdapter.IconViewHolder>{
+public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHolder>{
 
     private ArrayList<Integer> additionalIcons;
     private Activity activity;
@@ -23,7 +23,7 @@ public class AdditionalIconsAdapter extends RecyclerView.Adapter<AdditionalIcons
 
     public View.OnClickListener mItemClickListener;
 
-    AdditionalIconsAdapter(HashSet<Integer> allExpenseIcons, Activity activity) {
+    IconsAdapter(HashSet<Integer> allExpenseIcons, Activity activity) {
         this.activity = activity;
         additionalIcons = new ArrayList<Integer> (allExpenseIcons);
         adapter = DBAdapter.getInstance(activity);

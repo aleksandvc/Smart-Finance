@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
-    android:layout_marginTop="@dimen/appbar_height">
+    tools:context=".MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,7 +20,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/activity_vertical_margin"
                 android:textSize="@dimen/all_text_size_middle"
-                android:text="Favourite categories:"
+                android:text="@string/favourite_categories_title"
                 android:background="@color/colorLightGreen"
                 android:textColor="@color/colorDarkGreen"/>
 
@@ -40,7 +39,7 @@
                 android:paddingLeft="@dimen/activity_vertical_margin"
                 android:textSize="@dimen/all_text_size_middle"
                 android:layout_below="@+id/favourites_list"
-                android:text="All categories:"
+                android:text="@string/all_categories_title"
                 android:background="@color/colorLightGreen"
                 android:textColor="@color/colorDarkGreen"/>
 
@@ -60,7 +59,7 @@
                 android:paddingLeft="@dimen/activity_vertical_margin"
                 android:textSize="@dimen/all_text_size_middle"
                 android:layout_below="@+id/all_categories_list"
-                android:text="Add more categories:"
+                android:text="@string/add_more_categories_title"
                 android:background="@color/colorLightGreen"
                 android:textColor="@color/colorDarkGreen"/>
 

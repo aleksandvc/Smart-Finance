@@ -48,6 +48,8 @@
     <string name="diagram_fragment_tag">Diagram Fragment</string>
     <string name="favourites_fragment_tag">Favourites Fragment</string>
     <string name="calendar_fragment_tag">Calendar</string>
+    <string name="accounts_fragment_tag">Accounts Fragment</string>
+    <string name="add_category_dialog">Add Category Dialog</string>
 
     <!-- MESSAGES -->
     <string name="transaction_success">Transaction successful!</string>
@@ -65,4 +67,9 @@
     <string name="set_name">Set name</string>
     <string name="nav_expense">Expense</string>
     <string name="note_fragment_tag">Note_input_Fragment</string>
+    <string name="favourite_categories_title">Favourite categories:</string>
+    <string name="all_categories_title">All categories:</string>
+    <string name="add_more_categories_title">Add more categories:</string>
+    <string name="my_accounts_title">My accounts:</string>
+    <string name="add_more_accounts_title">Add more accounts:</string>
 </resources>
