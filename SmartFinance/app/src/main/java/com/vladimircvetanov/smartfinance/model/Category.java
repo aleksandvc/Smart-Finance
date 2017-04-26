@@ -1,6 +1,7 @@
 package com.vladimircvetanov.smartfinance.model;
 
 import com.vladimircvetanov.smartfinance.RowDisplayable;
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
 /**
  * Created by vladimircvetanov on 18.04.17.
@@ -36,9 +37,7 @@ public abstract class Category implements RowDisplayable {
         return type;
     }
 
-    public double getSum() {
-        return sum;
-    }
+    public double getSum() { return sum; }
 
     public String getName() {
         return name;

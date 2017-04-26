@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+
                 if(flag[0]){
                     finish();
                     Message.message(LoginActivity.this,"Successful logged in." + Manager.getLoggedUser().getId());
