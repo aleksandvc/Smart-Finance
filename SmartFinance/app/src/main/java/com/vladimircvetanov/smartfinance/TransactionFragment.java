@@ -33,6 +33,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener, NoteInputFragment.NoteCommunicator {
 
@@ -111,7 +112,14 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
-        Message.message(getContext(),dbAdapter.getCachedTransactions().values().size()+"");
+//        Message.message(getContext(),dbAdapter.getCachedTransactions().values().size()+"");
+//        for (Map.Entry<Long, ArrayList<Transaction>> e : dbAdapter.getCachedTransactions().entrySet()){
+//
+//            Message.message(getActivity(), e.getKey().toString());
+//            for (Transaction t : e.getValue()){
+//                Message.message(getActivity(), t.getCategory().getName());
+//            }
+//        }
 
         ArrayList<Category> expenseCategories = new ArrayList<>();
         expenseCategories.addAll(dbAdapter.getCachedExpenseCategories().values());
@@ -360,6 +368,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         Account account = selectedAccount;
         Category category = selectedCategory;
+
         if (selectedAccount == null || selectedCategory == null){
             Message.message(getContext(),"(╯ರ ~ ರ）╯︵ ┻━┻..");
             return;

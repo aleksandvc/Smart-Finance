@@ -39,10 +39,10 @@ public class DBAdapter {
     static DbHelper helper ;
 
     private static ConcurrentHashMap<String, User> registeredUsers;
-    private static ConcurrentHashMap<String, Account> accounts;
-    private static ConcurrentHashMap<String, CategoryExpense> expenseCategories;
-    private static ConcurrentHashMap<String, CategoryIncome> incomeCategories;
-    private static ConcurrentHashMap<String,CategoryExpense> favouriteCategories;
+    private static ConcurrentHashMap<Long, Account> accounts;
+    private static ConcurrentHashMap<Long, CategoryExpense> expenseCategories;
+    private static ConcurrentHashMap<Long, CategoryIncome> incomeCategories;
+    private static ConcurrentHashMap<Long,CategoryExpense> favouriteCategories;
     private static ConcurrentHashMap<Long, ArrayList<Transaction>> transactions;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.
@@ -90,18 +90,18 @@ public class DBAdapter {
     public Map<String, User> getCachedUsers(){
         return Collections.unmodifiableMap(registeredUsers);
     }
-    public Map<String, Category> getCachedIncomeCategories(){
-        HashMap<String, Category> temp = new HashMap<>();
+    public Map<Long, Category> getCachedIncomeCategories(){
+        HashMap<Long, Category> temp = new HashMap<>();
         temp.putAll(incomeCategories);
         return Collections.unmodifiableMap(temp);
     }
-    public Map<String, CategoryExpense> getCachedExpenseCategories(){
+    public Map<Long, CategoryExpense> getCachedExpenseCategories(){
         return Collections.unmodifiableMap(expenseCategories);
     }
-    public Map<String, CategoryExpense> getCachedFavCategories(){
+    public Map<Long, CategoryExpense> getCachedFavCategories(){
         return Collections.unmodifiableMap(favouriteCategories);
     }
-    public Map<String, Account> getCachedAccounts(){
+    public Map<Long, Account> getCachedAccounts(){
         return Collections.unmodifiableMap(accounts);
     }
     public Map<Long, ArrayList<Transaction>> getCachedTransactions(){
@@ -314,12 +314,12 @@ public class DBAdapter {
                 Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,account_name,account_icon,account_user FROM " + DbHelper.TABLE_NAME_ACCOUNTS + " WHERE " + DbHelper.ACCOUNTS_COLUMN_USERFK +" = ? ;",fk);
 
                 while(cursor.moveToNext()){
-                    int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    long id = cursor.getInt(cursor.getColumnIndex("_id"));
                     String accountName = cursor.getString(cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME));
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.ACCOUNTS_COLUMN_ICON));
                     Account account = new Account(accountName,iconId);
                     account.setId(id);
-                    accounts.put(accountName+"",account);
+                    accounts.put(account.getId(), account);
                 }
                 return null;
             }
@@ -349,7 +349,7 @@ public class DBAdapter {
                     id[0] = db.insert(DbHelper.TABLE_NAME_ACCOUNTS,null,values);
                     account.setId(id[0]);
                     account.setUserFk(userId);
-                    accounts.put(account.getName(),account);
+                    accounts.put(account.getId(),account);
                 }
                 return null;
             }
@@ -368,7 +368,7 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = ? ",new String[]{account.getName()});
-                accounts.remove(account.getName());
+                accounts.remove(account.getId());
                 return null;
             }
 
@@ -396,7 +396,7 @@ public class DBAdapter {
                 a.setName(newName);
                 a.setIconId(newIconId);
                 accounts.remove(oldName);
-                accounts.put(newName, a);
+                accounts.put(a.getId(), a);
                 db.update("Accounts", values, "account_name = ?", new String[]{oldName});
 
                 return null;
@@ -425,7 +425,7 @@ public class DBAdapter {
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON));
                     CategoryExpense category = new CategoryExpense(categoryName, false, iconId);
                     category.setId(id);
-                    expenseCategories.put(categoryName + "", category);
+                    expenseCategories.put(category.getId(), category);
                 }
                 return null;
             }
@@ -434,7 +434,7 @@ public class DBAdapter {
 
     }
     public boolean existsExpenseCat(CategoryExpense category){
-        return expenseCategories.containsKey(category.getName());
+        return expenseCategories.containsKey(category.getId());
     }
 
 
@@ -444,7 +444,7 @@ public class DBAdapter {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                if(!expenseCategories.containsKey(category.getName())) {
+                if(!expenseCategories.containsKey(category.getId())) {
                     SQLiteDatabase db = helper.getWritableDatabase();
 
                     ContentValues values = new ContentValues();
@@ -456,7 +456,7 @@ public class DBAdapter {
                     id[0] = db.insert(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,null,values);
                     category.setUserFk(userId);
                     category.setId(id[0]);
-                    expenseCategories.put(category.getName(),category);
+                    expenseCategories.put(category.getId(),category);
                 }
                 return null;
             }
@@ -473,7 +473,7 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME + " = ? ",new String[]{category.getName()});
-                expenseCategories.remove(category.getName());
+                expenseCategories.remove(category.getId());
                 return null;
             }
 
@@ -484,6 +484,7 @@ public class DBAdapter {
         }.execute();
         return count[0];
     }
+    //TODO - ADAPT TO NEW COLLECTION STRUCTURE
     public void editExpenseCategory(String oldName,int oldIconId , final String newName, final int newIconId) {
 
         new AsyncTask<String, Void, Void>() {
@@ -500,8 +501,8 @@ public class DBAdapter {
 
                 c.setName(newName);
                 c.setIconId(newIconId);
-                expenseCategories.remove(oldName);
-                expenseCategories.put(newName, c);
+                expenseCategories.remove(c.getId());
+                expenseCategories.put(c.getId(), c);
                 db.update("Expense_Categories", values, "expense_category_name = ?", new String[]{oldName});
 
                 return null;
@@ -528,7 +529,7 @@ public class DBAdapter {
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.INCOME_CATEGORIES_COLUMN_ICON));
                     CategoryIncome category = new CategoryIncome(categoryName,iconId);
                     category.setId(id);
-                    incomeCategories.put(categoryName+"",category);
+                    incomeCategories.put(category.getId(),category);
                 }
                 return null;
             }
@@ -537,7 +538,7 @@ public class DBAdapter {
 
     }
     public boolean existsIncomeCat(CategoryIncome category){
-        return incomeCategories.containsKey(category.getName());
+        return incomeCategories.containsKey(category.getId());
     }
 
     public long addIncomeCategory(final CategoryIncome category,final long userId){
@@ -546,7 +547,7 @@ public class DBAdapter {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                if(!incomeCategories.containsKey(category.getName())) {
+                if(!incomeCategories.containsKey(category.getId())) {
                     SQLiteDatabase db = helper.getWritableDatabase();
 
                     ContentValues values = new ContentValues();
@@ -558,7 +559,7 @@ public class DBAdapter {
                     id[0] = db.insert(DbHelper.TABLE_NAME_INCOME_CATEGORIES,null,values);
                     category.setUserFk(userId);
                     category.setId(id[0]);
-                    incomeCategories.put(category.getName(),category);
+                    incomeCategories.put(category.getId(),category);
                 }
                 return null;
             }
@@ -575,7 +576,7 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_INCOME_CATEGORIES,DbHelper.INCOME_CATEGORIES_COLUMN_CATEGORYNAME + " = ? " ,new String[]{category.getName()});
-                incomeCategories.remove(category.getName());
+                incomeCategories.remove(category.getId());
                 return null;
             }
 
@@ -587,6 +588,7 @@ public class DBAdapter {
         return count[0];
     }
 
+    //TODO -
     public void editIncomeCategory(String oldName,int oldIconId , final String newName, final int newIconId) {
 
         new AsyncTask<String, Void, Void>() {
@@ -603,8 +605,8 @@ public class DBAdapter {
 
                 c.setName(newName);
                 c.setIconId(newIconId);
-                incomeCategories.remove(oldName);
-                incomeCategories.put(newName, c);
+                incomeCategories.remove(c.getId());
+                incomeCategories.put(c.getId(), c);
                 db.update("Income_Categories", values, "income_category_name = ?", new String[]{oldName});
 
                 return null;
@@ -634,7 +636,7 @@ public class DBAdapter {
                         int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON));
                         CategoryExpense category = new CategoryExpense(categoryName, true, iconId);
                         category.setId(id);
-                        favouriteCategories.put(categoryName + "", category);
+                        favouriteCategories.put(category.getId(), category);
                     }
                 }
                 else{
@@ -671,7 +673,7 @@ public class DBAdapter {
                     id[0] = db.insert(DbHelper.TABLE_NAME_FAVCATEGORIES,null,values);
                     category.setUserFk(userId);
                     category.setId(id[0]);
-                    favouriteCategories.put(category.getName(),category);
+                    favouriteCategories.put(category.getId(),category);
                 }
                 return null;
             }
@@ -719,8 +721,12 @@ public class DBAdapter {
                 values.put(DbHelper.TRANSACTIONS_COLUMN_CATEGORYFK,transaction.getCategory().getId());
 
                 id[0] = db.insert(DbHelper.TABLE_NAME_TRANSACTIONS,null,values);
+
                 long catId = transaction.getCategory().getId();
-                if (!transactions.containsKey(catId)) transactions.put(catId, new ArrayList<Transaction>());
+
+                if (!transactions.containsKey(catId)){
+                    transactions.put(catId, new ArrayList<Transaction>());
+                }
                 transactions.get(catId).add(transaction);
                 return null;
             }
