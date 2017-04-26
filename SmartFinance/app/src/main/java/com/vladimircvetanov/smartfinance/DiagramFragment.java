@@ -117,7 +117,7 @@ public class DiagramFragment extends Fragment {
         return rootView;
     }
 
-    private void addEntry(float entrySum) {
+    void addEntry(float entrySum) {
         if (entries.size() == 1) {
             entries.clear();
             entries.add(new PieEntry(0));
@@ -162,7 +162,7 @@ public class DiagramFragment extends Fragment {
                 CircleLayout.LayoutParams params = new CircleLayout.LayoutParams(120, 120);
                 icon.setLayoutParams(params);
 
-                icon.setPadding(30, 30, 30, 30);
+                icon.setPadding(20, 20, 20, 20);
                 icon.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorTransparent));
 
                 circleLayout.addView(icon);

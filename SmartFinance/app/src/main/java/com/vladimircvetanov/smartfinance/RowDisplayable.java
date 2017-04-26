@@ -7,4 +7,6 @@ public interface RowDisplayable {
     String getName();
 
     int getIconId();
+
+    double getSum();
 }

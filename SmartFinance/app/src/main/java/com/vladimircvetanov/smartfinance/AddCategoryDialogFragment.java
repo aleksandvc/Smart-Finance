@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +20,7 @@ import static android.R.attr.id;
 public class AddCategoryDialogFragment extends DialogFragment {
 
     private TextView dialogTitle;
-    private ImageView icon;
+    private View icon;
     private EditText categoryName;
     private Button addCategory;
     private Button cancel;
@@ -34,7 +33,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_dialog_add_category, container, false);
 
         dialogTitle = (TextView) view.findViewById(R.id.add_category_title);
-        icon = (ImageView) view.findViewById(R.id.add_category_icon);
+        icon = view.findViewById(R.id.add_category_icon);
         categoryName = (EditText) view.findViewById(R.id.add_category_name);
         cancel = (Button) view.findViewById(R.id.cancel_addition);
         addCategory = (Button) view.findViewById(R.id.start_addition);
@@ -46,7 +45,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
 
         if (b != null && !b.isEmpty() && b.containsKey(iconKey) && b.containsKey(listKey)) {
             int id = b.getInt(iconKey);
-            icon.setImageResource(id);
+            icon.setId(id);
         }
 
         cancel.setOnClickListener(new View.OnClickListener() {

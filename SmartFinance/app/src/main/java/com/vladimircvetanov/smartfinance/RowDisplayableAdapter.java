@@ -24,7 +24,6 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
     RowDisplayableAdapter(HashSet<RowDisplayable> favouriteCategories, Activity activity) {
         this.activity = activity;
         categories = new ArrayList<RowDisplayable> (favouriteCategories);
-        adapter = DBAdapter.getInstance(activity);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
 
                         categories.remove(holder.getAdapterPosition());
                         notifyItemRemoved(position);
-                        adapter.deleteFavCategory(categoryExpense);
+                        DBAdapter.deleteFavCategory(categoryExpense);
 
                         //Manager.getInstance();
                         //Manager.addExpenseIcon(categoryExpense.getIconId());
@@ -79,6 +78,7 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
 
         public IconViewHolder(View itemView) {
             super(itemView);
+
             image = (ImageView) itemView.findViewById(R.id.image);
             removeButton = (ImageButton) itemView.findViewById(R.id.remove_icon_btn);
             addButton = (ImageButton) itemView.findViewById(R.id.add_icon_btn);

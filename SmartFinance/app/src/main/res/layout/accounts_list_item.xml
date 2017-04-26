@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appbar_height"
+        android:background="@drawable/account_background">
+
+        <ImageView
+            android:id="@+id/account_image"
+            android:src="@mipmap/money_bag"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:background="@color/colorTransparentGreen"/>
+
+        <TextView
+            android:id="@+id/account_name"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:text="Account name"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorDarkGreen"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:textSize="@dimen/all_text_size_middle"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/account_sum"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="0.00"
+            android:gravity="center"
+            android:textSize="@dimen/all_text_size_middle"
+            android:textColor="@color/colorDarkGreen"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -13,18 +13,17 @@ import android.widget.Toast;
 import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.RowDisplayable;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.CategoryIncome;
-import com.vladimircvetanov.smartfinance.model.Transaction;
 import com.vladimircvetanov.smartfinance.model.Manager;
-import com.vladimircvetanov.smartfinance.model.Account;
+import com.vladimircvetanov.smartfinance.model.Transaction;
 import com.vladimircvetanov.smartfinance.model.User;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -179,19 +178,19 @@ public class DBAdapter {
     }
     private void addDefaultCategories(User u) {
         long id =u.getId();
-        addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car),id);
-        addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes),id);
-        addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart),id);
-        addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane),id);
-        addFavCategory(new CategoryExpense("House", true, R.mipmap.home),id);
-        addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming),id);
-        addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant),id);
-        addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),id);
-        addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),id);
-        addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),id);
-        addAccount(new Account("Cash",R.drawable.accounts),id);
-        addAccount(new Account("Debit",R.drawable.income),id);
-        addAccount(new Account("Credit",R.drawable.income),id);
+        addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car), id);
+        addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes), id);
+        addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart), id);
+        addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane), id);
+        addFavCategory(new CategoryExpense("House", true, R.mipmap.home), id);
+        addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming), id);
+        addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant), id);
+        addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train), id);
+        addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail), id);
+        addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone), id);
+        addAccount(new Account("Cash",R.mipmap.cash), id);
+        addAccount(new Account("Debit",R.mipmap.visa), id);
+        addAccount(new Account("Credit",R.mipmap.mastercard), id);
     }
     private  String getData(final String username){
 

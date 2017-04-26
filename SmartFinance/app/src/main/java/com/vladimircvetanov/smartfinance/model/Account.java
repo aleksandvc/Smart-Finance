@@ -87,6 +87,7 @@ public class Account implements Serializable, Comparable<Account>, RowDisplayabl
         return iconId;
     }
 
+    public double getSum(){ return sum; }
 
     public void setId(long id) {
         this.id = id;
@@ -99,8 +100,6 @@ public class Account implements Serializable, Comparable<Account>, RowDisplayabl
     public void setIconId(int iconId) {
         this.iconId = iconId;
     }
-
-    public double getSum(){ return sum; }
 
     public List<Transaction> getTransactions() {
         ArrayList<Transaction> tempTransactions = new ArrayList<>();

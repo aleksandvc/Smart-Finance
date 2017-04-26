@@ -18,7 +18,6 @@ import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ReportFragment extends Fragment {
 
