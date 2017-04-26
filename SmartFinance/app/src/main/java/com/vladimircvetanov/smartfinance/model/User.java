@@ -1,10 +1,5 @@
 package com.vladimircvetanov.smartfinance.model;
 
-import android.accounts.Account;
-
-import com.vladimircvetanov.smartfinance.R;
-import com.vladimircvetanov.smartfinance.db.DBAdapter;
-
 import java.io.Serializable;
 import java.util.HashSet;
 
