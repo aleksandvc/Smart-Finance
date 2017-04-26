@@ -110,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                 User u = new User(username,pass);
                 long id = adapter.insertData(username, pass);
                 Manager.setLoggedUser(u);
-                u.setId(id);
+                Manager.getLoggedUser().setId(id);
 
                 return true;
             }
@@ -118,24 +118,26 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Boolean aBoolean) {
                 super.onPostExecute(aBoolean);
-                Message.message(RegisterActivity.this, "User registered!");
+                Message.message(RegisterActivity.this, "User registered!" + Manager.getLoggedUser().getId());
                 addDefaultCategories();
+               Message.message(RegisterActivity.this,adapter.existsFavCat("Food")+""); //NQMA TAKAVA KATEGORIQ VOBSHTE
+
             }
         }.execute();
 
         return flag;
     }
     private void addDefaultCategories() {
-        DBAdapter.addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("House", true, R.mipmap.home),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),Manager.getLoggedUser().getId());
-        DBAdapter.addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Vehicle", true, R.mipmap.car),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Clothes", true, R.mipmap.clothes),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Health", true, R.mipmap.heart),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Travel", true, R.mipmap.plane),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("House", true, R.mipmap.home),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Sport", true, R.mipmap.swimming),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Food", true, R.mipmap.restaurant),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail),Manager.getLoggedUser().getId());
+        adapter.addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone),Manager.getLoggedUser().getId());
 
     }
 }

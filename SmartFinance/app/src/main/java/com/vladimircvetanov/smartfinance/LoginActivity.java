@@ -64,9 +64,8 @@ public class LoginActivity extends AppCompatActivity {
                 flag[0] = adapter.getUser(email, pass);
                 if(flag[0]){
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("user", u);
                     Manager.setLoggedUser(u);
-                    u.setId(adapter.getId(u.getEmail()));
+                    Manager.getLoggedUser().setId(adapter.getId(u.getEmail()));
                     startActivity(intent);
 
 
@@ -83,7 +82,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 if(flag[0]){
-                    Message.message(LoginActivity.this,"Successful logged in.");
+                    Message.message(LoginActivity.this,"Successful logged in." + Manager.getLoggedUser().getId());
+                    Message.message(LoginActivity.this,adapter.existsFavCat("Food")+"");
                 } else{
                     Message.message(LoginActivity.this,"Wrong email or password.");
                 }
