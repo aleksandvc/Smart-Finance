@@ -46,46 +46,43 @@ public class RegisterActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(signUp()){
-                   startActivity(new Intent(RegisterActivity.this,MainActivity.class));
-                   finish();
-               }
+               signUp();
             }
         });
     }
 
-    private boolean signUp() {
+    private void signUp() {
         final String username = userEmail.getText().toString();
         final String pass = userPass.getText().toString();
         final String confirm = confirmPass.getText().toString();
-        boolean flag;
+        final boolean[] flag = new boolean[1];
         if (username.isEmpty()) {
             userEmail.setError("Empty email");
             userEmail.requestFocus();
-            return false;
+            return;
         }
         //if(!android.util.Patterns.EMAIL_ADDRESS.matcher(username).matches()){
         if (!username.matches("^(.+)@(.+)$")) {
             userEmail.setError("enter a valid email address");
             userEmail.setText("");
             userEmail.requestFocus();
-            return false;
+            return;
         }
         if (pass.isEmpty()) {
             userPass.setError("Empty password");
             userPass.requestFocus();
-            return false;
+            return;
 
         }
         if (!pass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{8,30}$")) {
             userPass.setError("Password should contain at least one digit," +
                     "one special symbol,one small letter,and should be between 8 and 30 symbols. ");
-            return false;
+            return;
         }
         if (confirm.isEmpty()) {
             confirmPass.setError("Empty confirmation");
             confirmPass.requestFocus();
-            return false;
+            return;
 
         }
         if (!pass.equals(confirm)) {
@@ -93,21 +90,37 @@ public class RegisterActivity extends AppCompatActivity {
             confirmPass.setError("Different passwords");
             confirmPass.setText("");
             confirmPass.requestFocus();
-            return false;
+            return;
 
         }
         if(adapter.existsUser(username)){
             Message.message(this,"User already exists");
-            return false;
+            return;
         }
 
-        flag = true;
+        flag[0] = true;
+        new AsyncTask<Void,Void,Boolean>(){
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                if(flag[0] = true) {
+                    User u = new User(username, pass);
+                    long id = adapter.insertData(u);
+                }
+                return null;
+            }
 
-        User u = new User(username,pass);
-        long id = adapter.insertData(u);
-        Message.message(RegisterActivity.this, "User registered!");
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                Message.message(RegisterActivity.this, "User registered!");
+                startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+                finish();
+            }
+        }.execute();
 
-        return flag;
+
+
+
     }
 
 }
