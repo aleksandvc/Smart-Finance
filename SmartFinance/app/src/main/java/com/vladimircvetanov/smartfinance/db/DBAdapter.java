@@ -858,7 +858,7 @@ public class DBAdapter {
         /**
          * Constant integer of database`s version.
          */
-        private static final int DB_VERSION = 3;
+        private static final int DB_VERSION = 4;
 
         /**
          * Constant String of the table`s column for id;
