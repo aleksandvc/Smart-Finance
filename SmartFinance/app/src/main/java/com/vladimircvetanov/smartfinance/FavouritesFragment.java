@@ -88,10 +88,11 @@ public class FavouritesFragment extends Fragment {
                     AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                     Bundle arguments = new Bundle();
 
-                    int id = view.getId();
+                    int id = view.findViewById(R.id.image).getId();
                     arguments.putInt(getString(R.string.EXTRA_ICON), id);
+                    arguments.putString("ROW_DISPLAYABLE_TYPE", "CATEGORY");
 
-                    //dialog.setArguments(arguments);
+                    dialog.setArguments(arguments);
                     dialog.show(getFragmentManager(), "Add category dialog");
                 }
 

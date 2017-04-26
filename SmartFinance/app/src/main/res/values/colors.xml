@@ -7,6 +7,7 @@
     <color name="colorWhite">#f9fafc</color>
     <color name="colorTransparent">#00ffffff</color>
     <color name="colorTransparentWhite">#a7ffffff</color>
+    <color name="colorTransparentGreen">#4262a7a7</color>
     <color name="colorLightGreen">#6f62a7a7</color>
     <color name="colorGreen">#FF009999</color>
     <color name="colorDarkGreen">#007f7f</color>

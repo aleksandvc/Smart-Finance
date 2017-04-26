@@ -2,7 +2,6 @@ package com.vladimircvetanov.smartfinance.model;
 
 import com.vladimircvetanov.smartfinance.R;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Manager {
@@ -20,12 +19,14 @@ public class Manager {
 
     //temp changed
     private HashSet<Integer> allExpenseIcons;
+    private HashSet<Integer> allAccountIcons;
 
 
     private Manager() {
-
+        allAccountIcons = new HashSet<>();
         allExpenseIcons = new HashSet<>();
         addMoreExpenseIcons();
+        addMoreAccountIcons();
     }
 
     public static Manager getInstance() {
@@ -49,6 +50,10 @@ public class Manager {
         return allExpenseIcons;
     }
 
+    public HashSet<Integer> getAllAccountIcons() {
+        return allAccountIcons;
+    }
+
     /**
      * Get the balance of all active Accounts (INCOMING type Sections) in the {@link Manager#}
      *
@@ -61,8 +66,6 @@ public class Manager {
         }
         return sum;
     }*/
-
-
 
     public static void addExpenseIcon(int icon) {
         getInstance().allExpenseIcons.add(icon);
@@ -108,5 +111,17 @@ public class Manager {
         allExpenseIcons.add(R.mipmap.hotel);
         allExpenseIcons.add(R.mipmap.ping_pong);
         allExpenseIcons.add(R.mipmap.rollerblade);
+    }
+
+    private void addMoreAccountIcons() {
+        allAccountIcons.add(R.mipmap.money_box);
+        allAccountIcons.add(R.mipmap.gift_card);
+        allAccountIcons.add(R.mipmap.funding);
+        allAccountIcons.add(R.mipmap.mattress);
+        allAccountIcons.add(R.mipmap.paypal);
+        allAccountIcons.add(R.mipmap.safe);
+        allAccountIcons.add(R.mipmap.coins);
+        allAccountIcons.add(R.drawable.accounts);
+        allAccountIcons.add(R.drawable.income);
     }
 }
