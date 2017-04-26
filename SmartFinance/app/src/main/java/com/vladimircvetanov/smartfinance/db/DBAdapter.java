@@ -602,6 +602,8 @@ public class DBAdapter {
                 }
                 return null;
             }
+
+
         }.execute();
 
 
@@ -611,7 +613,7 @@ public class DBAdapter {
     }
 
 
-    public static long addFavCategory(final CategoryExpense category, final long userId){
+    public  long addFavCategory(final CategoryExpense category, final long userId){
         final long[] id = new long[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -632,6 +634,7 @@ public class DBAdapter {
                 }
                 return null;
             }
+
         }.execute();
 
         return id[0];

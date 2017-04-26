@@ -120,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
                 super.onPostExecute(aBoolean);
                 Message.message(RegisterActivity.this, "User registered!" + Manager.getLoggedUser().getId());
                 addDefaultCategories();
-               Message.message(RegisterActivity.this,adapter.existsFavCat("Food")+""); //NQMA TAKAVA KATEGORIQ VOBSHTE
+              // Message.message(RegisterActivity.this,adapter.existsFavCat("Food")+""); //NQMA TAKAVA KATEGORIQ VOBSHTE
 
             }
         }.execute();
