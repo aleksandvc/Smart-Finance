@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vladimircvetanov.smartfinance.TransactionFragment"
-    android:layout_marginTop="@dimen/appbar_height">
+    tools:context="com.vladimircvetanov.smartfinance.TransactionFragment">
 
     <FrameLayout
         android:id="@+id/transaction_top_bar"
@@ -229,8 +228,7 @@
             <TextView
                 android:id="@+id/transaction_numpad_divide"
                 style="@style/transaction_numpad_button"
-                android:text="÷"
-                android:theme="@style/ThemeOverlay.CustomTheme" />
+                android:text="÷"/>
         </LinearLayout>
 
         <TextView
