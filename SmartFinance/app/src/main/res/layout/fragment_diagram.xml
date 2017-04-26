@@ -68,6 +68,7 @@
                 android:layout_weight="1"
                 android:padding="@dimen/all_view_spacing_standard"
                 android:src="@drawable/navigation_menu" />
+
         </LinearLayout>
 
         <fragment

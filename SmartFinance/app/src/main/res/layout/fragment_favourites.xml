@@ -21,8 +21,8 @@
         android:textSize="@dimen/all_text_size_middle"
         android:layout_below="@+id/favourites_list"
         android:text="@string/change_favourite_categories"
-        android:background="@drawable/text_view_border"
-        android:textColor="@color/colorWhite"/>
+        android:background="@color/colorLightGreen"
+        android:textColor="@color/colorDarkGreen"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/additional_icons_list"

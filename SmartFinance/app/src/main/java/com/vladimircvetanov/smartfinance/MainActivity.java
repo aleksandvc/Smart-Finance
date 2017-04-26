@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView userProfile;
     private View headerView;
     private View toolbarTitle;
-    private View navigationHeader;
 
     private FragmentManager fragmentManager;
     private Bundle dataBetweenFragments;
@@ -57,6 +56,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        fragmentManager = getSupportFragmentManager();
+        if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
+            fragmentManager.beginTransaction()
+                    .add(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
+                    .commit();
+        }
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
@@ -74,19 +80,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        toolbarTitle = findViewById(R.id.diagram_fragment_link);
+        toolbarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
+                        .commit();
+            }
+        });
 
         dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
-        //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
         final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
         //dateDisplay.setText(date.toString(dateFormat));
 
-        fragmentManager = getSupportFragmentManager();
-        if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
-            fragmentManager.beginTransaction()
-                .add(R.id.master_layout, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
-                .commit();
-        }
     }
 
     @Override
@@ -102,13 +110,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.item_settings:
                 return true;
             case R.id.item_logout:
-                LogoutDialogFragment dialog = LogoutDialogFragment.newInstance();
+                AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                 dialog.show(getSupportFragmentManager(), getString(R.string.logout_button));
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onBackPressed() {
