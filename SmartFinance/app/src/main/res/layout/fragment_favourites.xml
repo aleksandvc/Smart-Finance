@@ -48,8 +48,7 @@
                 android:id="@+id/all_categories_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/all_categories_title"
-                android:background="@color/colorGrey"/>
+                android:layout_below="@+id/all_categories_title"/>
 
             <TextView
                 android:id="@+id/more_icons_title"

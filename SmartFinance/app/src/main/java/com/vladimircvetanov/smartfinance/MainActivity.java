@@ -107,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item_settings:
-                return true;
+            //case R.id.item_settings:
+            //    return true;
             case R.id.item_logout:
                 LogoutDialogFragment dialog = new LogoutDialogFragment();
                 dialog.show(getSupportFragmentManager(), getString(R.string.logout_button));
@@ -150,6 +150,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
 
             case R.id.nav_income:
+                if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_fragment_frame, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
+                        .addToBackStack(getString(R.string.transaction_fragment_tag))
+                        .commit();
+            }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
 

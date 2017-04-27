@@ -1,5 +1,7 @@
 package com.vladimircvetanov.smartfinance;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -8,19 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
-
-import static android.R.attr.id;
 
 public class AddCategoryDialogFragment extends DialogFragment {
 
     private TextView dialogTitle;
-    private View icon;
+    private ImageView icon;
     private EditText categoryName;
     private Button addCategory;
     private Button cancel;
@@ -33,7 +35,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_dialog_add_category, container, false);
 
         dialogTitle = (TextView) view.findViewById(R.id.add_category_title);
-        icon = view.findViewById(R.id.add_category_icon);
+        icon = (ImageView) view.findViewById(R.id.add_category_icon);
         categoryName = (EditText) view.findViewById(R.id.add_category_name);
         cancel = (Button) view.findViewById(R.id.cancel_addition);
         addCategory = (Button) view.findViewById(R.id.start_addition);
@@ -42,10 +44,20 @@ public class AddCategoryDialogFragment extends DialogFragment {
         Bundle b = getArguments();
         final String iconKey = getText(R.string.EXTRA_ICON).toString();
         String listKey = getText(R.string.EXTRA_LIST).toString();
+        String list = "";
 
         if (b != null && !b.isEmpty() && b.containsKey(iconKey) && b.containsKey(listKey)) {
-            int id = b.getInt(iconKey);
-            icon.setId(id);
+            byte[] byteArray = b.getByteArray(iconKey);
+            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            icon.setImageBitmap(bmp);
+
+            list = b.getString(listKey);
+            if (list.equals("ACCOUNT")) {
+                dialogTitle.setText("Add new account");
+            }
+            if (list.equals("CATEGORY")) {
+                dialogTitle.setText("Add new category!");
+            }
         }
 
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +67,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
             }
         });
 
+        final String tempList = list;
         addCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,9 +77,18 @@ public class AddCategoryDialogFragment extends DialogFragment {
                     categoryName.requestFocus();
 
                 } else {
-                    adapter.addExpenseCategory(new CategoryExpense(nameStr, false, id), Manager.getLoggedUser().getId());
-                    Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
-                    dismiss();
+                    switch(tempList) {
+                        case "CATEGORY":
+                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, icon.getId()), Manager.getLoggedUser().getId());
+                            Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
+                            dismiss();
+                            return;
+                        case "ACCOUNT":
+                            adapter.addAccount(new Account(nameStr, icon.getId()), Manager.getLoggedUser().getId());
+                            Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_SHORT).show();
+                            dismiss();
+                            return;
+                    }
                 }
             }
         });
