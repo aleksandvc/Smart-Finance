@@ -191,6 +191,9 @@ public class DBAdapter {
         addAccount(new Account("Cash",R.mipmap.cash), id);
         addAccount(new Account("Debit",R.mipmap.visa), id);
         addAccount(new Account("Credit",R.mipmap.mastercard), id);
+        addIncomeCategory(new CategoryIncome("Salary",R.mipmap.cash),id);
+        addIncomeCategory(new CategoryIncome("Savings",R.mipmap.cash),id);
+        addIncomeCategory(new CategoryIncome("Other",R.mipmap.cash),id);
     }
     private  String getData(final String username){
 
