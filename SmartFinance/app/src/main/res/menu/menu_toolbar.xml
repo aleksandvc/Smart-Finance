@@ -4,9 +4,10 @@
     android:background="@color/colorGreen"
     app:theme="@style/OverflowMenu">
 
+    <!--
     <item
         android:title="@string/settings"
-        android:id="@+id/item_settings"/>
+        android:id="@+id/item_settings"/>-->
 
     <item
         android:title="@string/logout_button"

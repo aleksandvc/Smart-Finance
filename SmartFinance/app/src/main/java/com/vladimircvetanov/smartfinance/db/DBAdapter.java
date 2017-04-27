@@ -127,8 +127,6 @@ public class DBAdapter {
 
         new AsyncTask<Long,Void,Void>() {
 
-
-
             @Override
             protected Void doInBackground(Long... params) {
 
@@ -187,6 +185,7 @@ public class DBAdapter {
         addFavCategory(new CategoryExpense("Transport", true, R.mipmap.train), id);
         addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail), id);
         addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone), id);
+
         addAccount(new Account("Cash",R.mipmap.cash), id);
         addAccount(new Account("Debit",R.mipmap.visa), id);
         addAccount(new Account("Credit",R.mipmap.mastercard), id);

@@ -1,6 +1,7 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 
 public class AccountsFragment extends Fragment {
@@ -46,7 +48,8 @@ public class AccountsFragment extends Fragment {
         accountsList.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, accountsList, new RecyclerItemClickListener.OnItemClickListener() {
 
-                    @Override public void onItemClick(View view, int position) {
+                    @Override public void onItemClick(View view, int position) {Bundle arguments = new Bundle();
+
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.main_fragment_frame, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
                                 .addToBackStack(getString(R.string.transaction_fragment_tag))
@@ -71,8 +74,15 @@ public class AccountsFragment extends Fragment {
                         AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                         Bundle arguments = new Bundle();
 
-                        int id = view.findViewById(R.id.image).getId();
-                        arguments.putInt(getString(R.string.EXTRA_ICON), id);
+                        view.findViewById(R.id.image).setDrawingCacheEnabled(true);
+                        view.findViewById(R.id.image).buildDrawingCache();
+                        Bitmap bitmap = view.findViewById(R.id.image).getDrawingCache();
+
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        byte[] b = baos.toByteArray();
+
+                        arguments.putByteArray(getString(R.string.EXTRA_ICON), b);
                         arguments.putString("ROW_DISPLAYABLE_TYPE", "ACCOUNT");
 
                         dialog.setArguments(arguments);

@@ -1,6 +1,7 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 
 public class FavouritesFragment extends Fragment {
@@ -84,12 +86,20 @@ public class FavouritesFragment extends Fragment {
         additionalIconsList.addOnItemTouchListener(
             new RecyclerItemClickListener(context, additionalIconsList, new RecyclerItemClickListener.OnItemClickListener() {
 
-            @Override public void onItemClick(View view, int position) {
+                @Override
+                public void onItemClick(View view, int position) {
                     AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                     Bundle arguments = new Bundle();
 
-                    int id = view.findViewById(R.id.image).getId();
-                    arguments.putInt(getString(R.string.EXTRA_ICON), id);
+                    view.findViewById(R.id.image).setDrawingCacheEnabled(true);
+                    view.findViewById(R.id.image).buildDrawingCache();
+                    Bitmap bitmap = view.findViewById(R.id.image).getDrawingCache();
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    byte[] b = baos.toByteArray();
+
+                    arguments.putByteArray(getString(R.string.EXTRA_ICON), b);
                     arguments.putString("ROW_DISPLAYABLE_TYPE", "CATEGORY");
 
                     dialog.setArguments(arguments);
@@ -99,8 +109,8 @@ public class FavouritesFragment extends Fragment {
                 @Override
                 public void onLongItemClick(View view, int position) {
                 }
-            })
-        );
+
+            }));
         return root;
     }
 }
