@@ -190,6 +190,7 @@ public class DBAdapter {
         addAccount(new Account("Cash",R.mipmap.cash), id);
         addAccount(new Account("Debit",R.mipmap.visa), id);
         addAccount(new Account("Credit",R.mipmap.mastercard), id);
+
         addIncomeCategory(new CategoryIncome("Salary",R.mipmap.cash),id);
         addIncomeCategory(new CategoryIncome("Savings",R.mipmap.cash),id);
         addIncomeCategory(new CategoryIncome("Other",R.mipmap.cash),id);
@@ -528,7 +529,7 @@ public class DBAdapter {
 
             @Override
             protected Void doInBackground(Void... params) {
-                String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
+                String[] fk = {Manager.getLoggedUser().getId()+""};
                 Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,income_category_name,income_category_icon,income_category_user FROM " + DbHelper.TABLE_NAME_INCOME_CATEGORIES + " WHERE " + DbHelper.INCOME_CATEGORIES_COLUMN_USERFK +" = ? ;",fk);
                 while(cursor.moveToNext()){
                     long id = cursor.getInt(cursor.getColumnIndex("_id"));
@@ -637,7 +638,6 @@ public class DBAdapter {
 
                 if(favouriteCategories.isEmpty()) {
                     while (cursor.moveToNext()) {
-                        Log.e("TAG", "ima metod");
                         long id = cursor.getLong(cursor.getColumnIndex("_id"));
                         String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME));
                         int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON));

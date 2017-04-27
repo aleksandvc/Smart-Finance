@@ -132,6 +132,9 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
 
 
+
+
+
         //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");

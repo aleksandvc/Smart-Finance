@@ -43,7 +43,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         adapter = DBAdapter.getInstance(getActivity());
         Bundle b = getArguments();
         final String iconKey = getText(R.string.EXTRA_ICON).toString();
-        String listKey = getText(R.string.EXTRA_LIST).toString();
+        String listKey = getString(R.string.EXTRA_LIST);
         String list = "";
 
         if (b != null && !b.isEmpty() && b.containsKey(iconKey) && b.containsKey(listKey)) {

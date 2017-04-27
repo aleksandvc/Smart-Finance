@@ -37,6 +37,8 @@ public class Account implements Serializable, Comparable<Account>, RowDisplayabl
         this.iconId = iconId;
 
         transactions = new HashMap<>();
+        transactions.put(Category.Type.EXPENSE, new ArrayList<Transaction>());
+        transactions.put(Category.Type.INCOME, new ArrayList<Transaction>());
     }
 
 
@@ -87,7 +89,14 @@ public class Account implements Serializable, Comparable<Account>, RowDisplayabl
         return iconId;
     }
 
-    public double getSum(){ return sum; }
+    public double getSum(){
+        double sum = 0.0;
+        for ( Transaction t : transactions.get(Category.Type.INCOME))
+            sum += t.getSum();
+        for ( Transaction t : transactions.get(Category.Type.EXPENSE))
+            sum -= t.getSum();
+        return sum;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -110,6 +119,8 @@ public class Account implements Serializable, Comparable<Account>, RowDisplayabl
     }
 
     public boolean addTransaction(Transaction entry) {
-      return true;
+        if (entry == null || entry.getCategory() == null) return false;
+        Category.Type type = entry.getCategory().getType();
+        return transactions.get(type).add(entry);
     }
 }
