@@ -169,6 +169,7 @@ public class DBAdapter {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 addDefaultCategories(u);
+
             }
         }.execute();
         return id[0];
