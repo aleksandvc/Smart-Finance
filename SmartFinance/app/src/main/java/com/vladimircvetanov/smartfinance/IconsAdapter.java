@@ -42,6 +42,9 @@ public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHold
         final Integer icon = additionalIcons.get(position);
         holder.image.setImageResource(icon);
         holder.image.setBackground(ContextCompat.getDrawable(activity, R.drawable.unselected_icon_background));
+
+        //adapter.addAccount(new Account(view.findViewById(R.), view.findViewById(R.id.image)), Manager.getLoggedUser().getId());
+        //Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

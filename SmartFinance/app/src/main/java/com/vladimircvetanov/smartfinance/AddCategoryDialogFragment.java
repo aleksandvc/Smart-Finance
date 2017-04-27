@@ -55,6 +55,9 @@ public class AddCategoryDialogFragment extends DialogFragment {
             if (list.equals("ACCOUNT")) {
                 dialogTitle.setText("Add new account");
             }
+            if (list.equals("CATEGORY")) {
+                dialogTitle.setText("Add new category!");
+            }
         }
 
         cancel.setOnClickListener(new View.OnClickListener() {

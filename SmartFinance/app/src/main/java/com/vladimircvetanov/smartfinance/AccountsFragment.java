@@ -71,6 +71,7 @@ public class AccountsFragment extends Fragment {
                 new RecyclerItemClickListener(context, moreAccountIconsList, new RecyclerItemClickListener.OnItemClickListener() {
 
                     @Override public void onItemClick(View view, int position) {
+                        //Temporarily deleted
                         AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                         Bundle arguments = new Bundle();
 
