@@ -112,9 +112,10 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Boolean aBoolean) {
                 super.onPostExecute(aBoolean);
-                Message.message(RegisterActivity.this, "User registered!");
-                startActivity(new Intent(RegisterActivity.this,MainActivity.class));
-                finish();
+                    Message.message(RegisterActivity.this, "User registered!");
+                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    finish();
+
             }
         }.execute();
 

@@ -2,6 +2,7 @@ package com.vladimircvetanov.smartfinance.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,7 +11,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.vladimircvetanov.smartfinance.MainActivity;
 import com.vladimircvetanov.smartfinance.R;
+import com.vladimircvetanov.smartfinance.RegisterActivity;
 import com.vladimircvetanov.smartfinance.RowDisplayable;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
@@ -41,6 +44,7 @@ public class DBAdapter {
      * Declaration of fields of the adapter class. A reference to innerclass will executes queries.
      */
     static DbHelper helper ;
+
 
     private static ConcurrentHashMap<String, User> registeredUsers;
     private static ConcurrentHashMap<Long, Account> accounts;
@@ -159,6 +163,7 @@ public class DBAdapter {
                     u.setId(id[0]);
                     registeredUsers.put(u.getEmail(),u);
                     Manager.setLoggedUser(u);
+
 
                 }
 
@@ -646,12 +651,9 @@ public class DBAdapter {
                         favouriteCategories.put(category.getId(), category);
                     }
                 }
-                else{
 
-                }
                 return null;
             }
-
 
         }.execute();
     }
@@ -667,7 +669,7 @@ public class DBAdapter {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                if(!favouriteCategories.containsKey(category.getName())) {
+                if(!favouriteCategories.containsKey(category.getId())) {
                     SQLiteDatabase db = helper.getWritableDatabase();
 
                     ContentValues values = new ContentValues();
@@ -697,13 +699,13 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = ? AND " + DbHelper.FAVCATEGORIES_COLUMN_USERFK+ " = ?",new String[]{category.getName(), Manager.getLoggedUser().getId()+""});
-                favouriteCategories.remove(category.getName());
+                favouriteCategories.remove(category.getId());
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void integer) {
-                Message.message(context,"Category deleted! " + count[0]);
+                Message.message(context,"Category deleted!");
             }
         }.execute();
         return count[0];
