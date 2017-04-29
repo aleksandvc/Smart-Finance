@@ -7,6 +7,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,17 +109,32 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         catTypeRadio.check(R.id.transaction_radio_expense);
         startedWithCategory = checkForCategoryExtra();
 
-        accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
-
         ArrayList<Category> expenseCategories = new ArrayList<>();
         expenseCategories.addAll(dbAdapter.getCachedExpenseCategories().values());
         expenseCategories.addAll(dbAdapter.getCachedFavCategories().values());
-
 
         final RowViewAdapter<Category> expenseAdapter = new RowViewAdapter<>(inflater, expenseCategories);
         final RowViewAdapter<Category> incomeAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedIncomeCategories().values());
         categorySelection.setAdapter(expenseAdapter);
 
+
+        if (selectedType == null)
+            selectedType = Category.Type.EXPENSE;
+
+        switch (selectedType){
+            case EXPENSE:
+                catTypeRadio.check(R.id.transaction_radio_expense);
+                colorizeUI(getActivity(), R.color.colorOrange, R.drawable.orange_button_9);
+                categorySelection.setAdapter(expenseAdapter);
+                break;
+            case INCOME:
+                catTypeRadio.check(R.id.transaction_radio_income);
+                colorizeUI(getActivity(), R.color.colorGreen, R.drawable.green_button_9);
+                categorySelection.setAdapter(incomeAdapter);
+                break;
+        }
+
+        accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
         //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
@@ -148,11 +164,9 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                     case R.id.transaction_radio_expense:
                         colorizeUI(getActivity(), R.color.colorOrange, R.drawable.orange_button_9);
                         categorySelection.setAdapter(expenseAdapter);
-                       // Message.message(getContext(),"This is here to test some stuff.");
                         break;
                     case R.id.transaction_radio_income:
                         colorizeUI(getActivity(), R.color.colorGreen, R.drawable.green_button_9);
-
                         categorySelection.setAdapter(incomeAdapter);
                         break;
                 }
@@ -365,7 +379,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
         account.addTransaction(transaction);
 
-        Message.message(getContext(),""+transaction.getCategory().getId());
         getActivity().onBackPressed();
     }
 
@@ -399,7 +412,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         numDisplay.setText(numText);
 
         decimalPosition = numText.contains(".") ? (numText.length() - 1) - numText.lastIndexOf(".") : BEFORE_DECIMAL;
-        Message.message(getActivity(), "" + storedNumber);
 
         currentOperation = NEXT_OPERATION;
         return storedNumber;
@@ -445,5 +457,15 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     @Override
     public void setNote(String note) {
         if (note != null && !note.isEmpty()) this.noteInput.setText(note);
+    }
+
+    public static TransactionFragment getNewInstance(Category.Type type) {
+        if (type == null){
+            type = Category.Type.EXPENSE;
+            Log.e("TransactionFragment:", " STARTED WITH A NULL TYPE PARAMETER!!!");
+        }
+        TransactionFragment t = new TransactionFragment();
+        t.selectedType = type;
+        return t;
     }
 }

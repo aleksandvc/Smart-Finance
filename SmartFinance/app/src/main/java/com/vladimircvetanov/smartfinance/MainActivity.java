@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
 import org.joda.time.DateTime;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         fragmentManager = getSupportFragmentManager();
-        if(fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
+        if (fragmentManager.getFragments() == null || fragmentManager.getFragments().isEmpty()) {
             fragmentManager.beginTransaction()
                     .add(R.id.main_fragment_frame, new DiagramFragment(), getString(R.string.diagram_fragment_tag))
                     .commit();
@@ -128,14 +129,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.nav_accounts:
                 if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.main_fragment_frame, new AccountsFragment(), getString(R.string.accounts_fragment_tag))
-                        .addToBackStack(getString(R.string.accounts_fragment_tag))
-                        .commit();
-            }
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.main_fragment_frame, new AccountsFragment(), getString(R.string.accounts_fragment_tag))
+                            .addToBackStack(getString(R.string.accounts_fragment_tag))
+                            .commit();
+                }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
 
@@ -151,20 +152,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_income:
                 if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.main_fragment_frame, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
-                        .addToBackStack(getString(R.string.transaction_fragment_tag))
-                        .commit();
-            }
+                    TransactionFragment fragment = TransactionFragment.getNewInstance(Category.Type.INCOME);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.main_fragment_frame, fragment, getString(R.string.transaction_fragment_tag))
+                            .addToBackStack(getString(R.string.transaction_fragment_tag))
+                            .commit();
+                }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
 
             case R.id.nav_expense:
                 if (fragmentManager.getFragments() != null || !fragmentManager.getFragments().isEmpty()) {
+                    TransactionFragment fragment = TransactionFragment.getNewInstance(Category.Type.EXPENSE);
                     fragmentManager.beginTransaction()
-                        .replace(R.id.main_fragment_frame, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
-                        .addToBackStack(getString(R.string.transaction_fragment_tag))
-                        .commit();
+                            .replace(R.id.main_fragment_frame, fragment, getString(R.string.transaction_fragment_tag))
+                            .addToBackStack(getString(R.string.transaction_fragment_tag))
+                            .commit();
                 }
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
