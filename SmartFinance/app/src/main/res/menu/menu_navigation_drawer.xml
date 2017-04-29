@@ -25,7 +25,10 @@
             android:title="@string/nav_item_calendar" />
     </group>
 
-    <item android:title="@string/nav_item_interval">
+    <item
+        android:title="@string/nav_item_interval"
+        android:id="@+id/nav_interval">
+
         <menu>
             <item
                 android:id="@+id/interval_day"

@@ -1,6 +1,6 @@
 package com.vladimircvetanov.smartfinance;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,27 +8,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.vladimircvetanov.smartfinance.db.DBAdapter;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>{
 
     private ArrayList<RowDisplayable> categories;
-    private Activity activity;
+    private Context context;
 
-    private DBAdapter adapter;
-
-    AccountsAdapter(HashSet<RowDisplayable> favouriteCategories, Activity activity) {
-        this.activity = activity;
+    AccountsAdapter(HashSet<RowDisplayable> favouriteCategories, Context context) {
+        this.context = context;
         categories = new ArrayList<RowDisplayable> (favouriteCategories);
     }
 
     @Override
     public AccountViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        LayoutInflater inflater = LayoutInflater.from(activity);
+        LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.accounts_list_item, parent, false);
         return new AccountViewHolder(view);
     }

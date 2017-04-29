@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/CustomDialog">
+    android:minWidth="300dp">
 
     <TextView
         android:id="@+id/add_category_title"
@@ -18,8 +18,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/appbar_height_two_times"
-        android:padding="@dimen/all_view_spacing_large">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin">
 
         <ImageView
             android:id="@+id/add_category_icon"
@@ -39,14 +39,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/appbar_height"
-        android:gravity="center">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin">
 
         <Button
             android:id="@+id/cancel_addition"
             android:text="@android:string/cancel"
             android:background="@drawable/balance_button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
             android:layout_marginRight="@dimen/all_view_spacing_large"/>
@@ -56,7 +57,8 @@
             android:text="@string/add"
             android:background="@drawable/balance_button"
             android:textColor="@color/colorWhite"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content" />
 
     </LinearLayout>

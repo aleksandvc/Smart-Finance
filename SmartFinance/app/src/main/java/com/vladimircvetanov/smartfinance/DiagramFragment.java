@@ -60,7 +60,6 @@ public class DiagramFragment extends Fragment {
             rootView = inflater.inflate(R.layout.fragment_diagram, container, false);
         } catch (InflateException e) {}
 
-
         circleLayout = (CircleLayout) rootView.findViewById(R.id.frame);
         pieChart = (PieChart) rootView.findViewById(R.id.pie_chart);
 
@@ -72,7 +71,6 @@ public class DiagramFragment extends Fragment {
 
         drawDiagram();
         drawFavouriteIcons();
-
 
         /** Animator for the Report Drawer */
         final LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.report_layout);
@@ -133,7 +131,6 @@ public class DiagramFragment extends Fragment {
     }
 
     void drawDiagram() {
-
         if (entries.isEmpty()) {
             entries.add(new PieEntry(100));
         }
@@ -180,13 +177,26 @@ public class DiagramFragment extends Fragment {
                                 .addToBackStack(getString(R.string.transaction_fragment_tag))
                                 .commit();
 
+                       // pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
+                       // pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
+                        icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
+                    }
+                });
+                icon.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
                         pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
                         pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
-                        icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
+                        return false;
                     }
                 });
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     class CustomPercentFormatter implements IValueFormatter {

@@ -1,7 +1,5 @@
 package com.vladimircvetanov.smartfinance;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -45,11 +43,10 @@ public class AddCategoryDialogFragment extends DialogFragment {
         final String iconKey = getText(R.string.EXTRA_ICON).toString();
         String listKey = getText(R.string.EXTRA_LIST).toString();
         String list = "";
+        int iconId = 0;
 
         if (b != null && !b.isEmpty() && b.containsKey(iconKey) && b.containsKey(listKey)) {
-            byte[] byteArray = b.getByteArray(iconKey);
-            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            icon.setImageBitmap(bmp);
+            iconId = b.getInt(iconKey);
 
             list = b.getString(listKey);
             if (list.equals("ACCOUNT")) {
@@ -59,6 +56,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
                 dialogTitle.setText("Add new category!");
             }
         }
+        icon.setImageResource(iconId);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,16 +77,15 @@ public class AddCategoryDialogFragment extends DialogFragment {
                 } else {
                     switch(tempList) {
                         case "CATEGORY":
-                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, icon.getId()), Manager.getLoggedUser().getId());
+                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, R.mipmap.mattress), Manager.getLoggedUser().getId());
                             Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
-                            dismiss();
-                            return;
+                            break;
                         case "ACCOUNT":
                             adapter.addAccount(new Account(nameStr, icon.getId()), Manager.getLoggedUser().getId());
                             Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_SHORT).show();
-                            dismiss();
-                            return;
+                            break;
                     }
+                    dismiss();
                 }
             }
         });

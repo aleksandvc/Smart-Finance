@@ -1,7 +1,6 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 
 public class AccountsFragment extends Fragment {
@@ -55,10 +53,6 @@ public class AccountsFragment extends Fragment {
                                 .addToBackStack(getString(R.string.transaction_fragment_tag))
                                 .commit();
                     }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                    }
                 })
         );
 
@@ -71,27 +65,17 @@ public class AccountsFragment extends Fragment {
                 new RecyclerItemClickListener(context, moreAccountIconsList, new RecyclerItemClickListener.OnItemClickListener() {
 
                     @Override public void onItemClick(View view, int position) {
-                        //Temporarily deleted
+
                         AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                         Bundle arguments = new Bundle();
 
-                        view.findViewById(R.id.image).setDrawingCacheEnabled(true);
-                        view.findViewById(R.id.image).buildDrawingCache();
-                        Bitmap bitmap = view.findViewById(R.id.image).getDrawingCache();
+                        int icon = view.findViewById(R.id.account_image).getId();
 
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        byte[] b = baos.toByteArray();
-
-                        arguments.putByteArray(getString(R.string.EXTRA_ICON), b);
+                        arguments.putInt(getString(R.string.EXTRA_ICON), icon);
                         arguments.putString("ROW_DISPLAYABLE_TYPE", "ACCOUNT");
 
                         dialog.setArguments(arguments);
                         dialog.show(getFragmentManager(), "Add category dialog");
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
                     }
                 })
         );

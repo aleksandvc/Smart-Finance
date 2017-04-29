@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minWidth="300dp"
     android:orientation="vertical">
 
     <EditText
@@ -11,25 +12,32 @@
         android:hint="@string/transaction_input_note"
         android:lines="2"
         android:maxLength="255"
-        android:maxLines="10" />
+        android:maxLines="10"
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin">
 
         <Button
             android:id="@+id/note_input_cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cancel_button" />
+            android:text="@string/cancel_button"
+            android:textColor="@color/colorWhite"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/balance_button"/>
 
         <Button
             android:id="@+id/note_input_submit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/submit" />
+            android:text="@string/submit"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/balance_button"/>
     </LinearLayout>
 </LinearLayout>
