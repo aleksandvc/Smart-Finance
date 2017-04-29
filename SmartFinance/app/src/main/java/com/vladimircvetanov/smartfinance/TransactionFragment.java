@@ -389,6 +389,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         double currNumber = Double.valueOf(numDisplay.getText().toString());
 
+        if (currentOperation == OPERATION_NONE) return currNumber;
+
         switch (currentOperation) {
             case OPERATION_PLUS:
                 storedNumber += currNumber;
