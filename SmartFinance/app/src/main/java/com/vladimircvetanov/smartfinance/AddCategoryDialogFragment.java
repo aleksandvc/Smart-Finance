@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
@@ -46,6 +47,8 @@ public class AddCategoryDialogFragment extends DialogFragment {
         String listKey = getString(R.string.EXTRA_LIST);
         String list = "";
 
+
+
         if (b != null && !b.isEmpty() && b.containsKey(iconKey) && b.containsKey(listKey)) {
             byte[] byteArray = b.getByteArray(iconKey);
             Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
@@ -56,7 +59,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
                 dialogTitle.setText("Add new account");
             }
             if (list.equals("CATEGORY")) {
-                dialogTitle.setText("Add new category!");
+                dialogTitle.setText("Add new cat");
             }
         }
 
