@@ -708,6 +708,13 @@ public class DBAdapter {
     public long addTransaction(final Transaction transaction, final long userId) {
         final long[] id = new long[1];
 
+        long catId = transaction.getCategory().getId();
+
+        if (!transactions.containsKey(catId)){
+            transactions.put(catId, new LinkedList<Transaction>());
+        }
+        transactions.get(catId).add(transaction);
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -724,14 +731,8 @@ public class DBAdapter {
                 values.put(DbHelper.TRANSACTIONS_COLUMN_USERFK, userId);
 
                 id[0] = db.insert(DbHelper.TABLE_NAME_TRANSACTIONS,null,values);
-                transaction.setId(id[0]);
+                transaction.setId(id[0]);   
 
-                long catId = transaction.getCategory().getId();
-
-                if (!transactions.containsKey(catId)){
-                    transactions.put(catId, new LinkedList<Transaction>());
-                }
-                transactions.get(catId).add(transaction);
                 return null;
             }
 

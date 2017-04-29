@@ -26,12 +26,15 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.szugyi.circlemenu.view.CircleLayout;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
+import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class DiagramFragment extends Fragment {
 
@@ -71,6 +74,8 @@ public class DiagramFragment extends Fragment {
 
         drawDiagram();
         drawFavouriteIcons();
+
+        displayTotal(totalSumButton);
 
         /** Animator for the Report Drawer */
         final LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.report_layout);
@@ -197,6 +202,21 @@ public class DiagramFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    private double displayTotal(Button displayView) {
+        double sum = 0.0;
+        for (LinkedList<Transaction> list : adapter.getCachedTransactions().values())
+            for (Transaction t : list)
+                sum += t.getSum() * (t.getCategory().getType() == Category.Type.EXPENSE ? -1 : 1);
+        displayView.setText(sum + "");
+
+        if (sum < 0)
+            displayView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorOrange));
+        else
+            displayView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorGreen));
+
+        return sum;
     }
 
     class CustomPercentFormatter implements IValueFormatter {
