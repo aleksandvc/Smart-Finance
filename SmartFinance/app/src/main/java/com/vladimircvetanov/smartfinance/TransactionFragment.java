@@ -110,15 +110,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         accountSelection.setAdapter(new RowViewAdapter<>(inflater, dbAdapter.getCachedAccounts().values()));
 
-//        Message.message(getContext(),dbAdapter.getCachedTransactions().values().size()+"");
-//        for (Map.Entry<Long, ArrayList<Transaction>> e : dbAdapter.getCachedTransactions().entrySet()){
-//
-//            Message.message(getActivity(), e.getKey().toString());
-//            for (Transaction t : e.getValue()){
-//                Message.message(getActivity(), t.getCategory().getName());
-//            }
-//        }
-
         ArrayList<Category> expenseCategories = new ArrayList<>();
         expenseCategories.addAll(dbAdapter.getCachedExpenseCategories().values());
         expenseCategories.addAll(dbAdapter.getCachedFavCategories().values());
@@ -127,10 +118,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         final RowViewAdapter<Category> expenseAdapter = new RowViewAdapter<>(inflater, expenseCategories);
         final RowViewAdapter<Category> incomeAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedIncomeCategories().values());
         categorySelection.setAdapter(expenseAdapter);
-
-
-
-
 
 
         //Show the current date in a "d MMMM, YYYY" format.
@@ -210,6 +197,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                calculate(OPERATION_NONE);
                 if (!startedWithCategory) {
                     numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                         @Override
@@ -235,7 +223,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         View.OnClickListener arithmeticListener = new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (operationPrimed && currentOperation != OPERATION_NONE) calculate();
+                if (operationPrimed && currentOperation != OPERATION_NONE) calculate(((TextView)v).getText().charAt(0));
                 currentOperation = ((TextView) v).getText().charAt(0);
                 if (currentOperation != OPERATION_NONE) operationPrimed = false;
             }
@@ -274,13 +262,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                 if (decimalPosition != BEFORE_DECIMAL) decimalPosition++;
             }
         };
-
-        equals.setOnClickListener(arithmeticListener);
-        divide.setOnClickListener(arithmeticListener);
-        multiply.setOnClickListener(arithmeticListener);
-        plus.setOnClickListener(arithmeticListener);
-        minus.setOnClickListener(arithmeticListener);
-
         for (TextView btn : numButtons)
             btn.setOnClickListener(numberListener);
         decimal.setOnClickListener(numberListener);
@@ -367,7 +348,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
      * Creates a Transaction with the note, sum, type and date selected in the Activity and a passed Section.
      */
     private void createTransaction() {
-        double sum = Double.parseDouble(numDisplay.getText().toString());
+
+        double sum = calculate(OPERATION_NONE);
         String note = noteInput.getText().toString();
 
         Account account = selectedAccount;
@@ -388,7 +370,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     }
 
     /** Executes stored arithmetic operation. */
-    private void calculate() {
+    private double calculate(char NEXT_OPERATION) {
+
+        //TODO - validate 'NEXT_OPERATION' param.
+
         double currNumber = Double.valueOf(numDisplay.getText().toString());
 
         switch (currentOperation) {
@@ -414,6 +399,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         numDisplay.setText(numText);
 
         decimalPosition = numText.contains(".") ? (numText.length() - 1) - numText.lastIndexOf(".") : BEFORE_DECIMAL;
+        Message.message(getActivity(), "" + storedNumber);
+
+        currentOperation = NEXT_OPERATION;
+        return storedNumber;
     }
 
     @Override

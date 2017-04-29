@@ -731,7 +731,7 @@ public class DBAdapter {
                 values.put(DbHelper.TRANSACTIONS_COLUMN_USERFK, userId);
 
                 id[0] = db.insert(DbHelper.TABLE_NAME_TRANSACTIONS,null,values);
-                transaction.setId(id[0]);   
+                transaction.setId(id[0]);
 
                 return null;
             }
