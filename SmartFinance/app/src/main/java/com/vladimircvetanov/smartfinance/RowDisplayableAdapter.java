@@ -13,7 +13,6 @@ import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAdapter.IconViewHolder>{
@@ -23,7 +22,7 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
 
     private DBAdapter adapter;
 
-    RowDisplayableAdapter(HashSet<RowDisplayable> favouriteCategories, Context context) {
+    RowDisplayableAdapter(ArrayList<RowDisplayable> favouriteCategories, Context context) {
         this.context = context;
         categories = new ArrayList<RowDisplayable> (favouriteCategories);
         adapter = DBAdapter.getInstance(context);

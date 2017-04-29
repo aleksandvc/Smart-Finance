@@ -13,9 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
-import com.vladimircvetanov.smartfinance.model.Account;
-import com.vladimircvetanov.smartfinance.model.CategoryExpense;
-import com.vladimircvetanov.smartfinance.model.Manager;
 
 public class AddCategoryDialogFragment extends DialogFragment {
 
@@ -40,20 +37,23 @@ public class AddCategoryDialogFragment extends DialogFragment {
 
         adapter = DBAdapter.getInstance(getActivity());
         Bundle b = getArguments();
-        final String iconKey = getText(R.string.EXTRA_ICON).toString();
-        String listKey = getText(R.string.EXTRA_LIST).toString();
+        String iconKey = getText(R.string.EXTRA_ICON).toString();
+        String listKey = "ROW_DISPLAYABLE_TYPE";
         String list = "";
         int iconId = 0;
 
         if (b != null && !b.isEmpty() && b.containsKey(iconKey) && b.containsKey(listKey)) {
             iconId = b.getInt(iconKey);
-
             list = b.getString(listKey);
-            if (list.equals("ACCOUNT")) {
-                dialogTitle.setText("Add new account");
-            }
-            if (list.equals("CATEGORY")) {
-                dialogTitle.setText("Add new category!");
+
+            assert list != null;
+            switch (list) {
+                case "ACCOUNT":
+                    dialogTitle.setText("Add new account");
+                    break;
+                case "CATEGORY":
+                    dialogTitle.setText("Add new category");
+                    break;
             }
         }
         icon.setImageResource(iconId);
@@ -75,13 +75,13 @@ public class AddCategoryDialogFragment extends DialogFragment {
                     categoryName.requestFocus();
 
                 } else {
-                    switch(tempList) {
-                        case "CATEGORY":
-                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, R.mipmap.mattress), Manager.getLoggedUser().getId());
+                    switch (tempList) {
+                        case "C":
+                            //adapter.addExpenseCategory(new CategoryExpense(nameStr, false, icon.getId()), Manager.getLoggedUser().getId());
                             Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
                             break;
-                        case "ACCOUNT":
-                            adapter.addAccount(new Account(nameStr, icon.getId()), Manager.getLoggedUser().getId());
+                        case "A":
+                            //adapter.addAccount(new Account(nameStr, icon.getId()), Manager.getLoggedUser().getId());
                             Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_SHORT).show();
                             break;
                     }

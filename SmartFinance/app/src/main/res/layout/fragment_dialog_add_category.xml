@@ -10,10 +10,10 @@
         android:text="@string/add_category_title"
         android:textSize="@dimen/all_text_size_middle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/appbar_height"
+        android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/activity_horizontal_margin"
         android:background="@color/colorGreen"/>
 
     <LinearLayout

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class AccountsFragment extends Fragment {
 
@@ -35,7 +35,7 @@ public class AccountsFragment extends Fragment {
         context = getActivity();
 
         accountsList = (RecyclerView) view.findViewById(R.id.accounts_list);
-        HashSet<RowDisplayable> accounts = new HashSet<>();
+        ArrayList<RowDisplayable> accounts = new ArrayList<>();
         accounts.addAll(adapter.getCachedAccounts().values());
 
         accountsAdapter = new AccountsAdapter(accounts, getActivity());
@@ -68,10 +68,9 @@ public class AccountsFragment extends Fragment {
 
                         AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                         Bundle arguments = new Bundle();
+                        int iconId = Manager.getInstance().getAllAccountIcons().get(position);
 
-                        int icon = view.findViewById(R.id.account_image).getId();
-
-                        arguments.putInt(getString(R.string.EXTRA_ICON), icon);
+                        arguments.putInt(getString(R.string.EXTRA_ICON), iconId);
                         arguments.putString("ROW_DISPLAYABLE_TYPE", "ACCOUNT");
 
                         dialog.setArguments(arguments);

@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
-                    Message.message(LoginActivity.this,"Successful logged in." + Manager.getLoggedUser().getId());
+                    Message.message(LoginActivity.this,"Successful logged in.");
 
                 } else{
                     Message.message(LoginActivity.this,"Wrong email or password.");

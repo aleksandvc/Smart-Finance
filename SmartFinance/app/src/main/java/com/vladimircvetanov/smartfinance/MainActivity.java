@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         headerView = navigationView.getHeaderView(0);
         userProfile = (TextView) headerView.findViewById(R.id.user_profile_link);
-        userProfile.setText(Manager.getLoggedUser().getEmail());
+        userProfile.setText("Hi, " + Manager.getLoggedUser().getEmail());
 
         LinearLayout header = (LinearLayout) headerView.findViewById(R.id.header);
         header.setOnClickListener(new View.OnClickListener() {

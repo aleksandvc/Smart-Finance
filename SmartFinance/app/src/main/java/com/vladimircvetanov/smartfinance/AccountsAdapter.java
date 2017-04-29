@@ -9,16 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.List;
 
 public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>{
 
-    private ArrayList<RowDisplayable> categories;
+    private ArrayList<RowDisplayable> accounts;
     private Context context;
 
-    AccountsAdapter(HashSet<RowDisplayable> favouriteCategories, Context context) {
+    AccountsAdapter(ArrayList<RowDisplayable> accountsList, Context context) {
         this.context = context;
-        categories = new ArrayList<RowDisplayable> (favouriteCategories);
+        this.accounts = new ArrayList<RowDisplayable> (accountsList);
+    }
+
+    public List<RowDisplayable> getAccounts() {
+        return Collections.unmodifiableList(accounts);
     }
 
     @Override
@@ -31,7 +36,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
 
     @Override
     public void onBindViewHolder(final AccountViewHolder holder, final int position) {
-        final RowDisplayable account = categories.get(position);
+        final RowDisplayable account = accounts.get(position);
         holder.accountImage.setImageResource(account.getIconId());
         holder.accountName.setText(account.getName());
         holder.accountSum.setText(account.getSum() + "");
@@ -39,7 +44,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
 
     @Override
     public int getItemCount() {
-        return categories.size();
+        return accounts.size();
     }
 
     public static class AccountViewHolder extends RecyclerView.ViewHolder{

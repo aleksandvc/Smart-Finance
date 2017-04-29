@@ -123,9 +123,15 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         expenseCategories.addAll(dbAdapter.getCachedExpenseCategories().values());
         expenseCategories.addAll(dbAdapter.getCachedFavCategories().values());
 
+
         final RowViewAdapter<Category> expenseAdapter = new RowViewAdapter<>(inflater, expenseCategories);
         final RowViewAdapter<Category> incomeAdapter = new RowViewAdapter<>(inflater, dbAdapter.getCachedIncomeCategories().values());
         categorySelection.setAdapter(expenseAdapter);
+
+
+
+
+
 
         //Show the current date in a "d MMMM, YYYY" format.
         date = DateTime.now();
@@ -155,7 +161,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                     case R.id.transaction_radio_expense:
                         colorizeUI(getActivity(), R.color.colorOrange, R.drawable.orange_button_9);
                         categorySelection.setAdapter(expenseAdapter);
-                        Message.message(getContext(),"This is here to test some stuff.");
+                       // Message.message(getContext(),"This is here to test some stuff.");
                         break;
                     case R.id.transaction_radio_income:
                         colorizeUI(getActivity(), R.color.colorGreen, R.drawable.green_button_9);

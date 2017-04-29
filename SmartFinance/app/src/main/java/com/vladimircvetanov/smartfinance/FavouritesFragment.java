@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class FavouritesFragment extends Fragment {
 
@@ -29,8 +29,6 @@ public class FavouritesFragment extends Fragment {
 
     private RowDisplayableAdapter rowDisplayableAdapter;
     private IconsAdapter iconsAdapter;
-
-    private IconsAdapter.IconViewHolder holder;
     private Context context;
 
     @Override
@@ -44,7 +42,7 @@ public class FavouritesFragment extends Fragment {
         moreIconsTitle = (TextView) root.findViewById(R.id.more_icons_title);
         context = getActivity();
 
-        HashSet<RowDisplayable> categories = new HashSet<>();
+        ArrayList<RowDisplayable> categories = new ArrayList<>();
         categories.addAll(adapter.getCachedFavCategories().values());
 
         rowDisplayableAdapter = new RowDisplayableAdapter(categories, getActivity());
@@ -53,7 +51,7 @@ public class FavouritesFragment extends Fragment {
         favouritesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
         allCategoriesList = (RecyclerView) root.findViewById(R.id.all_categories_list);
-        final HashSet<RowDisplayable> allCategories = new HashSet<>();
+        final ArrayList<RowDisplayable> allCategories = new ArrayList<>();
         allCategories.addAll(adapter.getCachedExpenseCategories().values());
         allCategoriesList.setAdapter(new RowDisplayableAdapter(allCategories, getActivity()));
 
@@ -82,10 +80,10 @@ public class FavouritesFragment extends Fragment {
 
                 @Override
                 public void onItemClick(View view, int position) {
+
                     AddCategoryDialogFragment dialog = new AddCategoryDialogFragment();
                     Bundle arguments = new Bundle();
-
-                    int iconId = rowDisplayableAdapter.getCategories().get(position).getIconId();
+                    int iconId = Manager.getInstance().getAllExpenseIcons().get(position);
 
                     arguments.putInt(getString(R.string.EXTRA_ICON), iconId);
                     arguments.putString("ROW_DISPLAYABLE_TYPE", "CATEGORY");

@@ -42,6 +42,7 @@ public class DBAdapter {
      */
     static DbHelper helper ;
 
+
     private static ConcurrentHashMap<String, User> registeredUsers;
     private static ConcurrentHashMap<Long, Account> accounts;
     private static ConcurrentHashMap<Long, CategoryExpense> expenseCategories;
@@ -160,6 +161,7 @@ public class DBAdapter {
                     registeredUsers.put(u.getEmail(),u);
                     Manager.setLoggedUser(u);
 
+
                 }
 
                 return null;
@@ -190,6 +192,10 @@ public class DBAdapter {
         addAccount(new Account("Cash",R.mipmap.cash), id);
         addAccount(new Account("Debit",R.mipmap.visa), id);
         addAccount(new Account("Credit",R.mipmap.mastercard), id);
+
+        addIncomeCategory(new CategoryIncome("Salary",R.mipmap.cash),id);
+        addIncomeCategory(new CategoryIncome("Savings",R.mipmap.cash),id);
+        addIncomeCategory(new CategoryIncome("Other",R.mipmap.cash),id);
     }
     private  String getData(final String username){
 
@@ -304,7 +310,6 @@ public class DBAdapter {
                 Toast.makeText(context, " user edited successfully", Toast.LENGTH_SHORT).show();
             }
         }.execute(oldEmail);
-
     }
 
 
@@ -328,8 +333,6 @@ public class DBAdapter {
                 return null;
             }
         }.execute();
-
-
     }
     public boolean existsAccount(Account account){
         return accounts.containsKey(account.getName());
@@ -525,7 +528,7 @@ public class DBAdapter {
 
             @Override
             protected Void doInBackground(Void... params) {
-                String[] fk = {String.valueOf(Manager.getLoggedUser().getId())};
+                String[] fk = {Manager.getLoggedUser().getId()+""};
                 Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,income_category_name,income_category_icon,income_category_user FROM " + DbHelper.TABLE_NAME_INCOME_CATEGORIES + " WHERE " + DbHelper.INCOME_CATEGORIES_COLUMN_USERFK +" = ? ;",fk);
                 while(cursor.moveToNext()){
                     long id = cursor.getInt(cursor.getColumnIndex("_id"));
@@ -634,7 +637,6 @@ public class DBAdapter {
 
                 if(favouriteCategories.isEmpty()) {
                     while (cursor.moveToNext()) {
-                        Log.e("TAG", "ima metod");
                         long id = cursor.getLong(cursor.getColumnIndex("_id"));
                         String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME));
                         int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.FAVCATEGORIES_COLUMN_ICON));
@@ -643,12 +645,9 @@ public class DBAdapter {
                         favouriteCategories.put(category.getId(), category);
                     }
                 }
-                else{
 
-                }
                 return null;
             }
-
 
         }.execute();
     }
@@ -664,7 +663,7 @@ public class DBAdapter {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                if(!favouriteCategories.containsKey(category.getName())) {
+                if(!favouriteCategories.containsKey(category.getId())) {
                     SQLiteDatabase db = helper.getWritableDatabase();
 
                     ContentValues values = new ContentValues();
@@ -694,13 +693,13 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_FAVCATEGORIES,DbHelper.FAVCATEGORIES_COLUMN_CATEGORYNAME + " = ? AND " + DbHelper.FAVCATEGORIES_COLUMN_USERFK+ " = ?",new String[]{category.getName(), Manager.getLoggedUser().getId()+""});
-                favouriteCategories.remove(category.getName());
+                favouriteCategories.remove(category.getId());
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void integer) {
-                Message.message(context,"Category deleted! " + count[0]);
+                Message.message(context,"Category deleted!");
             }
         }.execute();
         return count[0];

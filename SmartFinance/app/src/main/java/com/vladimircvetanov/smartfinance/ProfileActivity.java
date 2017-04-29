@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.User;
 
@@ -78,6 +79,10 @@ public class ProfileActivity extends AppCompatActivity {
                 if (!newPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{8,30}$")) {
                     changePass.setError("Password should contain at least one digit," +
                             "one special symbol,one small letter,and should be between 8 and 30 symbols. ");
+                    return;
+                }
+                if(adapter.existsUser(newEmail)){
+                    Message.message(ProfileActivity.this,"This username is taken by someone else.");
                     return;
                 }
 

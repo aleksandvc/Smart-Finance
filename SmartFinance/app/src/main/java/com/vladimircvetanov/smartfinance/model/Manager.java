@@ -2,7 +2,7 @@ package com.vladimircvetanov.smartfinance.model;
 
 import com.vladimircvetanov.smartfinance.R;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class Manager {
 
@@ -18,13 +18,13 @@ public class Manager {
      */
 
     //temp changed
-    private HashSet<Integer> allExpenseIcons;
-    private HashSet<Integer> allAccountIcons;
+    private ArrayList<Integer> allExpenseIcons;
+    private ArrayList<Integer> allAccountIcons;
 
 
     private Manager() {
-        allAccountIcons = new HashSet<>();
-        allExpenseIcons = new HashSet<>();
+        allAccountIcons = new ArrayList<>();
+        allExpenseIcons = new ArrayList<>();
         addMoreExpenseIcons();
         addMoreAccountIcons();
     }
@@ -46,11 +46,11 @@ public class Manager {
         return loggedUser;
     }
 
-    public HashSet<Integer> getAllExpenseIcons() {
+    public ArrayList<Integer> getAllExpenseIcons() {
         return allExpenseIcons;
     }
 
-    public HashSet<Integer> getAllAccountIcons() {
+    public ArrayList<Integer> getAllAccountIcons() {
         return allAccountIcons;
     }
 
