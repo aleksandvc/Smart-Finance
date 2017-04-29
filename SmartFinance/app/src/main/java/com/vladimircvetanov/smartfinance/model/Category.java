@@ -57,4 +57,23 @@ public abstract class Category implements RowDisplayable {
     public int getIconId() {
         return iconId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Category category = (Category) o;
+
+        if (id != category.id) return false;
+        return name.equals(category.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        return result;
+    }
 }

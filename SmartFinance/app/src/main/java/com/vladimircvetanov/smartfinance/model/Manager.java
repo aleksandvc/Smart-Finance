@@ -6,18 +6,11 @@ import java.util.ArrayList;
 
 public class Manager {
 
-    /**
-     * Transaction types.
-     */
-
+    /* Transaction types. */
     private static User loggedUser;
     private static Manager instance = null;
 
-    /**
-     * A collection that maintains a list of all Sections (both Income and Expense) and distributes input accordingly.
-     */
-
-    //temp changed
+    /* A collection that maintains a list of all Sections (both Income and Expense) and distributes input accordingly. */
     private ArrayList<Integer> allExpenseIcons;
     private ArrayList<Integer> allAccountIcons;
 
