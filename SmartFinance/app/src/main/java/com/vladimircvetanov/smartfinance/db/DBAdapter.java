@@ -739,7 +739,7 @@ public class DBAdapter {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                Message.message(context,"Transaction added in db successfully.");
+                Message.message(context,"Transaction added successfully.");
                 Log.wtf("LOAD TRANSACTIONS:", " LOADED ");
             }
         }.execute();
