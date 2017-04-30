@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -26,6 +27,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.szugyi.circlemenu.view.CircleLayout;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
@@ -58,7 +60,6 @@ public class DiagramFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         try{
             rootView = inflater.inflate(R.layout.fragment_diagram, container, false);
         } catch (InflateException e) {}
@@ -118,6 +119,13 @@ public class DiagramFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Message.message(getActivity(), "Number of loaded TransactionLists: " + adapter.getCachedTransactions().keySet().size());
+        displayTotal(totalSumButton);
     }
 
     void addEntry(float entrySum) {
@@ -206,9 +214,11 @@ public class DiagramFragment extends Fragment {
 
     private double displayTotal(Button displayView) {
         double sum = 0.0;
-        for (LinkedList<Transaction> list : adapter.getCachedTransactions().values())
-            for (Transaction t : list)
+        for (LinkedList<Transaction> list : adapter.getCachedTransactions().values()) {
+            for (Transaction t : list) {
                 sum += t.getSum() * (t.getCategory().getType() == Category.Type.EXPENSE ? -1 : 1);
+            }
+        }
         displayView.setText(sum + "");
 
         if (sum < 0)

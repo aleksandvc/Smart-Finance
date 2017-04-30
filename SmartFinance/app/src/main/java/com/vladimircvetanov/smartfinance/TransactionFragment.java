@@ -202,7 +202,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedCategory = (Category) categorySelection.getItemAtPosition(position);
-                selectedAccount = (Account) accountSelection.getSelectedItem();
                 createTransaction();
             }
         });
@@ -366,7 +365,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         double sum = calculate(OPERATION_NONE);
         String note = noteInput.getText().toString();
 
-        Account account = selectedAccount;
+        Account account = (Account) accountSelection.getSelectedItem();
         Category category = selectedCategory;
 
         if (selectedAccount == null || selectedCategory == null){
@@ -375,9 +374,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         }
 
         Transaction transaction = new Transaction(date, sum, note, account, category);
-
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
-        account.addTransaction(transaction);
 
         getActivity().onBackPressed();
     }
