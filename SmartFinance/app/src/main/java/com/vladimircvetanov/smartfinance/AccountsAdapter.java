@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>{
 
@@ -20,10 +18,6 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
     AccountsAdapter(ArrayList<RowDisplayable> accountsList, Context context) {
         this.context = context;
         this.accounts = new ArrayList<RowDisplayable> (accountsList);
-    }
-
-    public List<RowDisplayable> getAccounts() {
-        return Collections.unmodifiableList(accounts);
     }
 
     @Override

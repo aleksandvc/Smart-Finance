@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.Account;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
+import com.vladimircvetanov.smartfinance.model.Manager;
 
 public class AddCategoryDialogFragment extends DialogFragment {
 
@@ -38,7 +41,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         adapter = DBAdapter.getInstance(getActivity());
         Bundle b = getArguments();
         String iconKey = getText(R.string.EXTRA_ICON).toString();
-        String listKey = "ROW_DISPLAYABLE_TYPE";
+        String listKey = String.valueOf(R.string.ROW_DISPLAYABLE_TYPE);
         String list = "";
         int iconId = 0;
 
@@ -49,10 +52,10 @@ public class AddCategoryDialogFragment extends DialogFragment {
             assert list != null;
             switch (list) {
                 case "ACCOUNT":
-                    dialogTitle.setText("Add new account");
+                    dialogTitle.setText(R.string.add_new_account);
                     break;
                 case "CATEGORY":
-                    dialogTitle.setText("Add new category");
+                    dialogTitle.setText(R.string.add_new_category);
                     break;
             }
         }
@@ -76,12 +79,12 @@ public class AddCategoryDialogFragment extends DialogFragment {
 
                 } else {
                     switch (tempList) {
-                        case "C":
-                            //adapter.addExpenseCategory(new CategoryExpense(nameStr, false, icon.getId()), Manager.getLoggedUser().getId());
+                        case "CATEGORY":
+                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, icon.getId()), Manager.getLoggedUser().getId());
                             Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
                             break;
-                        case "A":
-                            //adapter.addAccount(new Account(nameStr, icon.getId()), Manager.getLoggedUser().getId());
+                        case "ACCOUNT":
+                            adapter.addAccount(new Account(nameStr, icon.getId()), Manager.getLoggedUser().getId());
                             Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_SHORT).show();
                             break;
                     }

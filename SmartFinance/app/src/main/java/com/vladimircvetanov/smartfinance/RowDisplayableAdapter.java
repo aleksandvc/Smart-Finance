@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAdapter.IconViewHolder>{
 
@@ -26,10 +24,6 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
         this.context = context;
         categories = new ArrayList<RowDisplayable> (favouriteCategories);
         adapter = DBAdapter.getInstance(context);
-    }
-
-    List<RowDisplayable> getCategories() {
-        return Collections.unmodifiableList(categories);
     }
 
     @Override

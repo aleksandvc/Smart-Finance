@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SmartFinance</string>
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- TOOLBAR MENU -->
@@ -13,6 +12,9 @@
     <string name="EXTRA_ICON">KEY_ICON</string>
     <string name="EXTRA_LIST">KEY_LIST</string>
     <string name="EXTRA_NOTE">temp</string>
+    <string name="EXTRA_ACCOUNT">ACCOUNT</string>
+    <string name="EXTRA_CATEGORY">CATEGORY</string>
+    <string name="ROW_DISPLAYABLE_TYPE">ROW_DISPLAYABLE_TYPE</string>
 
     <!-- NAVIGATION ITEMS -->
     <string name="nav_item_accounts">Accounts</string>
@@ -26,6 +28,7 @@
     <string name="nav_item_month">Month</string>
     <string name="nav_item_year">Year</string>
     <string name="email">Hi, [email address]</string>
+    <string name="nav_expense">Expense</string>
 
     <!-- TRANSACTION RADIO BUTTONS -->
     <string name="income">income</string>
@@ -42,6 +45,7 @@
     <string name="submit">submit</string>
     <string name="transaction_select_section">SELECT SECTION</string>
     <string name="transaction_add_to">ADD TO</string>
+    <string name="add">Add</string>
 
     <!-- FRAGMENT TAGS -->
     <string name="transaction_fragment_tag">Transaction Fragment</string>
@@ -58,18 +62,21 @@
     <string name="logout_title">Log out!</string>
     <string name="transaction_select_account">Please select an account!</string>
     <string name="change_favourite_categories">Change favourite categories:</string>
-
-    <string name="transaction_input_note">add note ...</string>
-    <string name="title_activity_navigation">NavigationActivity</string>
-    <string name="test_text">TEST_TEXT</string>
-    <string name="add_category_title">Add new category</string>
-    <string name="add">Add</string>
     <string name="set_name">Set name</string>
-    <string name="nav_expense">Expense</string>
-    <string name="note_fragment_tag">Note_input_Fragment</string>
+    <string name="add_new_account">Add new account</string>
+    <string name="add_new_category">Add new category</string>
+
+    <!-- TITLES -->
     <string name="favourite_categories_title">Favourite categories:</string>
     <string name="all_categories_title">All categories:</string>
     <string name="add_more_categories_title">Add more categories:</string>
+    <string name="add_category_title">Add new category</string>
     <string name="my_accounts_title">My accounts:</string>
     <string name="add_more_accounts_title">Add more accounts:</string>
+
+    <!-- TEMP -->
+    <string name="transaction_input_note">add note ...</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="test_text">TEST_TEXT</string>
+    <string name="note_fragment_tag">Note_input_Fragment</string>
 </resources>

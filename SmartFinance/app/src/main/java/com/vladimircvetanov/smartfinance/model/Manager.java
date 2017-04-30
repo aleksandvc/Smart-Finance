@@ -109,13 +109,13 @@ public class Manager {
     private void addMoreAccountIcons() {
         allAccountIcons.add(R.mipmap.money_box);
         allAccountIcons.add(R.mipmap.gift_card);
+        allAccountIcons.add(R.drawable.accounts);
         allAccountIcons.add(R.mipmap.funding);
         allAccountIcons.add(R.mipmap.mattress);
         allAccountIcons.add(R.mipmap.paypal);
+        allAccountIcons.add(R.drawable.calculator);
         allAccountIcons.add(R.mipmap.safe);
         allAccountIcons.add(R.mipmap.coins);
-        allAccountIcons.add(R.drawable.accounts);
         allAccountIcons.add(R.drawable.income);
-        allAccountIcons.add(R.drawable.calculator);
     }
 }

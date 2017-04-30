@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHolder>{
 

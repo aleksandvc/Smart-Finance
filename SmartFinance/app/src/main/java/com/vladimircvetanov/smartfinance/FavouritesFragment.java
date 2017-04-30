@@ -86,10 +86,10 @@ public class FavouritesFragment extends Fragment {
                     int iconId = Manager.getInstance().getAllExpenseIcons().get(position);
 
                     arguments.putInt(getString(R.string.EXTRA_ICON), iconId);
-                    arguments.putString("ROW_DISPLAYABLE_TYPE", "CATEGORY");
+                    arguments.putString(String.valueOf(R.string.ROW_DISPLAYABLE_TYPE), String.valueOf(R.string.EXTRA_CATEGORY));
 
                     dialog.setArguments(arguments);
-                    dialog.show(getFragmentManager(), "Add category dialog");
+                    dialog.show(getFragmentManager(), String.valueOf(R.string.add_category_dialog));
                 }
 
             }));
