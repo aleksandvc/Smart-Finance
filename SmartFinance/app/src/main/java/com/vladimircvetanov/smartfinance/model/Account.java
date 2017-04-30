@@ -3,6 +3,7 @@ package com.vladimircvetanov.smartfinance.model;
 import android.support.annotation.NonNull;
 
 import com.vladimircvetanov.smartfinance.RowDisplayable;
+import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
