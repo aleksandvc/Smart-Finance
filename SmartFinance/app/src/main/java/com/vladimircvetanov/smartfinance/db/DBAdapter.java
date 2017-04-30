@@ -365,7 +365,7 @@ public class DBAdapter {
         return id[0];
     }
 
-    public int deleteAccount(final Account account){
+    public int deleteAccount(final RowDisplayable account){
 
         final int[] count = new int[1];
 
@@ -375,7 +375,6 @@ public class DBAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = ? AND " + DbHelper.ACCOUNTS_COLUMN_USERFK + " = ?",new String[]{account.getName(), Manager.getLoggedUser().getId()+""});
-                count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = ? ",new String[]{account.getName()});
                 accounts.remove(account.getId());
                 return null;
             }
