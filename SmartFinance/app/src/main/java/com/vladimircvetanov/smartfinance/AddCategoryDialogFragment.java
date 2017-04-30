@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
+import com.vladimircvetanov.smartfinance.model.Manager;
 
 public class AddCategoryDialogFragment extends DialogFragment {
 
@@ -66,6 +68,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         });
 
         final String tempList = list;
+        final int icon = iconId;
         addCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,9 +79,9 @@ public class AddCategoryDialogFragment extends DialogFragment {
 
                 } else {
                     switch (tempList) {
-                        case "C":
-                            //adapter.addExpenseCategory(new CategoryExpense(nameStr, false, icon.getId()), Manager.getLoggedUser().getId());
-                            Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
+                        case "CATEGORY":
+                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, R.mipmap.smartfinance_icon), Manager.getLoggedUser().getId());
+                            Toast.makeText(getActivity(), "Category created!" + adapter.getCachedExpenseCategories().size(), Toast.LENGTH_SHORT).show();
                             break;
                         case "A":
                             //adapter.addAccount(new Account(nameStr, icon.getId()), Manager.getLoggedUser().getId());
