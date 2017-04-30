@@ -65,15 +65,12 @@ public abstract class Category implements RowDisplayable {
 
         Category category = (Category) o;
 
-        if (id != category.id) return false;
         return name.equals(category.name);
 
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + (int) (id ^ (id >>> 32));
-        return result;
+        return name.hashCode();
     }
 }
