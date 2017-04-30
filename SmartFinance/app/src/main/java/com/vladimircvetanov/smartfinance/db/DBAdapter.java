@@ -472,7 +472,7 @@ public class DBAdapter {
 
         return id[0];
     }
-    public int deleteExpenseCategory(final CategoryExpense category){
+    public int deleteExpenseCategory(final RowDisplayable category){
         final int[] count = new int[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -487,7 +487,7 @@ public class DBAdapter {
 
             @Override
             protected void onPostExecute(Void integer) {
-                Message.message(context,"Category deleted!");
+               Message.message(context,"Category deleted!");
             }
         }.execute();
         return count[0];

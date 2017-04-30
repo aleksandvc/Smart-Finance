@@ -9,4 +9,6 @@ public interface RowDisplayable {
     int getIconId();
 
     double getSum();
+
+    boolean getIsFavourite();
 }

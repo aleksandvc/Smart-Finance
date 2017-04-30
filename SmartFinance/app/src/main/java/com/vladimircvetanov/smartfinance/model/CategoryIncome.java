@@ -9,4 +9,9 @@ public class CategoryIncome extends Category {
     public CategoryIncome(String name, int iconId) {
         super(Type.INCOME, name, iconId);
     }
+
+    @Override
+    public boolean getIsFavourite() {
+        return false;
+    }
 }

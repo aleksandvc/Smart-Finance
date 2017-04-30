@@ -90,6 +90,11 @@ public class Account implements Serializable, Comparable<Account>, RowDisplayabl
         return iconId;
     }
 
+    @Override
+    public boolean getIsFavourite() {
+        return false;
+    }
+
     public double getSum(){
         double sum = 0.0;
         for ( Transaction t : transactions.get(Category.Type.INCOME))
