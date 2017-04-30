@@ -29,6 +29,8 @@ public class Transaction implements Serializable {
 
         this.account = account;
         this.category = category;
+
+        account.addTransaction(this);
     }
 
     public DateTime getDate() {
