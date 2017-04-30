@@ -804,7 +804,6 @@ public class DBAdapter {
                         t.setId(id);
                         t.setUserFk(userFk);
 
-                        acc.addTransaction(t);
                         if (!transactions.containsKey(catFk)){
                             transactions.put(catFk, new LinkedList<Transaction>());
                         }
