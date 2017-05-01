@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_weight="6"
             android:layout_height="wrap_content"
-            android:hint="e-mail"
+            android:hint="@string/email_hint"
             android:maxLength="40"
             android:inputType="textWebEmailAddress"
             android:maxLines="1"
@@ -78,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_weight="6"
             android:layout_height="wrap_content"
-            android:hint="password"
+            android:hint="@string/password_hint"
             android:maxLength="20"
             android:maxLines="1"
             android:inputType="textPassword"
@@ -102,8 +102,8 @@
             android:layout_marginTop="10dp"
             android:layout_width="187dp"
             android:layout_height="wrap_content"
-            android:text="Login"
-            android:background="@drawable/shadow"
+            android:text="@string/login_btn"
+            android:background="@drawable/balance_button"
             android:textSize="20sp"
             android:textColor="@color/colorWhite"/>
 
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="20sp"
-            android:text="- - OR - -"
+            android:text="@string/or_textview"
             android:layout_gravity="center"
             android:textColor="@color/colorWhite"/>
 
@@ -120,14 +120,12 @@
             android:id="@+id/loggin_signup_button"
             android:layout_width="187dp"
             android:layout_height="wrap_content"
-            android:text="Sign UP"
+            android:text="@string/sign_up_btn"
             android:layout_marginTop="10dp"
-            android:background="@drawable/shadow"
+            android:background="@drawable/balance_button"
             android:textSize="20sp"
             android:textColor="@color/colorWhite"/>
 
     </LinearLayout>
-
-
 
 </LinearLayout>

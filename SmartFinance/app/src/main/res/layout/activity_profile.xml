@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorDark"
-    android:id="@+id/profile_activity"
+    android:orientation="vertical"
     tools:context="com.vladimircvetanov.smartfinance.ProfileActivity">
 
     <ImageView
         android:layout_width="231dp"
-        android:layout_marginTop="30dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/profiletext"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/profiletext" />
+
     <ImageView
         android:id="@+id/profile_user_pic"
         android:layout_width="96dp"
@@ -26,81 +26,77 @@
 
 
     <LinearLayout
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_gravity="center"
-        >
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_dialog_email"
-            android:gravity="center"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:src="@android:drawable/ic_dialog_email" />
 
-
-            />
         <EditText
             android:id="@+id/profile_email_change"
             android:layout_width="0dp"
-            android:layout_weight="6"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="6"
             android:hint="e-mail"
-            android:maxLength="40"
             android:inputType="textWebEmailAddress"
+            android:maxLength="40"
             android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:textSize="@dimen/all_text_size_standard"
 
-            android:layout_marginLeft="10dp"
-            />
+            android:textSize="@dimen/all_text_size_standard" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="25dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@mipmap/mylock"
             android:layout_gravity="center"
-            />
+            android:layout_weight="1"
+            android:src="@mipmap/mylock" />
+
         <EditText
             android:id="@+id/profile_pass_change"
             android:layout_width="0dp"
-            android:layout_weight="6"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="6"
             android:hint="password"
             android:maxLength="20"
             android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:textSize="@dimen/all_text_size_standard"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"/>
+            android:textSize="@dimen/all_text_size_standard" />
     </LinearLayout>
 
-
-        <Button
-            android:id="@+id/profile_edit_button"
-            android:layout_marginTop="30dp"
-            android:layout_width="187dp"
-            android:layout_height="wrap_content"
-            android:text="edit"
-            android:layout_gravity="center"
-            android:background="@drawable/shadow"
-            android:textSize="20sp"
-            android:textColor="@color/colorWhite"/>
+    <Button
+        android:id="@+id/profile_edit_button"
+        android:layout_width="187dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/balance_button"
+        android:text="edit"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp" />
 </LinearLayout>

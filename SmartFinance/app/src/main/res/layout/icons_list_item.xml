@@ -9,6 +9,7 @@
         android:id="@+id/image"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:src="@mipmap/heart"
         android:background="@color/colorWhite"
         android:padding="5dp"
         android:layout_margin="@dimen/all_view_spacing_small"

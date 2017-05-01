@@ -47,7 +47,7 @@ public class DBAdapter {
     private static ConcurrentHashMap<Long, Account> accounts;
     private static ConcurrentHashMap<Long, CategoryExpense> expenseCategories;
     private static ConcurrentHashMap<Long, CategoryIncome> incomeCategories;
-    private static ConcurrentHashMap<Long,CategoryExpense> favouriteCategories;
+    private static ConcurrentHashMap<Long, CategoryExpense> favouriteCategories;
     private static ConcurrentHashMap<Long, LinkedList<Transaction>> transactions;
     /**
      * Static reference to the instance of the adapter.Private static because helps to create only one instance of type DbAdapter.

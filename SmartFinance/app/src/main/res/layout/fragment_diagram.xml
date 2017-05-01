@@ -57,7 +57,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="3"
                 android:background="@drawable/balance_button"
-                android:text="Total: 0.00"
+                android:text="@string/total_value_btn"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/all_text_size_standard" />
 

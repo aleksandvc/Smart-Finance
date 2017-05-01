@@ -86,6 +86,7 @@ public class FavouritesFragment extends Fragment {
                     int iconId = Manager.getInstance().getAllExpenseIcons().get(position);
 
                     arguments.putInt(getString(R.string.EXTRA_ICON), iconId);
+                    arguments.putInt("POSITION", position);
                     arguments.putString(String.valueOf(R.string.ROW_DISPLAYABLE_TYPE), String.valueOf(R.string.EXTRA_CATEGORY));
 
                     dialog.setArguments(arguments);

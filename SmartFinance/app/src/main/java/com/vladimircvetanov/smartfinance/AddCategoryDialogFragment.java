@@ -69,6 +69,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         });
 
         final String tempList = list;
+        final int finalIconId = iconId;
         addCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,11 +81,11 @@ public class AddCategoryDialogFragment extends DialogFragment {
                 } else {
                     switch (tempList) {
                         case "CATEGORY":
-                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, icon.getId()), Manager.getLoggedUser().getId());
+                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, finalIconId), Manager.getLoggedUser().getId());
                             Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
                             break;
                         case "ACCOUNT":
-                            adapter.addAccount(new Account(nameStr, icon.getId()), Manager.getLoggedUser().getId());
+                            adapter.addAccount(new Account(nameStr, finalIconId), Manager.getLoggedUser().getId());
                             Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_SHORT).show();
                             break;
                     }
