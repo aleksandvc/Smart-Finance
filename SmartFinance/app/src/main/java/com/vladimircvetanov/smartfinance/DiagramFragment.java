@@ -55,7 +55,6 @@ public class DiagramFragment extends Fragment {
     private DBAdapter adapter;
 
     private int[] diagramColors;
-    private int colorPosition;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -75,9 +74,7 @@ public class DiagramFragment extends Fragment {
 
         entries = new ArrayList<>();
         pieDataSet = new PieDataSet(entries, "");
-
-        diagramColors = new int[56];
-        colorPosition = 0;
+        diagramColors = new int[] {R.color.colorDarkGrey};
 
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
         adapter = DBAdapter.getInstance(getActivity());
@@ -135,11 +132,12 @@ public class DiagramFragment extends Fragment {
         displayTotal(totalSumButton);
     }
 
-    void addEntry(float entrySum) {
+    void addEntry(Transaction transaction) {
         if (entries.size() == 1) {
             entries.clear();
             entries.add(new PieEntry(0));
         }
+        float entrySum = (float) transaction.getSum();
         PieEntry entry = new PieEntry(entrySum);
         entries.add(entry);
 
@@ -150,9 +148,10 @@ public class DiagramFragment extends Fragment {
     void drawDiagram() {
         if (entries.isEmpty()) {
             entries.add(new PieEntry(100));
+
         }
-        pieDataSet.setColors(new int[] {R.color.colorDarkGrey}, getActivity());
-        pieChart.setCenterText(String.format("Total:\n%s", String.format("%.2f", getTotal())));
+        pieDataSet.setColors(diagramColors, getActivity());
+        pieChart.setCenterText(String.format("Total:\n%.2f", getTotal()));
 
         pieData = new PieData(pieDataSet);
         pieData.setValueFormatter(new CustomPercentFormatter());
@@ -174,7 +173,7 @@ public class DiagramFragment extends Fragment {
                 icon.setImageResource(categoryExpense.getIconId());
 
                 int color = getDominantColor(categoryExpense.getIconId());
-                diagramColors[colorPosition++] = color;
+                //diagramColors[colorPosition++] = color;
 
                 icon.setScaleType(ImageButton.ScaleType.FIT_CENTER);
                 CircleLayout.LayoutParams params = new CircleLayout.LayoutParams(120, 120);
@@ -198,9 +197,6 @@ public class DiagramFragment extends Fragment {
                                 .addToBackStack(getString(R.string.transaction_fragment_tag))
                                 .commit();
                         icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
-                        //int color = getDominantColor(categoryExpense.getIconId());
-                        //icon.setBackgroundColor(color);
-                        //icon.setImageAlpha(98);
                     }
                 });
 

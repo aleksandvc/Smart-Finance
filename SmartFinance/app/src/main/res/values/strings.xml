@@ -16,6 +16,7 @@
     <string name="EXTRA_CATEGORY">CATEGORY</string>
     <string name="ROW_DISPLAYABLE_TYPE">ROW_DISPLAYABLE_TYPE</string>
     <string name="EXTRA_DATE_NAME">KEY_DATE_NAME</string>
+    <string name="EXTRA_TRANSACTION">TRANSACTION</string>
 
     <!-- NAVIGATION ITEMS -->
     <string name="nav_item_accounts">Accounts</string>

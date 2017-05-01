@@ -82,7 +82,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
                 } else {
                     switch (tempList) {
                         case "CATEGORY":
-                            CategoryExpense cat = new CategoryExpense(nameStr, false,finalIconId);
+                            CategoryExpense cat = new CategoryExpense(nameStr, false, finalIconId);
                             if(!adapter.getCachedExpenseCategories().containsValue(cat) && !adapter.getCachedFavCategories().containsValue(cat)) {
                                 adapter.addExpenseCategory(cat, Manager.getLoggedUser().getId());
                                 Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
