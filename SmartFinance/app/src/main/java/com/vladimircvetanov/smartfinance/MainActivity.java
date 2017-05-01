@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +20,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
@@ -174,14 +175,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
 
             case R.id.nav_calendar:
-                /*
+                
                 DialogFragment datePicker = new DatePickerFragment();
                 Bundle args = new Bundle();
 
-                args.putSerializable(getString(date), date);
+                args.putSerializable("date", date);
                 datePicker.setArguments(args);
                 datePicker.show(getSupportFragmentManager(), getString(R.string.calendar_fragment_tag));
-                */
+
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
         }
