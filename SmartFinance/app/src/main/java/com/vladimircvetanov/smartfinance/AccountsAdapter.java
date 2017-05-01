@@ -25,6 +25,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
     public List<RowDisplayable> getAccounts() {
         return Collections.unmodifiableList(accounts);
     }
+    public Object getItem(int position){ return (position >=0 && position < accounts.size()) ? accounts.get(position) : null; }
 
     @Override
     public AccountViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

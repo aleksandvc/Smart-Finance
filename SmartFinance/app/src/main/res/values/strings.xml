@@ -72,4 +72,8 @@
     <string name="add_more_categories_title">Add more categories:</string>
     <string name="my_accounts_title">My accounts:</string>
     <string name="add_more_accounts_title">Add more accounts:</string>
+    <string name="filters">Filters</string>
+    <string name="sortby">Sort by</string>
+    <string name="start_date">Start Date</string>
+    <string name="EXTRA_DATE_NAME">KEY_DATE_NAME</string>
 </resources>
