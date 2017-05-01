@@ -56,7 +56,7 @@ public class FavouritesFragment extends Fragment {
         allCategoriesList.setAdapter(new RowDisplayableAdapter(allCategories, getActivity()));
         allCategoriesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
-        allCategoriesList.addOnItemTouchListener(
+      /*  allCategoriesList.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, allCategoriesList, new RecyclerItemClickListener.OnItemClickListener() {
 
                     @Override
@@ -69,7 +69,7 @@ public class FavouritesFragment extends Fragment {
                         }
                     }
                 })
-        );
+        );*/
 
         iconsAdapter = new IconsAdapter(Manager.getInstance().getAllExpenseIcons(), getActivity());
         additionalIconsList = (RecyclerView) root.findViewById(R.id.additional_icons_list);

@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
 
     RowDisplayableAdapter(ArrayList<RowDisplayable> favouriteCategories, Context context) {
         this.context = context;
-        categories = new ArrayList<RowDisplayable> (favouriteCategories);
+        categories = favouriteCategories;
         adapter = DBAdapter.getInstance(context);
     }
 
@@ -58,14 +59,22 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
 
 
                         if(categoryExpense.getIsFavourite() == true) {
-                            adapter.deleteFavCategory(categoryExpense);
-                            categories.remove(holder.getAdapterPosition());
-                            notifyItemRemoved(position);
+                            if(categories.size() > 1) {
+                                adapter.deleteFavCategory(categoryExpense);
+                                categories.remove(position);
+                                notifyItemRemoved(position);
+                            }else{
+                                Message.message(context,"You can`t be without favourite categories!");
+                            }
                         }
                         else{
-                            adapter.deleteExpenseCategory(categoryExpense);
-                            categories.remove(holder.getAdapterPosition());
-                            notifyItemRemoved(position);
+                            if(categories.size() > 1) {
+                                adapter.deleteExpenseCategory(categoryExpense);
+                                categories.remove(position);
+                                notifyItemRemoved(position);
+                            }else{
+                                Message.message(context,"You can`t be without  categories!");
+                            }
                         }
                     }
                 });
