@@ -14,4 +14,7 @@ public class CategoryExpense extends Category implements Serializable{
         super(Type.EXPENSE, name, iconId);
         this.isFavourite = isFavourite;
     }
+    public boolean getIsFavourite(){
+        return isFavourite;
+    }
 }

@@ -189,13 +189,13 @@ public class DBAdapter {
         addFavCategory(new CategoryExpense("Entertainment", true, R.mipmap.cocktail), id);
         addFavCategory(new CategoryExpense("Phone", true, R.mipmap.phone), id);
 
-        addAccount(new Account("Cash",R.mipmap.cash), id);
-        addAccount(new Account("Debit",R.mipmap.visa), id);
-        addAccount(new Account("Credit",R.mipmap.mastercard), id);
+        addAccount(new Account("Cash", R.mipmap.cash), id);
+        addAccount(new Account("Debit", R.mipmap.visa), id);
+        addAccount(new Account("Credit", R.mipmap.mastercard), id);
 
-        addIncomeCategory(new CategoryIncome("Salary",R.mipmap.cash),id);
-        addIncomeCategory(new CategoryIncome("Savings",R.mipmap.cash),id);
-        addIncomeCategory(new CategoryIncome("Other",R.mipmap.cash),id);
+        addIncomeCategory(new CategoryIncome("Salary", R.mipmap.coins), id);
+        addIncomeCategory(new CategoryIncome("Savings", R.mipmap.money_box), id);
+        addIncomeCategory(new CategoryIncome("Other", R.mipmap.money_bag), id);
     }
     private  String getData(final String username){
 
@@ -365,7 +365,7 @@ public class DBAdapter {
         return id[0];
     }
 
-    public int deleteAccount(final Account account){
+    public int deleteAccount(final RowDisplayable account){
 
         final int[] count = new int[1];
 
@@ -374,7 +374,7 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = ? ",new String[]{account.getName()});
+                count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = ? AND " + DbHelper.ACCOUNTS_COLUMN_USERFK + " = ?",new String[]{account.getName(), Manager.getLoggedUser().getId()+""});
                 accounts.remove(account.getId());
                 return null;
             }
@@ -471,7 +471,7 @@ public class DBAdapter {
 
         return id[0];
     }
-    public int deleteExpenseCategory(final CategoryExpense category){
+    public int deleteExpenseCategory(final RowDisplayable category){
         final int[] count = new int[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -479,14 +479,14 @@ public class DBAdapter {
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                count[0] = db.delete(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME + " = ? ",new String[]{category.getName()});
+                count[0] = db.delete(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME + " = ? AND " + DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK + " = ?",new String[]{category.getName(), Manager.getLoggedUser().getId()+""});
                 expenseCategories.remove(category.getId());
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void integer) {
-                Message.message(context,"Category deleted!");
+               Message.message(context,"Category deleted!");
             }
         }.execute();
         return count[0];
@@ -738,7 +738,7 @@ public class DBAdapter {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                Message.message(context,"Transaction added in db successfully.");
+                Message.message(context,"Transaction added successfully.");
                 Log.wtf("LOAD TRANSACTIONS:", " LOADED ");
             }
         }.execute();
@@ -803,7 +803,6 @@ public class DBAdapter {
                         t.setId(id);
                         t.setUserFk(userFk);
 
-                        acc.addTransaction(t);
                         if (!transactions.containsKey(catFk)){
                             transactions.put(catFk, new LinkedList<Transaction>());
                         }

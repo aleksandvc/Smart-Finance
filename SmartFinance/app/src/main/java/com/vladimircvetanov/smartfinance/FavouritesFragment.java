@@ -54,6 +54,7 @@ public class FavouritesFragment extends Fragment {
         final ArrayList<RowDisplayable> allCategories = new ArrayList<>();
         allCategories.addAll(adapter.getCachedExpenseCategories().values());
         allCategoriesList.setAdapter(new RowDisplayableAdapter(allCategories, getActivity()));
+        allCategoriesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
         allCategoriesList.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, allCategoriesList, new RecyclerItemClickListener.OnItemClickListener() {

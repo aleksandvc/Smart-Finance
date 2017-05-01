@@ -1,9 +1,12 @@
 package com.vladimircvetanov.smartfinance;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -23,20 +25,21 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.szugyi.circlemenu.view.CircleLayout;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
-import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.Transaction;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 public class DiagramFragment extends Fragment {
 
@@ -50,6 +53,9 @@ public class DiagramFragment extends Fragment {
 
     private CircleLayout circleLayout;
     private DBAdapter adapter;
+
+    private int[] diagramColors;
+    private int colorPosition;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -70,15 +76,17 @@ public class DiagramFragment extends Fragment {
         entries = new ArrayList<>();
         pieDataSet = new PieDataSet(entries, "");
 
+        diagramColors = new int[56];
+        colorPosition = 0;
+
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
         adapter = DBAdapter.getInstance(getActivity());
 
         drawDiagram();
         drawFavouriteIcons();
-
         displayTotal(totalSumButton);
 
-        /** Animator for the Report Drawer */
+        /* Animator for the Report Drawer */
         final LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.report_layout);
         final float[] startY = new float[1];
         final float[] translationY = new float[1];
@@ -117,7 +125,6 @@ public class DiagramFragment extends Fragment {
                 }
             }
         });
-
         return rootView;
     }
 
@@ -138,16 +145,15 @@ public class DiagramFragment extends Fragment {
 
         pieChart.setData(pieData);
         pieChart.invalidate();
-
-        Manager.getLoggedUser().totalSum += entrySum;
-        totalSumButton.setText(String.valueOf(Manager.getLoggedUser().totalSum));
     }
 
     void drawDiagram() {
         if (entries.isEmpty()) {
             entries.add(new PieEntry(100));
         }
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        pieDataSet.setColors(new int[] {R.color.colorDarkGrey}, getActivity());
+        pieChart.setCenterText("Total:\n" + String.format("%.2f", getTotal()));
+
 
         pieData = new PieData(pieDataSet);
         pieData.setValueFormatter(new CustomPercentFormatter());
@@ -167,6 +173,9 @@ public class DiagramFragment extends Fragment {
                 displayedCategories.add(categoryExpense);
                 final ImageView icon = new ImageView(getActivity());
                 icon.setImageResource(categoryExpense.getIconId());
+
+                int color = getDominantColor(categoryExpense.getIconId());
+                diagramColors[colorPosition++] = color;
 
                 icon.setScaleType(ImageButton.ScaleType.FIT_CENTER);
                 CircleLayout.LayoutParams params = new CircleLayout.LayoutParams(120, 120);
@@ -189,15 +198,18 @@ public class DiagramFragment extends Fragment {
                                 .replace(R.id.main_fragment_frame, fragment, getString(R.string.transaction_fragment_tag))
                                 .addToBackStack(getString(R.string.transaction_fragment_tag))
                                 .commit();
-
-                       // pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
-                       // pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
                         icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
+                        //int color = getDominantColor(categoryExpense.getIconId());
+                        //icon.setBackgroundColor(color);
+                        //icon.setImageAlpha(98);
                     }
                 });
+
                 icon.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
+                        int color = getDominantColor(categoryExpense.getIconId());
+                        icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
                         pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
                         pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
                         return false;
@@ -212,21 +224,39 @@ public class DiagramFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private double displayTotal(Button displayView) {
-        double sum = 0.0;
+    private double getTotal() {
+        double sum = 0.0d;
         for (LinkedList<Transaction> list : adapter.getCachedTransactions().values()) {
             for (Transaction t : list) {
                 sum += t.getSum() * (t.getCategory().getType() == Category.Type.EXPENSE ? -1 : 1);
             }
         }
-        displayView.setText(sum + "");
+        return sum;
+    }
 
-        if (sum < 0)
+    private double displayTotal(Button displayView) {
+        getTotal();
+        displayView.setText("Total: " + String.format("%.2f", getTotal()));
+
+        if (getTotal() < 0)
             displayView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorOrange));
         else
             displayView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorGreen));
 
-        return sum;
+        return getTotal();
+    }
+
+    private int getDominantColor(int image) {
+        Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(), image);
+        List<Palette.Swatch> swatchesTemp = Palette.from(icon).generate().getSwatches();
+        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
+        Collections.sort(swatches, new Comparator<Palette.Swatch>() {
+            @Override
+            public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
+                return swatch2.getPopulation() - swatch1.getPopulation();
+            }
+        });
+        return swatches.size() > 0 ? swatches.get(0).getRgb() : R.color.colorGreen;
     }
 
     class CustomPercentFormatter implements IValueFormatter {
@@ -245,5 +275,3 @@ public class DiagramFragment extends Fragment {
         }
     }
 }
-
-

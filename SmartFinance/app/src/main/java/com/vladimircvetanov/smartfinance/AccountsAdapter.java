@@ -33,7 +33,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
         final RowDisplayable account = accounts.get(position);
         holder.accountImage.setImageResource(account.getIconId());
         holder.accountName.setText(account.getName());
-        holder.accountSum.setText(account.getSum() + "");
+        holder.accountSum.setText(String.format("%.2f", account.getSum()));
     }
 
     @Override

@@ -50,9 +50,17 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
                     @Override
                     public void onClick(View v) {
 
-                        categories.remove(holder.getAdapterPosition());
-                        notifyItemRemoved(position);
-                        adapter.deleteFavCategory(categoryExpense);
+
+                        if(categoryExpense.getIsFavourite() == true) {
+                            adapter.deleteFavCategory(categoryExpense);
+                            categories.remove(holder.getAdapterPosition());
+                            notifyItemRemoved(position);
+                        }
+                        else{
+                            adapter.deleteExpenseCategory(categoryExpense);
+                            categories.remove(holder.getAdapterPosition());
+                            notifyItemRemoved(position);
+                        }
                     }
                 });
             }

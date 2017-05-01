@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
@@ -81,12 +82,22 @@ public class AddCategoryDialogFragment extends DialogFragment {
                 } else {
                     switch (tempList) {
                         case "CATEGORY":
-                            adapter.addExpenseCategory(new CategoryExpense(nameStr, false, finalIconId), Manager.getLoggedUser().getId());
-                            Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
+                            CategoryExpense cat = new CategoryExpense(nameStr, false,finalIconId);
+                            if(!adapter.getCachedExpenseCategories().containsValue(cat) && !adapter.getCachedFavCategories().containsValue(cat)) {
+                                adapter.addExpenseCategory(cat, Manager.getLoggedUser().getId());
+                                Toast.makeText(getActivity(), "Category created!", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Message.message(getActivity(),"This category already exists,please choose another name!");
+                            }
                             break;
                         case "ACCOUNT":
-                            adapter.addAccount(new Account(nameStr, finalIconId), Manager.getLoggedUser().getId());
-                            Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_SHORT).show();
+                            Account ac = new Account(nameStr, finalIconId);
+                            if(!adapter.getCachedAccounts().containsValue(ac)) {
+                                adapter.addAccount(ac, Manager.getLoggedUser().getId());
+                                Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Message.message(getActivity(),"This account already exists,please choose another name!");
+                            }
                             break;
                     }
                     dismiss();

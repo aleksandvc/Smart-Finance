@@ -69,6 +69,17 @@ public class Manager {
     }
 
     private void addMoreExpenseIcons() {
+
+        allExpenseIcons.add(R.mipmap.car);
+        allExpenseIcons.add(R.mipmap.clothes);
+        allExpenseIcons.add(R.mipmap.heart);
+        allExpenseIcons.add(R.mipmap.plane);
+        allExpenseIcons.add(R.mipmap.home);
+        allExpenseIcons.add(R.mipmap.swimming);
+        allExpenseIcons.add(R.mipmap.restaurant);
+        allExpenseIcons.add(R.mipmap.train);
+        allExpenseIcons.add(R.mipmap.cocktail);
+        allExpenseIcons.add(R.mipmap.phone);
         allExpenseIcons.add(R.mipmap.books);
         allExpenseIcons.add(R.mipmap.cafe);
         allExpenseIcons.add(R.mipmap.cats);
