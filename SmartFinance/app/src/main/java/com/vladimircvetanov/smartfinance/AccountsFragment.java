@@ -73,7 +73,7 @@ public class AccountsFragment extends Fragment {
                         int iconId = Manager.getInstance().getAllAccountIcons().get(position);
 
                         arguments.putInt(getString(R.string.EXTRA_ICON), iconId);
-                        arguments.putString(String.valueOf(R.string.ROW_DISPLAYABLE_TYPE), String.valueOf(R.string.EXTRA_ACCOUNT));
+                        arguments.putString("ROW_DISPLAYABLE_TYPE", "ACCOUNT");
 
                         dialog.setArguments(arguments);
                         dialog.show(getFragmentManager(), String.valueOf(R.string.add_category_dialog));
