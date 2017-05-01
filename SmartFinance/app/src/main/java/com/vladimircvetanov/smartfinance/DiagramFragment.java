@@ -152,8 +152,7 @@ public class DiagramFragment extends Fragment {
             entries.add(new PieEntry(100));
         }
         pieDataSet.setColors(new int[] {R.color.colorDarkGrey}, getActivity());
-        pieChart.setCenterText("Total:\n" + String.format("%.2f", getTotal()));
-
+        pieChart.setCenterText(String.format("Total:\n%s", String.format("%.2f", getTotal())));
 
         pieData = new PieData(pieDataSet);
         pieData.setValueFormatter(new CustomPercentFormatter());
@@ -208,7 +207,6 @@ public class DiagramFragment extends Fragment {
                 icon.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        int color = getDominantColor(categoryExpense.getIconId());
                         icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
                         pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
                         pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));

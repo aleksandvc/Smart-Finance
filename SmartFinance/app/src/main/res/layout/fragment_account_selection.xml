@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/account_selection_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/account_selection_buttons"/>
+
+    <LinearLayout
+        android:id="@+id/account_selection_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/account_selection_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel_button"
+            android:textColor="@color/colorWhite"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/balance_button"/>
+
+        <Button
+            android:id="@+id/account_selection_submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/submit"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/balance_button"/>
+    </LinearLayout>
+</RelativeLayout>

@@ -15,6 +15,7 @@
     <string name="EXTRA_ACCOUNT">ACCOUNT</string>
     <string name="EXTRA_CATEGORY">CATEGORY</string>
     <string name="ROW_DISPLAYABLE_TYPE">ROW_DISPLAYABLE_TYPE</string>
+    <string name="EXTRA_DATE_NAME">KEY_DATE_NAME</string>
 
     <!-- NAVIGATION ITEMS -->
     <string name="nav_item_accounts">Accounts</string>
@@ -92,4 +93,8 @@
     <string name="account_name">Account name</string>
     <string name="acount_value">0.00</string>
     <string name="or_textview">- - OR - -</string>
+
+    <string name="filters">Filters</string>
+    <string name="sortby">Sort by</string>
+    <string name="start_date">Start Date</string>
 </resources>

@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class AccountsFragment extends Fragment {
 
@@ -35,7 +37,7 @@ public class AccountsFragment extends Fragment {
         context = getActivity();
 
         accountsList = (RecyclerView) view.findViewById(R.id.accounts_list);
-        ArrayList<RowDisplayable> accounts = new ArrayList<>();
+        final ArrayList<RowDisplayable> accounts = new ArrayList<>();
         accounts.addAll(adapter.getCachedAccounts().values());
 
         accountsAdapter = new AccountsAdapter(accounts, getActivity());
@@ -45,11 +47,11 @@ public class AccountsFragment extends Fragment {
 
         accountsList.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, accountsList, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
 
-                    @Override public void onItemClick(View view, int position) {Bundle arguments = new Bundle();
-
+                        //TODO - re-name TAG
                         getFragmentManager().beginTransaction()
-                                .replace(R.id.main_fragment_frame, new TransactionFragment(), getString(R.string.transaction_fragment_tag))
+                                .replace(R.id.main_fragment_frame, FilteredReportFragment.newInstance((Account) accountsAdapter.getItem(position)), getString(R.string.transaction_fragment_tag))
                                 .addToBackStack(getString(R.string.transaction_fragment_tag))
                                 .commit();
                     }

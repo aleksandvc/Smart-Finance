@@ -426,7 +426,6 @@ public class DBAdapter {
                 Cursor cursor = helper.getWritableDatabase().rawQuery("SELECT _id,expense_category_name,expense_category_icon,expense_category_user FROM " + DbHelper.TABLE_NAME_EXPENSE_CATEGORIES + " WHERE " + DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK +" = ? ;",fk);
 
                 while(cursor.moveToNext()){
-                    Log.e("EXPENSE","BACHKA WE");
                     long id = cursor.getInt(cursor.getColumnIndex("_id"));
                     String categoryName = cursor.getString(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME));
                     int iconId = cursor.getInt(cursor.getColumnIndex(DbHelper.EXPENSE_CATEGORIES_COLUMN_ICON));
@@ -486,7 +485,7 @@ public class DBAdapter {
 
             @Override
             protected void onPostExecute(Void integer) {
-               Message.message(context,"Category deleted!");
+                loadExpenseCategories();
             }
         }.execute();
         return count[0];
@@ -657,7 +656,7 @@ public class DBAdapter {
     }
 
 
-    public static long addFavCategory(final CategoryExpense category, final long userId){
+    public  long addFavCategory(final CategoryExpense category, final long userId){
         final long[] id = new long[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -680,11 +679,16 @@ public class DBAdapter {
                 return null;
             }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+              //  deleteExpenseCategory(category);
+            }
         }.execute();
 
         return id[0];
     }
-    public static int deleteFavCategory(final RowDisplayable category){
+    public int deleteFavCategory(final RowDisplayable category){
         final int[] count = new int[1];
 
         new AsyncTask<Void,Void,Void>(){
@@ -699,7 +703,9 @@ public class DBAdapter {
 
             @Override
             protected void onPostExecute(Void integer) {
+                loadTransactions();
                 Message.message(context,"Category deleted!");
+
             }
         }.execute();
         return count[0];

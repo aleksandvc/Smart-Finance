@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
 import java.util.ArrayList;
@@ -53,7 +53,8 @@ public class FavouritesFragment extends Fragment {
         allCategoriesList = (RecyclerView) root.findViewById(R.id.all_categories_list);
         final ArrayList<RowDisplayable> allCategories = new ArrayList<>();
         allCategories.addAll(adapter.getCachedExpenseCategories().values());
-        allCategoriesList.setAdapter(new RowDisplayableAdapter(allCategories, getActivity()));
+        RowDisplayableAdapter ad = new RowDisplayableAdapter(allCategories, getActivity());
+        allCategoriesList.setAdapter(ad);
         allCategoriesList.setLayoutManager(new GridLayoutManager(getActivity(), 5));
 
         allCategoriesList.addOnItemTouchListener(
@@ -61,12 +62,17 @@ public class FavouritesFragment extends Fragment {
 
                     @Override
                     public void onItemClick(View view, int position) {
-                        if (adapter.getCachedFavCategories().size() < 9) {
-                            //DBAdapter.addFavCategory();
+                        CategoryExpense cat = (CategoryExpense) allCategories.get(position);
+                        AddToFavDeleteDialogFragment dialog = new AddToFavDeleteDialogFragment();
+                        Bundle arguments = new Bundle();
+                        int iconId = Manager.getInstance().getAllExpenseIcons().get(position);
 
-                        } else if (adapter.getCachedFavCategories().size() == 9) {
-                            Toast.makeText(context, "There are no free slots.\nPlease remove an existing category first!", Toast.LENGTH_SHORT).show();
-                        }
+                        arguments.putInt(getString(R.string.EXTRA_ICON), iconId);
+                        arguments.putSerializable("ROW_DISPLAYABLE_TYPE", cat);
+
+                        dialog.setArguments(arguments);
+                        dialog.show(getFragmentManager(), "Add to favorite dialog");
+
                     }
                 })
         );
