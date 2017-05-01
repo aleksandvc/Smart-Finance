@@ -682,7 +682,7 @@ public class DBAdapter {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                deleteExpenseCategory(category);
+              //  deleteExpenseCategory(category);
             }
         }.execute();
 

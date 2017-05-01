@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
 
             case R.id.nav_calendar:
-                
+
                 DialogFragment datePicker = new DatePickerFragment();
                 Bundle args = new Bundle();
 

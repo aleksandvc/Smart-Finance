@@ -60,6 +60,7 @@ public class AddToFavDeleteDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 if(!adapter.getCachedFavCategories().containsValue(cat) && adapter.getCachedFavCategories().size() < 10) {
                     if(adapter.getCachedExpenseCategories().size() > 1) {
+                        adapter.deleteExpenseCategory(cat);
                         adapter.addFavCategory(cat, Manager.getLoggedUser().getId());
 
                         Toast.makeText(getActivity(), "Category added to favorites!", Toast.LENGTH_SHORT).show();
