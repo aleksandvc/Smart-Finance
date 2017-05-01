@@ -1,11 +1,13 @@
 package com.vladimircvetanov.smartfinance;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -150,23 +153,46 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if (convertView == null)
-                convertView = inflater.inflate(R.layout.report_list_group, parent, false);
+                convertView = inflater.inflate(R.layout.filtered_report_account, parent, false);
 
-            Account acc = getGroup(groupPosition);
+            final Account acc = getGroup(groupPosition);
 
-            ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_group_icon);
+            ImageView i = (ImageView) convertView.findViewById(R.id.filtered_report_group_icon);
             i.setImageResource(acc.getIconId());
 
-            TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_group_name);
+            TextView t1 = (TextView) convertView.findViewById(R.id.filtered_report_group_name);
             t1.setText(acc.getName());
 
-            TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_group_sum);
+            TextView t2 = (TextView) convertView.findViewById(R.id.filtered_report_group_sum);
             double sum = 0.0;
             for (Transaction t : acc.getTransactions())
                 if (t.getDate().isAfter(start) && t.getDate().isBefore(end))
                     sum += t.getSum() * (t.getCategory().getType() == Category.Type.EXPENSE ? -1 : 1);
 
             t2.setText("$" + sum);
+
+            ImageButton remove = (ImageButton) convertView.findViewById(R.id.filtered_report_group_remove_button);
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(context)
+                            .setIcon(acc.getIconId())
+                            .setTitle(acc.getName())
+                            .setMessage("Are you sure you want to DELETE this account? \n This can't be undone!")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    selectedAccounts.remove(acc);
+                                    dbAdapter.deleteAccount(acc);
+                                    ExpandableAccountAdapter.this.loadFromCache();
+                                }
+
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
+            });
 
             if (sum < 0)
                 t2.setTextColor(ContextCompat.getColor(context, R.color.colorOrange));
@@ -203,6 +229,7 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
                     }
                 }
             }
+            notifyDataSetChanged();
         }
 
         public void setFilters(DateTime startDate, DateTime endDate, HashSet<Account> selectedAccounts) {
