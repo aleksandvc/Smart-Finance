@@ -53,28 +53,22 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
                 holder.image.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGrey));
                 holder.removeButton.setVisibility(View.VISIBLE);
 
+                if(categoryExpense.getIsFavourite() == false){
+                    if(!categories.contains(categoryExpense)) {
+                        notifyItemRemoved(position);
+                    }
+                }
                 holder.removeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-
-                        if(categoryExpense.getIsFavourite() == true) {
-                            if(categories.size() > 1) {
+                        if(categories.size() > 1) {
                                 adapter.deleteFavCategory(categoryExpense);
                                 categories.remove(position);
                                 notifyItemRemoved(position);
-                            }else{
+
+                        }else{
                                 Message.message(context,"You can`t be without favourite categories!");
-                            }
-                        }
-                        else{
-                            if(categories.size() > 1) {
-                                adapter.deleteExpenseCategory(categoryExpense);
-                                categories.remove(position);
-                                notifyItemRemoved(position);
-                            }else{
-                                Message.message(context,"You can`t be without  categories!");
-                            }
                         }
                     }
                 });
