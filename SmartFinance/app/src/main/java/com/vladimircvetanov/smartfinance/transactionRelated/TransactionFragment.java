@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.DiagramFragment;
 import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
@@ -372,7 +373,15 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         Transaction transaction = new Transaction(date, sum, note, account, category);
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
 
-        getActivity().onBackPressed();
+        DiagramFragment fragment = new DiagramFragment();
+        Bundle arguments = new Bundle();
+        arguments.putSerializable("TRANSACTION", transaction);
+        fragment.setArguments(arguments);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.main_fragment_frame, fragment, getString(R.string.diagram_fragment_tag))
+                .addToBackStack(getString(R.string.diagram_fragment_tag))
+                .commit();
+        //getActivity().onBackPressed();
     }
 
     /** Executes stored arithmetic operation. */
