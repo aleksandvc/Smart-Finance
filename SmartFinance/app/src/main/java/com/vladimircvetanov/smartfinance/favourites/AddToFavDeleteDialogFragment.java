@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.favourites;
 
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;

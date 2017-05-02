@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.favourites;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.RowDisplayable;

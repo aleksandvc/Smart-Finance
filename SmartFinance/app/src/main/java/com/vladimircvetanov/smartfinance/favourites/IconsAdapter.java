@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.favourites;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHold
 
     public View.OnClickListener mItemClickListener;
 
-    IconsAdapter(ArrayList<Integer> allExpenseIcons, Activity activity) {
+    public IconsAdapter(ArrayList<Integer> allExpenseIcons, Activity activity) {
         this.activity = activity;
         additionalIcons = new ArrayList<Integer> (allExpenseIcons);
         adapter = DBAdapter.getInstance(activity);

@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.accounts;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.RowDisplayable;
@@ -19,7 +20,6 @@ import com.vladimircvetanov.smartfinance.reports.FilteredReportFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>{

@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.accounts;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
-import com.vladimircvetanov.smartfinance.model.Account;
+import com.vladimircvetanov.smartfinance.favourites.AddCategoryDialogFragment;
+import com.vladimircvetanov.smartfinance.favourites.IconsAdapter;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.model.RowDisplayable;
-import com.vladimircvetanov.smartfinance.reports.FilteredReportFragment;
 
 import java.util.ArrayList;
 

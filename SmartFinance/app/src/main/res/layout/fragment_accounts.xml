@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vladimircvetanov.smartfinance.AccountsFragment">
+    tools:context="com.vladimircvetanov.smartfinance.accounts.AccountsFragment">
 
     <TextView
         android:id="@+id/my_accounts_title"

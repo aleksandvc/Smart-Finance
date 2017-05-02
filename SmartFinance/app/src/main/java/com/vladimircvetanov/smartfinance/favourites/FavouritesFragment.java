@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.favourites;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.R;
+import com.vladimircvetanov.smartfinance.accounts.RecyclerItemClickListener;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;

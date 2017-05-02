@@ -20,15 +20,15 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.accounts.AccountsFragment;
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
+import com.vladimircvetanov.smartfinance.favourites.FavouritesFragment;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Manager;
 import com.vladimircvetanov.smartfinance.transactionRelated.NoteInputFragment;
 import com.vladimircvetanov.smartfinance.transactionRelated.TransactionFragment;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener, NoteInputFragment.NoteCommunicator {
 
@@ -42,10 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View toolbarTitle;
 
     private FragmentManager fragmentManager;
-    private Bundle dataBetweenFragments;
-
-    private TextView dateDisplay;
-    private DateTime date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,12 +90,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
             }
         });
-
-        dateDisplay = (TextView) findViewById(R.id.transaction_date_display);
-        date = DateTime.now();
-        final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
-        //dateDisplay.setText(date.toString(dateFormat));
-
     }
 
     @Override
@@ -177,10 +167,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
 
             case R.id.nav_calendar:
-
                 DialogFragment datePicker = DatePickerFragment.newInstance(this, DateTime.now());
                 datePicker.show(getSupportFragmentManager(), getString(R.string.calendar_fragment_tag));
-
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
         }
