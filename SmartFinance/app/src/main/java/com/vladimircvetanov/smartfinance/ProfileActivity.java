@@ -30,6 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText changeEmail;
     private EditText changePass;
     private Button editChanges;
+    private Button cancel;
     DBAdapter adapter;
 
     @Override
@@ -41,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
         changeEmail = (EditText) findViewById(R.id.profile_email_change);
         changePass = (EditText) findViewById(R.id.profile_pass_change);
         editChanges = (Button) findViewById(R.id.profile_edit_button);
+        cancel = (Button) findViewById(R.id.profile_cancel_button);
 
         adapter = DBAdapter.getInstance(this);
 
@@ -50,6 +52,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         final String oldData = changeEmail.getText().toString();
         final String oldPass = changePass.getText().toString();
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         editChanges.setOnClickListener(new View.OnClickListener() {
             @Override

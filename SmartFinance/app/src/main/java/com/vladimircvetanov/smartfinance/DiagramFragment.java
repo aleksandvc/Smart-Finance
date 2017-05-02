@@ -129,7 +129,6 @@ public class DiagramFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Message.message(getActivity(), "Number of loaded TransactionLists: " + adapter.getCachedTransactions().keySet().size());
         displayTotal(totalSumButton);
     }
 
