@@ -41,23 +41,10 @@ public class AccountsFragment extends Fragment {
         final ArrayList<RowDisplayable> accounts = new ArrayList<>();
         accounts.addAll(adapter.getCachedAccounts().values());
 
-        accountsAdapter = new AccountsAdapter(accounts, getActivity());
+        accountsAdapter = new AccountsAdapter(accounts, getActivity(), getFragmentManager());
         accountsList = (RecyclerView) view.findViewById(R.id.accounts_list);
         accountsList.setAdapter(accountsAdapter);
         accountsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        accountsList.addOnItemTouchListener(
-                new RecyclerItemClickListener(context, accountsList, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-
-                        //TODO - re-name TAG
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.main_fragment_frame, FilteredReportFragment.newInstance((Account) accountsAdapter.getItem(position)), getString(R.string.transaction_fragment_tag))
-                                .addToBackStack(getString(R.string.transaction_fragment_tag))
-                                .commit();
-                    }
-                })
-        );
 
         iconsAdapter = new IconsAdapter(Manager.getInstance().getAllAccountIcons(), getActivity());
         moreAccountIconsList = (RecyclerView) view.findViewById(R.id.accounts_icons_list);
