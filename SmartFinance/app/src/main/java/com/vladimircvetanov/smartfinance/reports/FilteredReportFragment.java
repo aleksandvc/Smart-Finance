@@ -1,11 +1,10 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.reports;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -13,12 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.R;
+import com.vladimircvetanov.smartfinance.model.RowDisplayable;
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
@@ -48,11 +48,8 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
     private HashSet<Account> selectedAccounts;
 
     public static FilteredReportFragment newInstance(Account... selectedAccounts) {
-        FilteredReportFragment fragment = new FilteredReportFragment();
-        fragment.selectedAccounts = new HashSet<>(Arrays.asList(selectedAccounts));
-        fragment.start = new DateTime(1970, 1, 1, 0, 0);
-        fragment.end = DateTime.now();
-        return fragment;
+        HashSet<Account> accounts = new HashSet<>(Arrays.asList(selectedAccounts));
+        return newInstance(accounts);
     }
 
     public static FilteredReportFragment newInstance(HashSet<Account> selectedAccounts) {
@@ -67,7 +64,6 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_filtered_report, container, false);
 
-
         filterButton = (Button) rootView.findViewById(R.id.filtered_report_filters_button);
         sortButton = (Button) rootView.findViewById(R.id.filtered_report_sort_button);
 
@@ -77,11 +73,8 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
         startDate.setText(start.toString(dateFormat));
         endDate.setText(end.toString(dateFormat));
 
-
         list = (ExpandableListView) rootView.findViewById(R.id.filtered_report_list);
-
         adapter = new ExpandableAccountAdapter(getActivity(), selectedAccounts);
-
         list.setAdapter(adapter);
 
         filterButton.setOnClickListener(new View.OnClickListener() {

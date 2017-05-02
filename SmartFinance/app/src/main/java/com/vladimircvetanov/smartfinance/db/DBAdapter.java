@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.R;
-import com.vladimircvetanov.smartfinance.RowDisplayable;
+import com.vladimircvetanov.smartfinance.model.RowDisplayable;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Category;

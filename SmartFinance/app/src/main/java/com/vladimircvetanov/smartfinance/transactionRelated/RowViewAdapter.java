@@ -1,12 +1,14 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.transactionRelated;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.vladimircvetanov.smartfinance.R;
+import com.vladimircvetanov.smartfinance.model.RowDisplayable;
 
 import java.util.ArrayList;
 import java.util.Collection;

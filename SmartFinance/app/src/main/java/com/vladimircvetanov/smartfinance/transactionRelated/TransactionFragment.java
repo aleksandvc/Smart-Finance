@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.transactionRelated;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
@@ -147,13 +148,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dateDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment datePicker = new DatePickerFragment();
-
-                Bundle args = new Bundle();
-                args.putSerializable(getString(R.string.EXTRA_DATE), date);
-                datePicker.setArguments(args);
-
-                datePicker.show(getFragmentManager(), "testTag");
+                DatePickerFragment datePicker = DatePickerFragment.newInstance(TransactionFragment.this, date);
+                datePicker.show(getFragmentManager(), getString(R.string.calendar_fragment_tag));
             }
         });
 
@@ -442,6 +438,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         numButtons = new TextView[10];
         for (int i = 0; i <= 9; i++)
             numButtons[i] = (TextView) rootView.findViewById(getResources().getIdentifier("transaction_numpad_" + i, "id", getActivity().getPackageName()));
+
         decimal = (TextView) rootView.findViewById(R.id.transaction_numpad_decimal);
         equals = (TextView) rootView.findViewById(R.id.transaction_numpad_equals);
         divide = (TextView) rootView.findViewById(R.id.transaction_numpad_divide);
@@ -453,11 +450,17 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         submitButton = (TextView) rootView.findViewById(R.id.transaction_submit_btn);
     }
 
+
     @Override
     public void setNote(String note) {
         if (note != null && !note.isEmpty()) this.noteInput.setText(note);
     }
 
+
+    /** Factory method for starting the TransactionFragment with a pre-selected Category.Type
+     * @param type the desired {@link Category.Type}
+     * @return a new {@link TransactionFragment} instance.
+     */
     public static TransactionFragment getNewInstance(Category.Type type) {
         if (type == null){
             type = Category.Type.EXPENSE;

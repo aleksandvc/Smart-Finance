@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/all_view_spacing_huge"
         android:adjustViewBounds="true"
-        android:layout_marginLeft="4dp"
+        android:layout_marginLeft="@dimen/all_view_spacing_standard"
         android:layout_marginRight="@dimen/all_text_size_tiny"
         android:src="@mipmap/cocktail" />
 

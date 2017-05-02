@@ -13,9 +13,10 @@ import android.view.ViewGroup;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Manager;
+import com.vladimircvetanov.smartfinance.model.RowDisplayable;
+import com.vladimircvetanov.smartfinance.reports.FilteredReportFragment;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class AccountsFragment extends Fragment {
 

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
+import com.vladimircvetanov.smartfinance.model.RowDisplayable;
 
 import java.util.ArrayList;
 

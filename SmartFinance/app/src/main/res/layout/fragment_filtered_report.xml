@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.vladimircvetanov.smartfinance.FilteredReportFragment">
+    tools:context="com.vladimircvetanov.smartfinance.reports.FilteredReportFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

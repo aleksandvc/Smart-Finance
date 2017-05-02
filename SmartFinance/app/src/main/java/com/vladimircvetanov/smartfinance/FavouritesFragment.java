@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
+import com.vladimircvetanov.smartfinance.model.RowDisplayable;
 
 import java.util.ArrayList;
 

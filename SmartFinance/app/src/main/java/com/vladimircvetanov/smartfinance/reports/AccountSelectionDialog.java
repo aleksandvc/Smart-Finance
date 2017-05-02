@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.reports;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,10 +13,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.Account;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.HashSet;
