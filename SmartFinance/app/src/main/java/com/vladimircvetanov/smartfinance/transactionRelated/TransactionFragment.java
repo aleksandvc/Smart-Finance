@@ -38,6 +38,7 @@ import java.util.ArrayList;
 
 public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener, NoteInputFragment.NoteCommunicator {
 
+    private static final int MAX_NUM_LENGTH = 9;
     private DBAdapter dbAdapter;
     private boolean startedWithCategory;
 
@@ -250,8 +251,18 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         View.OnClickListener numberListener = new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Block input if maximal number of digits after decimal point has been reached.
+                //Block input if maximal number of digits after decimal point has been reached
                 if (operationPrimed && decimalPosition >= MAX_DECIMAL_DEPTH) return;
+
+                if (v.getId() == R.id.transaction_numpad_decimal) {
+                    if (decimalPosition == BEFORE_DECIMAL) {
+                        numDisplay.append(".");
+                        decimalPosition = BEFORE_DECIMAL + 1;
+                    }
+                    return;
+                }
+
+                if (decimalPosition == BEFORE_DECIMAL && numDisplay.getText().toString().replaceAll("\\.\\d*", "").length() >= MAX_NUM_LENGTH) return;
 
                 if (!operationPrimed) {
                     operationPrimed = true;
@@ -260,16 +271,9 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                     decimalPosition = BEFORE_DECIMAL;
                 }
 
-                if (v.getId() == R.id.transaction_numpad_decimal && decimalPosition == BEFORE_DECIMAL) {
-                    numDisplay.append(".");
-                    decimalPosition++;
-                    return;
-                }
-
                 if (numDisplay.getText().toString().equals("0")) numDisplay.setText("");
-
                 numDisplay.append(((TextView) v).getText().toString());
-                if (decimalPosition != BEFORE_DECIMAL) decimalPosition++;
+                if (decimalPosition > BEFORE_DECIMAL) decimalPosition++;
             }
         };
         for (TextView btn : numButtons)
