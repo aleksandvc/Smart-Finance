@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Transaction;
 
@@ -28,7 +29,6 @@ public class ReportFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_report, container, false);
 
         dbAdapter = DBAdapter.getInstance(getActivity());
@@ -45,6 +45,7 @@ public class ReportFragment extends Fragment {
         expandableListView.setAdapter(adapter);
         adapter.loadFromCache();
 
+        Message.message(getActivity(), "ASDASDASDASDASDASDASDASD");
         return v;
     }
 
@@ -105,13 +106,13 @@ public class ReportFragment extends Fragment {
 
             Category cat = (Category) getGroup(groupPosition);
 
-            ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_group_icon);
+            ImageView i = (ImageView) convertView.findViewById(R.id.report_group_icon);
             i.setImageResource(cat.getIconId());
 
-            TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_group_name);
+            TextView t1 = (TextView) convertView.findViewById(R.id.report_group_title);
             t1.setText(cat.getName());
 
-            TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_group_sum);
+            TextView t2 = (TextView) convertView.findViewById(R.id.report_group_sum);
             double sum = 0.0;
 
             if (dbAdapter.getCachedTransactions().containsKey(cat.getId()))
@@ -138,7 +139,7 @@ public class ReportFragment extends Fragment {
             ImageView i = (ImageView) convertView.findViewById(R.id.report_item_icon);
             i.setImageResource(trans.getAccount().getIconId());
 
-            TextView t0 = (TextView) convertView.findViewById(R.id.report_item_account);
+            TextView t0 = (TextView) convertView.findViewById(R.id.report_item_title);
             t0.setText(trans.getAccount().getName());
 
             TextView t1 = (TextView) convertView.findViewById(R.id.report_item_sum);

@@ -16,7 +16,7 @@
         android:src="@drawable/radio_income_true" />
 
     <TextView
-        android:id="@+id/report_item_account"
+        android:id="@+id/report_item_title"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

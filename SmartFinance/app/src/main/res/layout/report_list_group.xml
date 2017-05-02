@@ -8,7 +8,7 @@
     android:gravity="center_vertical">
 
     <ImageView
-        android:id="@+id/inquiry_group_icon"
+        android:id="@+id/report_group_icon"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/all_view_spacing_huge"
         android:adjustViewBounds="true"
@@ -17,7 +17,7 @@
         android:src="@mipmap/cocktail" />
 
     <TextView
-        android:id="@+id/inquiry_group_name"
+        android:id="@+id/report_group_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -27,7 +27,7 @@
         android:textSize="@dimen/all_text_size_large" />
 
     <TextView
-        android:id="@+id/inquiry_group_sum"
+        android:id="@+id/report_group_sum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/all_text_size_large" />
