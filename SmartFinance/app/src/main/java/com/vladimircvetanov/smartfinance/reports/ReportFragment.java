@@ -25,6 +25,7 @@ public class ReportFragment extends Fragment {
 
     private DBAdapter dbAdapter;
     private ExpandableListView expandableListView;
+    private ExpandableListAdapter listAdapter;
 
     @Nullable
     @Override
@@ -41,12 +42,27 @@ public class ReportFragment extends Fragment {
         sections.addAll(dbAdapter.getCachedExpenseCategories().values());
         sections.addAll(dbAdapter.getCachedIncomeCategories().values());
 
-        ExpandableListAdapter adapter = new ExpandableListAdapter(getContext());
-        expandableListView.setAdapter(adapter);
-        adapter.loadFromCache();
+        listAdapter = new ExpandableListAdapter(getContext());
+        expandableListView.setAdapter(listAdapter);
+        listAdapter.loadFromCache();
+
 
         Message.message(getActivity(), "ASDASDASDASDASDASDASDASD");
         return v;
+    }
+
+    @Override
+    public void onPause() {
+        for (int i = 0; i < listAdapter.getGroupCount(); i++)
+            if (expandableListView.isGroupExpanded(i))
+                expandableListView.collapseGroup(i);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        listAdapter.notifyDataSetChanged();
+        super.onResume();
     }
 
     class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -162,6 +178,18 @@ public class ReportFragment extends Fragment {
             groups.addAll(dbAdapter.getCachedExpenseCategories().values());
             groups.addAll(dbAdapter.getCachedFavCategories().values());
             groups.addAll(dbAdapter.getCachedIncomeCategories().values());
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            loadFromCache();
+            super.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onGroupExpanded(int groupPosition) {
+            notifyDataSetChanged();
+            super.onGroupExpanded(groupPosition);
         }
     }
 }
