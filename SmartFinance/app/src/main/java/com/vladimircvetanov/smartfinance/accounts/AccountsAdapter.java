@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.RowDisplayable;
 import com.vladimircvetanov.smartfinance.reports.FilteredReportFragment;
@@ -66,12 +67,18 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                DBAdapter.getInstance(context).deleteAccount(account);
-                                AccountsAdapter.this.notifyDataSetChanged();
+                                if(DBAdapter.getInstance(context).getCachedAccounts().size() > 1) {
+                                    DBAdapter.getInstance(context).deleteAccount(account);
+                                    AccountsAdapter.this.notifyDataSetChanged();
+                                }else{
+                                    Message.message(context,"You can`t be without accounts!");
+                                }
+
                             }
                         })
                         .setNegativeButton("No", null)
                         .show();
+                notifyItemRemoved(position);
             }
         });
         holder.rootView.setOnClickListener(new View.OnClickListener() {

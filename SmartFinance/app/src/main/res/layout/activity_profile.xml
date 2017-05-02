@@ -99,4 +99,15 @@
         android:text="edit"
         android:textColor="@color/colorWhite"
         android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/profile_cancel_button"
+        android:layout_width="187dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/balance_button"
+        android:text="cancel"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp" />
 </LinearLayout>

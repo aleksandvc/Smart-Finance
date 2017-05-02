@@ -365,10 +365,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         Account account = (Account) accountSelection.getSelectedItem();
         Category category = selectedCategory;
 
-        if (selectedAccount == null || selectedCategory == null){
-            Message.message(getContext(),"(╯ರ ~ ರ）╯︵ ┻━┻..");
-            return;
-        }
 
         Transaction transaction = new Transaction(date, sum, note, account, category);
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());

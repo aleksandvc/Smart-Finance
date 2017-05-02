@@ -47,7 +47,6 @@ public class ReportFragment extends Fragment {
         listAdapter.loadFromCache();
 
 
-        Message.message(getActivity(), "ASDASDASDASDASDASDASDASD");
         return v;
     }
 
