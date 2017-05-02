@@ -23,6 +23,8 @@ import android.widget.TextView;
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Manager;
+import com.vladimircvetanov.smartfinance.transactionRelated.NoteInputFragment;
+import com.vladimircvetanov.smartfinance.transactionRelated.TransactionFragment;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -176,11 +178,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_calendar:
 
-                DialogFragment datePicker = new DatePickerFragment();
-                Bundle args = new Bundle();
-
-                args.putSerializable("date", date);
-                datePicker.setArguments(args);
+                DialogFragment datePicker = DatePickerFragment.newInstance(this, DateTime.now());
                 datePicker.show(getSupportFragmentManager(), getString(R.string.calendar_fragment_tag));
 
                 drawer.closeDrawer(GravityCompat.START);
@@ -191,10 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        TransactionFragment t = (TransactionFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.transaction_fragment_tag));
-        if (t != null) t.onDateSet(view, year, month, dayOfMonth);
-    }
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {}
 
     @Override
     public void setNote(String note) {
