@@ -95,7 +95,7 @@ public class Transaction implements Serializable {
     public static class TransactionCategoryComparator implements Comparator<Transaction> {
         @Override
         public int compare(Transaction o1, Transaction o2) {
-            if (o1.category.equals(o2.category){
+            if (o1.category.equals(o2.category)){
                 if (o1.date.equals(o2.date))
                     return ((Double)o2.sum).compareTo((Double)o1.sum);
                 return o2.date.compareTo(o1.date);
