@@ -1,5 +1,6 @@
 package com.vladimircvetanov.smartfinance.reports;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,14 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.R;
+import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
+import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Transaction;
+import com.vladimircvetanov.smartfinance.transactionRelated.TransactionFragment;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -30,13 +36,19 @@ import java.util.Comparator;
 import java.util.HashSet;
 
 public class FilteredReportFragment extends Fragment implements AccountSelectionDialog.Communicator, Serializable {
+    private static final DateTimeFormatter LONG_DATE_FORMAT = DateTimeFormat.forPattern("d MMMM, YYYY");
+    private static final DateTimeFormatter SHORT_DATE_FORMAT = DateTimeFormat.forPattern("d MMM, YYYY");
 
     private Button filterButton, sortButton;
     private TextView startDateView, endDateView;
-    private DateTime start, end;
+    private DateTime startDate, endDate;
     private ExpandableListView list;
     private ExpandableAccountAdapter adapter;
     private HashSet<Account> selectedAccounts;
+
+    private EndDateSetListener endDateListener;
+    private StartDateSetListener startDateListener;
+
 
     public static FilteredReportFragment newInstance(Account... selectedAccounts) {
         HashSet<Account> accounts = new HashSet<>(Arrays.asList(selectedAccounts));
@@ -46,8 +58,8 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
     public static FilteredReportFragment newInstance(HashSet<Account> selectedAccounts) {
         FilteredReportFragment fragment = new FilteredReportFragment();
         fragment.selectedAccounts = new HashSet<>(selectedAccounts);
-        fragment.start = new DateTime(1970, 1, 1, 0, 0);
-        fragment.end = DateTime.now();
+        fragment.startDate = new DateTime(1970, 1, 1, 0, 0);
+        fragment.endDate = DateTime.now();
         return fragment;
     }
 
@@ -55,16 +67,32 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_filtered_report, container, false);
 
+        endDateListener = new EndDateSetListener();
+        startDateListener = new StartDateSetListener();
+
         filterButton = (Button) rootView.findViewById(R.id.filtered_report_filters_button);
         sortButton = (Button) rootView.findViewById(R.id.filtered_report_sort_button);
 
         startDateView = (TextView) rootView.findViewById(R.id.filtered_report_date_start);
+        startDateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerFragment datePicker = DatePickerFragment.newInstance(startDateListener, startDate);
+                datePicker.show(getFragmentManager(), getString(R.string.calendar_fragment_tag));
+            }
+        });
+
         endDateView = (TextView) rootView.findViewById(R.id.filtered_report_date_end);
+        endDateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerFragment datePicker = DatePickerFragment.newInstance(endDateListener, endDate);
+                datePicker.show(getFragmentManager(), getString(R.string.calendar_fragment_tag));
+            }
+        });
 
-        DateTimeFormatter dateFormat = DateTimeFormat.forPattern("d MMMM, YYYY");
-        startDateView.setText(start.toString(dateFormat));
-        endDateView.setText(end.toString(dateFormat));
-
+        startDateView.setText(startDate.toString(LONG_DATE_FORMAT));
+        endDateView.setText(endDate.toString(LONG_DATE_FORMAT));
 
         list = (ExpandableListView) rootView.findViewById(R.id.filtered_report_list);
         adapter = new ExpandableAccountAdapter(getActivity(), selectedAccounts);
@@ -78,23 +106,14 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
             }
         });
 
-        /** On date click -> pop-up a DateDialogFragment and let user select different date. */
-        startDateView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return rootView;
     }
 
     @Override
     public void setAccounts(HashSet<Account> newSelection) {
         selectedAccounts = newSelection;
-        adapter.setFilters(start, end, newSelection);
+        adapter.setFilters(startDate, endDate, newSelection);
     }
-
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("d MMM, YYYY");
 
     class ExpandableAccountAdapter extends BaseExpandableListAdapter {
 
@@ -104,17 +123,12 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
         private DateTime startDate, endDate;
 
         private LayoutInflater inflater;
-        private Context context;
 
-        private DBAdapter dbAdapter;
         private HashSet<Account> selectedAccounts;
 
 
         ExpandableAccountAdapter(Context context, HashSet<Account> selectedAccounts) {
-            dbAdapter = DBAdapter.getInstance(context);
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            this.context = context;
 
             this.startDate = new DateTime(1970, 1, 1, 0, 0);
             this.endDate = DateTime.now();
@@ -123,7 +137,6 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
 
             this.dataSet = loadFromCache(selectedAccounts);
         }
-
 
 
         @Override
@@ -174,7 +187,12 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
 
             icon.setImageResource(acc.getIconId());
             title.setText(acc.getName());
-            sum.setText("$ " + acc.getSum());
+
+            double accSum = 0.0;
+            for (Transaction t : acc.getTransactions())
+                if (t.getDate().isAfter(startDate) && t.getDate().isBefore(endDate))
+                    accSum += t.getSum() * (t.getCategory().getType() == Category.Type.EXPENSE ? -1 : 1);
+            sum.setText("$ " + accSum);
 
             return convertView;
         }
@@ -194,7 +212,7 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
             icon.setImageResource(trans.getCategory().getIconId());
             title.setText(trans.getCategory().getName());
             sum.setText("$ " + trans.getSum());
-            date.setText(trans.getDate().toString(DATE_FORMAT));
+            date.setText(trans.getDate().toString(SHORT_DATE_FORMAT));
 
             return convertView;
         }
@@ -205,7 +223,7 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
         }
 
         public void setFilters(DateTime start, DateTime end, HashSet<Account> newSelection) {
-            if (start.isAfter(end)){
+            if (start.isAfter(end)) {
                 DateTime temp = start;
                 start = end;
                 end = temp;
@@ -221,7 +239,7 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
         private ArrayMap<Account, ArrayList<Transaction>> loadFromCache(HashSet<Account> selectedAccounts) {
             dataSet = new ArrayMap<>();
 
-            for (Account acc : selectedAccounts){
+            for (Account acc : selectedAccounts) {
                 ArrayList<Transaction> transactions = new ArrayList<>();
 
                 for (Transaction t : acc.getTransactions())
@@ -239,6 +257,42 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
         public void notifyDataSetChanged() {
             this.dataSet = loadFromCache(selectedAccounts);
             super.notifyDataSetChanged();
+        }
+    }
+
+
+
+    class StartDateSetListener implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            DateTime newDate = new DateTime(year, month+1, dayOfMonth, 0, 0);
+            if (newDate.isAfter(endDate)){
+                startDate = endDate;
+                endDate = newDate;
+            } else {
+                startDate = newDate;
+            }
+            startDateView.setText(startDate.toString(LONG_DATE_FORMAT));
+            endDateView.setText(endDate.toString(LONG_DATE_FORMAT));
+            adapter.setFilters(startDate, endDate, selectedAccounts);
+        }
+    }
+
+    class EndDateSetListener implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            DateTime newDate = new DateTime(year, month+1, dayOfMonth, 0, 0);
+            if (newDate.isBefore(startDate)){
+                endDate = startDate;
+                startDate = newDate;
+            } else {
+                endDate = newDate;
+            }
+            startDateView.setText(startDate.toString(LONG_DATE_FORMAT));
+            endDateView.setText(endDate.toString(LONG_DATE_FORMAT));
+            adapter.setFilters(startDate, endDate, selectedAccounts);
         }
     }
 }
