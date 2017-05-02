@@ -69,6 +69,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
                             public void onClick(DialogInterface dialog, int which) {
                                 if(DBAdapter.getInstance(context).getCachedAccounts().size() > 1) {
                                     DBAdapter.getInstance(context).deleteAccount(account);
+                                    accounts.remove(account);
                                     AccountsAdapter.this.notifyDataSetChanged();
                                 }else{
                                     Message.message(context,"You can`t be without accounts!");
