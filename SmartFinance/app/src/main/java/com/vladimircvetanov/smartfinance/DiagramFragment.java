@@ -32,6 +32,7 @@ import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Transaction;
+import com.vladimircvetanov.smartfinance.transactionRelated.TransactionFragment;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

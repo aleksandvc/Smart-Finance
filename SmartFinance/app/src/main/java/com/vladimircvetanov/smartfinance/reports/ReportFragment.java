@@ -1,4 +1,4 @@
-package com.vladimircvetanov.smartfinance;
+package com.vladimircvetanov.smartfinance.reports;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +13,9 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Transaction;
 
@@ -23,11 +25,11 @@ public class ReportFragment extends Fragment {
 
     private DBAdapter dbAdapter;
     private ExpandableListView expandableListView;
+    private ExpandableListAdapter listAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_report, container, false);
 
         dbAdapter = DBAdapter.getInstance(getActivity());
@@ -40,11 +42,27 @@ public class ReportFragment extends Fragment {
         sections.addAll(dbAdapter.getCachedExpenseCategories().values());
         sections.addAll(dbAdapter.getCachedIncomeCategories().values());
 
-        ExpandableListAdapter adapter = new ExpandableListAdapter(getContext());
-        expandableListView.setAdapter(adapter);
-        adapter.loadFromCache();
+        listAdapter = new ExpandableListAdapter(getContext());
+        expandableListView.setAdapter(listAdapter);
+        listAdapter.loadFromCache();
 
+
+        Message.message(getActivity(), "ASDASDASDASDASDASDASDASD");
         return v;
+    }
+
+    @Override
+    public void onPause() {
+        for (int i = 0; i < listAdapter.getGroupCount(); i++)
+            if (expandableListView.isGroupExpanded(i))
+                expandableListView.collapseGroup(i);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        listAdapter.notifyDataSetChanged();
+        super.onResume();
     }
 
     class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -104,13 +122,13 @@ public class ReportFragment extends Fragment {
 
             Category cat = (Category) getGroup(groupPosition);
 
-            ImageView i = (ImageView) convertView.findViewById(R.id.inquiry_group_icon);
+            ImageView i = (ImageView) convertView.findViewById(R.id.report_group_icon);
             i.setImageResource(cat.getIconId());
 
-            TextView t1 = (TextView) convertView.findViewById(R.id.inquiry_group_name);
+            TextView t1 = (TextView) convertView.findViewById(R.id.report_group_title);
             t1.setText(cat.getName());
 
-            TextView t2 = (TextView) convertView.findViewById(R.id.inquiry_group_sum);
+            TextView t2 = (TextView) convertView.findViewById(R.id.report_group_sum);
             double sum = 0.0;
 
             if (dbAdapter.getCachedTransactions().containsKey(cat.getId()))
@@ -137,7 +155,7 @@ public class ReportFragment extends Fragment {
             ImageView i = (ImageView) convertView.findViewById(R.id.report_item_icon);
             i.setImageResource(trans.getAccount().getIconId());
 
-            TextView t0 = (TextView) convertView.findViewById(R.id.report_item_account);
+            TextView t0 = (TextView) convertView.findViewById(R.id.report_item_title);
             t0.setText(trans.getAccount().getName());
 
             TextView t1 = (TextView) convertView.findViewById(R.id.report_item_sum);
@@ -160,6 +178,18 @@ public class ReportFragment extends Fragment {
             groups.addAll(dbAdapter.getCachedExpenseCategories().values());
             groups.addAll(dbAdapter.getCachedFavCategories().values());
             groups.addAll(dbAdapter.getCachedIncomeCategories().values());
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            loadFromCache();
+            super.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onGroupExpanded(int groupPosition) {
+            notifyDataSetChanged();
+            super.onGroupExpanded(groupPosition);
         }
     }
 }

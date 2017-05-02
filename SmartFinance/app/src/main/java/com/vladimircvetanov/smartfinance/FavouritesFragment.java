@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
 import com.vladimircvetanov.smartfinance.model.Manager;
+import com.vladimircvetanov.smartfinance.model.RowDisplayable;
 
 import java.util.ArrayList;
 
@@ -67,7 +68,7 @@ public class FavouritesFragment extends Fragment {
                         Bundle arguments = new Bundle();
                         int iconId = Manager.getInstance().getAllExpenseIcons().get(position);
 
-                        arguments.putInt(getString(R.string.EXTRA_ICON), iconId);
+                        arguments.putInt("KEY_ICON", iconId);
                         arguments.putSerializable("ROW_DISPLAYABLE_TYPE", cat);
 
                         dialog.setArguments(arguments);
@@ -92,12 +93,12 @@ public class FavouritesFragment extends Fragment {
                     Bundle arguments = new Bundle();
                     int iconId = Manager.getInstance().getAllExpenseIcons().get(position);
 
-                    arguments.putInt(getString(R.string.EXTRA_ICON), iconId);
+                    arguments.putInt("KEY_ICON", iconId);
                     arguments.putInt("POSITION", position);
-                    arguments.putString(String.valueOf(R.string.ROW_DISPLAYABLE_TYPE), String.valueOf(R.string.EXTRA_CATEGORY));
+                    arguments.putString("ROW_DISPLAYABLE_TYPE", "CATEGORY");
 
                     dialog.setArguments(arguments);
-                    dialog.show(getFragmentManager(), String.valueOf(R.string.add_category_dialog));
+                    dialog.show(getFragmentManager(), "Add category dialog");
                 }
 
             }));

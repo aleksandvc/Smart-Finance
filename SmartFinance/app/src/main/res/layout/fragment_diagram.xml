@@ -73,7 +73,7 @@
 
         <fragment
             android:id="@+id/report_fragment"
-            android:name="com.vladimircvetanov.smartfinance.ReportFragment"
+            android:name="com.vladimircvetanov.smartfinance.reports.ReportFragment"
             android:layout_width="match_parent"
             android:layout_height="400dp" />
 

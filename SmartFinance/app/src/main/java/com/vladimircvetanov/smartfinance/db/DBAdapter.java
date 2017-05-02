@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.vladimircvetanov.smartfinance.R;
-import com.vladimircvetanov.smartfinance.RowDisplayable;
+import com.vladimircvetanov.smartfinance.model.RowDisplayable;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Category;
@@ -373,6 +373,10 @@ public class DBAdapter {
             @Override
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = helper.getWritableDatabase();
+
+                for (Transaction t: ((Account)account).getTransactions()){
+                    deleteTransaction(t);
+                }
 
                 count[0] = db.delete(DbHelper.TABLE_NAME_ACCOUNTS,DbHelper.ACCOUNTS_COLUMN_ACCOUNTNAME + " = ? AND " + DbHelper.ACCOUNTS_COLUMN_USERFK + " = ?",new String[]{account.getName(), Manager.getLoggedUser().getId()+""});
                 accounts.remove(account.getId());
@@ -826,7 +830,29 @@ public class DBAdapter {
 
         }.execute();
     }
+    public int deleteTransaction(final Transaction transaction){
 
+        final int[] count = new int[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                count[0] = db.delete(DbHelper.TABLE_NAME_TRANSACTIONS,DbHelper.COLUMN_ID + " = ? AND " + DbHelper.TRANSACTIONS_COLUMN_USERFK + " = ?",new String[]{transaction.getId()+"", Manager.getLoggedUser().getId()+""});
+                if (count[0] >= 1){
+                    transactions.get(transaction.getCategory().getId()).remove(transaction);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void integer) {
+                Message.message(context,"Transaction deleted!");
+            }
+        }.execute();
+        return count[0];
+    }
 
     /**
      * Inner static class which is responsible for the creation of  database.
