@@ -209,11 +209,16 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculate(OPERATION_NONE);
+                if (calculate(OPERATION_NONE) <= 0){
+                    Message.message(getActivity(), "Transactions must have a greater-than-zero value. Thank you :)");
+                    return;
+                }
                 if (!startedWithCategory) {
                     numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                         @Override
                         public void run() {
+                            backspace.setVisibility(View.INVISIBLE);
+                            backspace.setClickable(false);
                             numpad.setVisibility(View.GONE);
                             rootView.findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
                             rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
@@ -375,6 +380,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     private void createTransaction() {
 
         double sum = calculate(OPERATION_NONE);
+
         String note = noteInput.getText().toString();
 
         Account account = (Account) accountSelection.getSelectedItem();
