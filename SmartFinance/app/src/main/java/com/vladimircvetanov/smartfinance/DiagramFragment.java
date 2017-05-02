@@ -38,6 +38,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,14 +56,20 @@ public class DiagramFragment extends Fragment {
     private CircleLayout circleLayout;
     private DBAdapter adapter;
 
+    private ArrayList<Integer> colorsList;
     private int[] diagramColors;
+    private HashMap<Integer, Integer> colors;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            entries = savedInstanceState.getParcelableArrayList("entriesList");
+        }
     }
 
     private View rootView;
+    private Transaction transaction;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,10 +82,19 @@ public class DiagramFragment extends Fragment {
 
         entries = new ArrayList<>();
         pieDataSet = new PieDataSet(entries, "");
-        diagramColors = new int[] {R.color.colorDarkGrey};
+
+        colors = new HashMap<>();
+        colorsList = new ArrayList<>();
+        diagramColors = new int[] {R.color.colorDarkGrey, R.color.colorLightOrange, R.color.colorOrange};
 
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
         adapter = DBAdapter.getInstance(getActivity());
+
+        Bundle args = getArguments();
+        transaction = null;
+        if (args != null && args.containsKey("TRANSACTION")){
+            transaction = (Transaction) args.getSerializable("TRANSACTION");
+        }
 
         drawDiagram();
         drawFavouriteIcons();
@@ -130,6 +146,10 @@ public class DiagramFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         displayTotal(totalSumButton);
+        if (transaction != null) {
+            addEntry(transaction);
+            Message.message(getActivity(), "Entry added to the diagram");
+        }
     }
 
     void addEntry(Transaction transaction) {
@@ -148,7 +168,6 @@ public class DiagramFragment extends Fragment {
     void drawDiagram() {
         if (entries.isEmpty()) {
             entries.add(new PieEntry(100));
-
         }
         pieDataSet.setColors(diagramColors, getActivity());
         pieChart.setCenterText(String.format("Total:\n%.2f", getTotal()));
@@ -170,9 +189,13 @@ public class DiagramFragment extends Fragment {
             if (!displayedCategories.contains(categoryExpense)) {
                 displayedCategories.add(categoryExpense);
                 final ImageView icon = new ImageView(getActivity());
-                icon.setImageResource(categoryExpense.getIconId());
+                int iconId = categoryExpense.getIconId();
+                icon.setImageResource(iconId);
 
-                int color = getDominantColor(categoryExpense.getIconId());
+                int color = getDominantColor(iconId);
+                if (!colors.containsKey(iconId)) {
+                    colors.put(iconId, color);
+                }
                 //diagramColors[colorPosition++] = color;
 
                 icon.setScaleType(ImageButton.ScaleType.FIT_CENTER);
@@ -217,6 +240,7 @@ public class DiagramFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("entriesList", entries);
     }
 
     private double getTotal() {
@@ -231,7 +255,7 @@ public class DiagramFragment extends Fragment {
 
     private double displayTotal(Button displayView) {
         getTotal();
-        displayView.setText("Total: " + String.format("%.2f", getTotal()));
+        displayView.setText(String.format("Total: %.2f", getTotal()));
 
         if (getTotal() < 0)
             displayView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorOrange));
@@ -254,11 +278,11 @@ public class DiagramFragment extends Fragment {
         return swatches.size() > 0 ? swatches.get(0).getRgb() : R.color.colorGreen;
     }
 
-    class CustomPercentFormatter implements IValueFormatter {
+    private class CustomPercentFormatter implements IValueFormatter {
 
         private DecimalFormat mFormat;
 
-        public CustomPercentFormatter() {
+        CustomPercentFormatter() {
             mFormat = new DecimalFormat("###,###,##0.0");
         }
 
