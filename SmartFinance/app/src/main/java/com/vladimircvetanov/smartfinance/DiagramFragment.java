@@ -56,12 +56,16 @@ public class DiagramFragment extends Fragment {
     private CircleLayout circleLayout;
     private DBAdapter adapter;
 
+    private ArrayList<Integer> colorsList;
     private int[] diagramColors;
     private HashMap<Integer, Integer> colors;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            entries = savedInstanceState.getParcelableArrayList("entriesList");
+        }
     }
 
     private View rootView;
@@ -80,6 +84,7 @@ public class DiagramFragment extends Fragment {
         pieDataSet = new PieDataSet(entries, "");
 
         colors = new HashMap<>();
+        colorsList = new ArrayList<>();
         diagramColors = new int[] {R.color.colorDarkGrey, R.color.colorLightOrange, R.color.colorOrange};
 
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
@@ -236,6 +241,7 @@ public class DiagramFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("entriesList", entries);
     }
 
     private double getTotal() {
