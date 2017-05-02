@@ -5,12 +5,15 @@ import android.support.annotation.Nullable;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
  * Class representing a single entry in an account or an expense category.
  */
 public class Transaction implements Serializable {
+
+    private static ArrayList<TransactionComparator> sorters;
 
     private DateTime date;
     private double sum;
@@ -76,23 +79,36 @@ public class Transaction implements Serializable {
      * It sorts by the LogEntry's date in ascending order
      * and returns -1 if the LocalDate property of the 2 dates is identical within a millisecond resolution.
      */
-    public static class TransactionDateComparator implements Comparator<Transaction> {
+    public static class TransactionDateComparator implements TransactionComparator {
+
         @Override
         public int compare(Transaction o1, Transaction o2) {
             if (o1.date.equals(o2.date)) return ((Double)o2.sum).compareTo((Double)o1.sum);
             return o2.date.compareTo(o1.date);
         }
+
+        @Override
+        public String toString() {
+            return "SORT BY DATE";
+        }
     }
 
-    public static class TransactionSumComparator implements Comparator<Transaction> {
+    public static class TransactionSumComparator implements TransactionComparator {
+
         @Override
         public int compare(Transaction o1, Transaction o2) {
             if (o1.sum == o2.sum) return o2.date.compareTo(o1.date);
             return ((Double)o2.sum).compareTo((Double)o1.sum);
         }
+
+        @Override
+        public String toString() {
+            return "SORT BY SUM";
+        }
     }
 
-    public static class TransactionCategoryComparator implements Comparator<Transaction> {
+    public static class TransactionCategoryComparator implements TransactionComparator {
+
         @Override
         public int compare(Transaction o1, Transaction o2) {
             if (o1.category.equals(o2.category)){
@@ -103,6 +119,24 @@ public class Transaction implements Serializable {
 
             return o2.category.getName().compareTo(o1.category.getName());
         }
+
+        @Override
+        public String toString() {
+            return "SORT BY CATEGORY";
+        }
     }
 
+    public static ArrayList<TransactionComparator> getComparators(){
+        if (sorters == null || sorters.isEmpty()) {
+            sorters = new ArrayList<>();
+            sorters.add(new TransactionSumComparator());
+            sorters.add(new TransactionCategoryComparator());
+            sorters.add(new TransactionDateComparator());
+        }
+        return sorters;
+    }
+
+    public interface TransactionComparator extends Comparator<Transaction>{}
 }
+
+

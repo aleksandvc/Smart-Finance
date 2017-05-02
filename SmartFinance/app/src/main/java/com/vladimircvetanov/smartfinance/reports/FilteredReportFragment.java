@@ -5,24 +5,25 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
-import com.vladimircvetanov.smartfinance.db.DBAdapter;
-import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Transaction;
-import com.vladimircvetanov.smartfinance.transactionRelated.TransactionFragment;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -39,7 +40,8 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
     private static final DateTimeFormatter LONG_DATE_FORMAT = DateTimeFormat.forPattern("d MMMM, YYYY");
     private static final DateTimeFormatter SHORT_DATE_FORMAT = DateTimeFormat.forPattern("d MMM, YYYY");
 
-    private Button filterButton, sortButton;
+    private Button filterButton;
+    private Spinner sortSpinner;
     private TextView startDateView, endDateView;
     private DateTime startDate, endDate;
     private ExpandableListView list;
@@ -67,13 +69,16 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_filtered_report, container, false);
 
+        Log.e("ASDDDDDDDDDDDD", "onCreateView: " + (selectedAccounts == null));
+        adapter = new ExpandableAccountAdapter(getActivity(), selectedAccounts);
+
         endDateListener = new EndDateSetListener();
         startDateListener = new StartDateSetListener();
 
         filterButton = (Button) rootView.findViewById(R.id.filtered_report_filters_button);
-        sortButton = (Button) rootView.findViewById(R.id.filtered_report_sort_button);
 
         startDateView = (TextView) rootView.findViewById(R.id.filtered_report_date_start);
+        startDateView.setText(startDate.toString(LONG_DATE_FORMAT));
         startDateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,8 +86,8 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
                 datePicker.show(getFragmentManager(), getString(R.string.calendar_fragment_tag));
             }
         });
-
         endDateView = (TextView) rootView.findViewById(R.id.filtered_report_date_end);
+        endDateView.setText(endDate.toString(LONG_DATE_FORMAT));
         endDateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,11 +96,7 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
             }
         });
 
-        startDateView.setText(startDate.toString(LONG_DATE_FORMAT));
-        endDateView.setText(endDate.toString(LONG_DATE_FORMAT));
-
         list = (ExpandableListView) rootView.findViewById(R.id.filtered_report_list);
-        adapter = new ExpandableAccountAdapter(getActivity(), selectedAccounts);
         list.setAdapter(adapter);
 
         filterButton.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +104,20 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
             public void onClick(View v) {
                 AccountSelectionDialog dialog = AccountSelectionDialog.newInstance(selectedAccounts, FilteredReportFragment.this);
                 dialog.show(getFragmentManager(), "Account Selection Tag");
+            }
+        });
+
+        sortSpinner = (Spinner) rootView.findViewById(R.id.filtered_report_sort_spinner);
+        sortSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, Transaction.getComparators()));
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                adapter.setSorter((Transaction.TransactionComparator) sortSpinner.getItemAtPosition(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -129,6 +144,8 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
 
         ExpandableAccountAdapter(Context context, HashSet<Account> selectedAccounts) {
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            this.selectedAccounts = selectedAccounts;
 
             this.startDate = new DateTime(1970, 1, 1, 0, 0);
             this.endDate = DateTime.now();
@@ -218,7 +235,7 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
                 @Override
                 public void onClick(View v) {
                     TransactionDetailsFragment fragment = TransactionDetailsFragment.newInstance(trans);
-                    fragment.show(getFragmentManager(),"TransactionDetails");
+                    fragment.show(getFragmentManager(), "TransactionDetails");
                 }
             });
 
@@ -266,16 +283,20 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
             this.dataSet = loadFromCache(selectedAccounts);
             super.notifyDataSetChanged();
         }
-    }
 
+        public void setSorter(Transaction.TransactionComparator sorter) {
+            this.sorter = sorter;
+            notifyDataSetChanged();
+        }
+    }
 
 
     class StartDateSetListener implements DatePickerDialog.OnDateSetListener {
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            DateTime newDate = new DateTime(year, month+1, dayOfMonth, 0, 0);
-            if (newDate.isAfter(endDate)){
+            DateTime newDate = new DateTime(year, month + 1, dayOfMonth, 0, 0);
+            if (newDate.isAfter(endDate)) {
                 startDate = endDate;
                 endDate = newDate;
             } else {
@@ -291,8 +312,8 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            DateTime newDate = new DateTime(year, month+1, dayOfMonth, 0, 0);
-            if (newDate.isBefore(startDate)){
+            DateTime newDate = new DateTime(year, month + 1, dayOfMonth, 0, 0);
+            if (newDate.isBefore(startDate)) {
                 endDate = startDate;
                 startDate = newDate;
             } else {

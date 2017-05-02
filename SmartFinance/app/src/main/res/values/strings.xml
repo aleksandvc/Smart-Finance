@@ -100,4 +100,5 @@
     <string name="filtered_report_fragment_tag">filtered_report_tag</string>
     <string name="end_date">End Date</string>
     <string name="back">return</string>
+    <string name="select_accounts">Select Accounts</string>
 </resources>
