@@ -149,7 +149,7 @@ public class ReportFragment extends Fragment {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.report_list_item, parent, false);
 
-            Transaction trans = (Transaction) getChild(groupPosition, childPosition);
+            final Transaction trans = (Transaction) getChild(groupPosition, childPosition);
 
             ImageView i = (ImageView) convertView.findViewById(R.id.report_item_icon);
             i.setImageResource(trans.getAccount().getIconId());
@@ -162,6 +162,14 @@ public class ReportFragment extends Fragment {
 
             TextView t2 = (TextView) convertView.findViewById(R.id.report_item_date);
             t2.setText(trans.getDate().toString("dd/MM/YY"));
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TransactionDetailsFragment fragment = TransactionDetailsFragment.newInstance(trans);
+                    fragment.show(getFragmentManager(),"TransactionDetails");
+                }
+            });
 
             return convertView;
         }

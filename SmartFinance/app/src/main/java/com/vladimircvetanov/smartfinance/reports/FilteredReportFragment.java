@@ -202,7 +202,7 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.report_list_item, parent, false);
 
-            Transaction trans = getChild(groupPosition, childPosition);
+            final Transaction trans = getChild(groupPosition, childPosition);
 
             ImageView icon = (ImageView) convertView.findViewById(R.id.report_item_icon);
             TextView title = (TextView) convertView.findViewById(R.id.report_item_title);
@@ -213,6 +213,14 @@ public class FilteredReportFragment extends Fragment implements AccountSelection
             title.setText(trans.getCategory().getName());
             sum.setText("$ " + trans.getSum());
             date.setText(trans.getDate().toString(SHORT_DATE_FORMAT));
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TransactionDetailsFragment fragment = TransactionDetailsFragment.newInstance(trans);
+                    fragment.show(getFragmentManager(),"TransactionDetails");
+                }
+            });
 
             return convertView;
         }

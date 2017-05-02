@@ -273,10 +273,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                     }
                     return;
                 }
-                Log.e("lllll","^^^^^^^^^^^^^^");
 
                 if (operationPrimed && decimalPosition == BEFORE_DECIMAL && numDisplay.getText().toString().length() >= MAX_NUM_LENGTH) return;
-                Log.e("lllll","|||||||||||");
 
                 if (!operationPrimed) {
                     operationPrimed = true;
