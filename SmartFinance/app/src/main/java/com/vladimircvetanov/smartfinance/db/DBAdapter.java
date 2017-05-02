@@ -490,6 +490,13 @@ public class DBAdapter {
             @Override
             protected void onPostExecute(Void integer) {
                 loadExpenseCategories();
+                if(transactions.containsKey(category.getId())) {
+                    for (Transaction t : transactions.get(category.getId())) {
+                        deleteTransaction(t);
+                    }
+                }
+
+
             }
         }.execute();
         return count[0];
@@ -660,6 +667,27 @@ public class DBAdapter {
     }
 
 
+    public int moveToFav(final CategoryExpense category){
+        final int[] count = new int[1];
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                SQLiteDatabase db = helper.getWritableDatabase();
+
+                count[0] = db.delete(DbHelper.TABLE_NAME_EXPENSE_CATEGORIES,DbHelper.EXPENSE_CATEGORIES_COLUMN_CATEGORYNAME + " = ? AND " + DbHelper.EXPENSE_CATEGORIES_COLUMN_USERFK + " = ?",new String[]{category.getName(), Manager.getLoggedUser().getId()+""});
+                expenseCategories.remove(category.getId());
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void integer) {
+                addFavCategory(category,Manager.getLoggedUser().getId());
+
+            }
+        }.execute();
+        return count[0];
+    }
     public  long addFavCategory(final CategoryExpense category, final long userId){
         final long[] id = new long[1];
 
@@ -686,7 +714,7 @@ public class DBAdapter {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-              //  deleteExpenseCategory(category);
+
             }
         }.execute();
 
@@ -707,7 +735,12 @@ public class DBAdapter {
 
             @Override
             protected void onPostExecute(Void integer) {
-                loadTransactions();
+               if(transactions.containsKey(category.getId())) {
+                   for (Transaction t : transactions.get(category.getId())) {
+                       deleteTransaction(t);
+                   }
+               }
+
                 Message.message(context,"Category deleted!");
 
             }
