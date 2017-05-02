@@ -15,7 +15,6 @@ import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Manager;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class AccountsFragment extends Fragment {
 

@@ -203,9 +203,10 @@ public class DiagramFragment extends Fragment {
                 icon.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
                         pieChart.setCenterText(categoryExpense.getName() + "\n" + categoryExpense.getSum());
                         pieChart.setHoleColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
+                        icon.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_background));
+
                         return false;
                     }
                 });
