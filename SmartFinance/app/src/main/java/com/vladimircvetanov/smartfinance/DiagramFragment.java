@@ -70,6 +70,7 @@ public class DiagramFragment extends Fragment {
 
     private View rootView;
     private Transaction transaction;
+    private Bundle args;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,12 +86,11 @@ public class DiagramFragment extends Fragment {
 
         colors = new HashMap<>();
         colorsList = new ArrayList<>();
-        diagramColors = new int[] {R.color.colorDarkGrey, R.color.colorLightOrange, R.color.colorOrange};
 
         totalSumButton = (Button) rootView.findViewById(R.id.total_sum_btn);
         adapter = DBAdapter.getInstance(getActivity());
 
-        Bundle args = getArguments();
+        args = getArguments();
         transaction = null;
         if (args != null && args.containsKey("TRANSACTION")){
             transaction = (Transaction) args.getSerializable("TRANSACTION");
@@ -146,31 +146,36 @@ public class DiagramFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         displayTotal(totalSumButton);
-        if (transaction != null) {
+        if (transaction != null && colors.containsKey(transaction.getCategory().getIconId())) {
             addEntry(transaction);
             Message.message(getActivity(), "Entry added to the diagram");
         }
     }
 
     void addEntry(Transaction transaction) {
-        if (entries.size() == 1) {
-            entries.clear();
-            entries.add(new PieEntry(0));
-        }
-        float entrySum = (float) transaction.getSum();
-        PieEntry entry = new PieEntry(entrySum);
-        entries.add(entry);
+        if (args != null || !colors.containsKey(transaction.getCategory().getIconId())) {
+            if (entries.size() == 1) {
+                entries.clear();
+                entries.add(new PieEntry(0));
+            }
+            float entrySum = (float) transaction.getSum();
+            PieEntry entry = new PieEntry(entrySum);
+            entries.add(entry);
+            pieDataSet.addColor(colors.get(transaction.getCategory().getIconId()));
 
-        pieChart.setData(pieData);
-        pieChart.invalidate();
+            pieChart.setData(pieData);
+            pieChart.invalidate();
+        }
     }
 
     void drawDiagram() {
         if (entries.isEmpty()) {
             entries.add(new PieEntry(100));
         }
-        pieDataSet.setColors(diagramColors, getActivity());
-        pieChart.setCenterText(String.format("Total:\n%.2f", getTotal()));
+        pieDataSet.setColor(R.color.colorGrey);
+        if (args != null && args.containsKey("TRANSACTION")) {
+            pieChart.setCenterText(String.format("Total:\n%.2f", getTotal()));
+        }
 
         pieData = new PieData(pieDataSet);
         pieData.setValueFormatter(new CustomPercentFormatter());
@@ -196,7 +201,6 @@ public class DiagramFragment extends Fragment {
                 if (!colors.containsKey(iconId)) {
                     colors.put(iconId, color);
                 }
-                //diagramColors[colorPosition++] = color;
 
                 icon.setScaleType(ImageButton.ScaleType.FIT_CENTER);
                 CircleLayout.LayoutParams params = new CircleLayout.LayoutParams(120, 120);

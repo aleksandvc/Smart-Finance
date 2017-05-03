@@ -24,7 +24,6 @@ import com.vladimircvetanov.smartfinance.DiagramFragment;
 import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
-import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Manager;
@@ -364,7 +363,6 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         Account account = (Account) accountSelection.getSelectedItem();
         Category category = selectedCategory;
-
 
         Transaction transaction = new Transaction(date, sum, note, account, category);
         dbAdapter.addTransaction(transaction, Manager.getLoggedUser().getId());
