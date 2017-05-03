@@ -40,6 +40,7 @@ public class AddToFavDeleteDialogFragment extends DialogFragment {
 
 
         adapter = DBAdapter.getInstance(getActivity());
+
         Bundle b = getArguments();
         String iconKey = getText(R.string.EXTRA_ICON).toString();
         String listKey = "ROW_DISPLAYABLE_TYPE";

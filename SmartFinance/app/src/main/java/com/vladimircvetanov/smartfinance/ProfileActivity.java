@@ -25,7 +25,7 @@ import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private static final int SELECT_IMAGE = 12 ;
+
     private ImageView userPic;
     private EditText changeEmail;
     private EditText changePass;
@@ -96,6 +96,8 @@ public class ProfileActivity extends AppCompatActivity {
                 }
 
                 adapter.updateUser(oldData,oldPass,newEmail,newPass);
+                Manager.getLoggedUser().setEmail(newEmail);
+                Manager.getLoggedUser().setPassword(newPass);
                 finish();
 
             }
