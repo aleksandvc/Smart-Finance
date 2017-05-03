@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                     Manager.setLoggedUser(u);
                     Manager.getLoggedUser().setId(adapter.getId(u.getEmail()));
 
+                    adapter.clearCache();
                     adapter.loadAccounts();
                     adapter.loadIncomeCategories();
                     adapter.loadExpenseCategories();

@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/all_view_spacing_standard"
+    tools:context="com.vladimircvetanov.smartfinance.reports.TransactionDetailsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/transaction_dialog_source"
+            style="@style/TransactionDetailsTopBar"
+            android:gravity="start">
+
+            <ImageView
+                android:id="@+id/transaction_dialog_source_icon"
+                style="@style/TransactionDetailsIcon" />
+
+            <TextView
+                android:id="@+id/transaction_dialog_source_title"
+                style="@style/TransactionDetailsTitle" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/transaction_dialog_direction_indicator"
+            style="@style/TransactionDetailsIcon"
+            android:src="@mipmap/arrow_out" />
+
+        <LinearLayout
+            android:id="@+id/transaction_dialog_destination"
+            style="@style/TransactionDetailsTopBar"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/transaction_dialog_destination_title"
+                style="@style/TransactionDetailsTitle" />
+
+            <ImageView
+                android:id="@+id/transaction_dialog_destination_icon"
+                style="@style/TransactionDetailsIcon" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:padding="@dimen/all_view_spacing_tiny"
+        android:textAlignment="center"
+        android:id="@+id/transaction_dialog_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/all_view_spacing_small"
+        android:layout_marginTop="@dimen/all_view_spacing_small"
+        android:background="@drawable/account_background" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/transaction_dialog_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="viewStart" />
+
+
+        <TextView
+            android:id="@+id/transaction_dialog_sum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/transaction_dialog_return_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/back" />
+
+</LinearLayout>

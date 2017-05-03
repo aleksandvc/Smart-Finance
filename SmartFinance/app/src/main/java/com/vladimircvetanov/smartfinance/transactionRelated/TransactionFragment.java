@@ -37,6 +37,7 @@ import java.util.ArrayList;
 
 public class TransactionFragment extends Fragment implements DatePickerDialog.OnDateSetListener, NoteInputFragment.NoteCommunicator {
 
+    private static final int MAX_NUM_LENGTH = 9;
     private DBAdapter dbAdapter;
     private boolean startedWithCategory;
 
@@ -97,7 +98,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     private static final char OPERATION_DIVIDE = '÷';
 
     //Previous input. Stored for executing currentOperation.
-    private Double storedNumber = 0.0;
+    private double storedNumber = 0.0;
 
     //=======CALCULATOR==============//
 
@@ -122,7 +123,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         if (selectedType == null)
             selectedType = Category.Type.EXPENSE;
 
-        switch (selectedType){
+        switch (selectedType) {
             case EXPENSE:
                 catTypeRadio.check(R.id.transaction_radio_expense);
                 colorizeUI(getActivity(), R.color.colorOrange, R.drawable.orange_button_9);
@@ -175,6 +176,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                 Account acc = (Account) accountSelection.getItemAtPosition(position);
                 selectedAccount = acc;
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -185,7 +187,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             public void onClick(View v) {
                 DialogFragment inputFragment = new NoteInputFragment();
                 String note = noteInput.getText().toString();
-                if (note != null && !note.isEmpty()){
+                if (note != null && !note.isEmpty()) {
                     Bundle b = new Bundle();
                     b.putString(getString(R.string.EXTRA_NOTE), note);
                     inputFragment.setArguments(b);
@@ -206,11 +208,16 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculate(OPERATION_NONE);
+                if (calculate(OPERATION_NONE) <= 0){
+                    Message.message(getActivity(), "Transactions must have a greater-than-zero value. Thank you :)");
+                    return;
+                }
                 if (!startedWithCategory) {
                     numpad.animate().setDuration(600).alpha(0.0F).withEndAction(new Runnable() {
                         @Override
                         public void run() {
+                            backspace.setVisibility(View.INVISIBLE);
+                            backspace.setClickable(false);
                             numpad.setVisibility(View.GONE);
                             rootView.findViewById(R.id.transaction_section_selection_layout).setAlpha(1F);
                             rootView.findViewById(R.id.transaction_section_selection_layout).setVisibility(View.VISIBLE);
@@ -218,7 +225,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                         }
                     });
                 } else {
-                  createTransaction();
+                    createTransaction();
                 }
             }
         });
@@ -232,7 +239,8 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         View.OnClickListener arithmeticListener = new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (operationPrimed && currentOperation != OPERATION_NONE) calculate(((TextView)v).getText().charAt(0));
+                if (operationPrimed && currentOperation != OPERATION_NONE)
+                    calculate(((TextView) v).getText().charAt(0));
                 currentOperation = ((TextView) v).getText().charAt(0);
                 if (currentOperation != OPERATION_NONE) operationPrimed = false;
             }
@@ -249,8 +257,23 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         View.OnClickListener numberListener = new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Block input if maximal number of digits after decimal point has been reached.
+                //Block input if maximal number of digits after decimal point has been reached
                 if (operationPrimed && decimalPosition >= MAX_DECIMAL_DEPTH) return;
+
+                if (v.getId() == R.id.transaction_numpad_decimal) {
+                    if (!operationPrimed) {
+                        operationPrimed = true;
+                        storedNumber = Double.valueOf(numDisplay.getText().toString());
+                        numDisplay.setText("0.");
+                        decimalPosition = BEFORE_DECIMAL + 1;
+                    } else if (decimalPosition == BEFORE_DECIMAL) {
+                        numDisplay.append(".");
+                        decimalPosition = BEFORE_DECIMAL + 1;
+                    }
+                    return;
+                }
+
+                if (operationPrimed && decimalPosition == BEFORE_DECIMAL && numDisplay.getText().toString().length() >= MAX_NUM_LENGTH) return;
 
                 if (!operationPrimed) {
                     operationPrimed = true;
@@ -259,16 +282,10 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                     decimalPosition = BEFORE_DECIMAL;
                 }
 
-                if (v.getId() == R.id.transaction_numpad_decimal && decimalPosition == BEFORE_DECIMAL) {
-                    numDisplay.append(".");
-                    decimalPosition++;
-                    return;
-                }
-
                 if (numDisplay.getText().toString().equals("0")) numDisplay.setText("");
-
                 numDisplay.append(((TextView) v).getText().toString());
-                if (decimalPosition != BEFORE_DECIMAL) decimalPosition++;
+                if (decimalPosition > BEFORE_DECIMAL) decimalPosition++;
+
             }
         };
         for (TextView btn : numButtons)
@@ -300,16 +317,17 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
     /**
      * Checks if the Transaction input has been started from a specific category and adjusts UI and data accordingly.
+     *
      * @return <code>true</code> if the Fragment has been started <b>with</b> an implicit {@alink com.vladimircvetanov.smartfinance.model.Category}.
      */
     private boolean checkForCategoryExtra() {
         Bundle args = getArguments();
-        if (args == null){
+        if (args == null) {
             return false;
         }
         Category cat = (Category) args.getSerializable(getString(R.string.EXTRA_SECTION));
-        if (cat != null){
-            switch (cat.getType()){
+        if (cat != null) {
+            switch (cat.getType()) {
                 case EXPENSE:
                     catTypeRadio.check(R.id.transaction_radio_expense);
                     selectedType = Category.Type.EXPENSE;
@@ -321,7 +339,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
             }
             catTypeRadio.setVisibility(View.GONE);
             selectedCategory = cat;
-            submitButton.setText(getString(R.string.transaction_add_to)+ " " + cat.getName());
+            submitButton.setText(getString(R.string.transaction_add_to) + " " + cat.getName());
             return true;
         }
         return false;
@@ -359,6 +377,7 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     private void createTransaction() {
 
         double sum = calculate(OPERATION_NONE);
+
         String note = noteInput.getText().toString();
 
         Account account = (Account) accountSelection.getSelectedItem();
@@ -375,10 +394,11 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
                 .replace(R.id.main_fragment_frame, fragment, getString(R.string.diagram_fragment_tag))
                 .addToBackStack(getString(R.string.diagram_fragment_tag))
                 .commit();
-        //getActivity().onBackPressed();
     }
 
-    /** Executes stored arithmetic operation. */
+    /**
+     * Executes stored arithmetic operation.
+     */
     private double calculate(char NEXT_OPERATION) {
 
         //TODO - validate 'NEXT_OPERATION' param.
@@ -387,29 +407,47 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
 
         if (currentOperation == OPERATION_NONE) return currNumber;
 
+        double temp = storedNumber;
+
         switch (currentOperation) {
             case OPERATION_PLUS:
-                storedNumber += currNumber;
+                temp += currNumber;
                 break;
             case OPERATION_MINUS:
-                storedNumber -= currNumber;
+                temp -= currNumber;
                 break;
             case OPERATION_MULTIPLY:
-                storedNumber *= currNumber;
+                temp *= currNumber;
                 break;
             case OPERATION_DIVIDE:
-                storedNumber /= currNumber;
+                temp /= currNumber;
                 break;
+        }
+
+        if (temp > 999_999_999.99) {
+            Message.message(getActivity(), "Sorry, this app doesn't support transactions larger than $999,999,999.99");
+            storedNumber = 999_999_999.99;
+        } else {
+            storedNumber = temp;
         }
 
         //Round result to 2 decimal places
         storedNumber = Math.round(storedNumber * 100.0) / 100.0;
 
-        String numText = storedNumber.toString();
+        String numText;
+        String format;
+
+        format = "%.2f";
+        numText = String.format(format, storedNumber);
         numText = numText.replaceAll("\\.(00$|0$)", "");
-        numDisplay.setText(numText);
 
         decimalPosition = numText.contains(".") ? (numText.length() - 1) - numText.lastIndexOf(".") : BEFORE_DECIMAL;
+
+        format = "%." + (decimalPosition == BEFORE_DECIMAL ? 0 : decimalPosition) + "f";
+        numText = String.format(format, storedNumber);
+
+        numDisplay.setText(numText);
+
 
         currentOperation = NEXT_OPERATION;
         return storedNumber;
@@ -423,7 +461,9 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
         dateDisplay.setText(date.toString(dateFormat));
     }
 
-    /** Moved all the .findViewById([...]) methods here, because the onCreateView was getting a bit cluttered. */
+    /**
+     * Moved all the .findViewById([...]) methods here, because the onCreateView was getting a bit cluttered.
+     */
     private void initializeUiObjects() {
         catTypeRadio = (RadioGroup) rootView.findViewById(R.id.transaction_radio);
         dateDisplay = (TextView) rootView.findViewById(R.id.transaction_date_display);
@@ -460,12 +500,14 @@ public class TransactionFragment extends Fragment implements DatePickerDialog.On
     }
 
 
-    /** Factory method for starting the TransactionFragment with a pre-selected Category.Type
+    /**
+     * Factory method for starting the TransactionFragment with a pre-selected Category.Type
+     *
      * @param type the desired {@link Category.Type}
      * @return a new {@link TransactionFragment} instance.
      */
     public static TransactionFragment getNewInstance(Category.Type type) {
-        if (type == null){
+        if (type == null) {
             type = Category.Type.EXPENSE;
             Log.e("TransactionFragment:", " STARTED WITH A NULL TYPE PARAMETER!!!");
         }
