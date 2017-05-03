@@ -79,7 +79,6 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
                         })
                         .setNegativeButton("No", null)
                         .show();
-                notifyItemRemoved(position);
             }
         });
         holder.rootView.setOnClickListener(new View.OnClickListener() {
