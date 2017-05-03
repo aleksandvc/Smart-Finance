@@ -24,6 +24,7 @@ import com.vladimircvetanov.smartfinance.DiagramFragment;
 import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.date.DatePickerFragment;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
+import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.Account;
 import com.vladimircvetanov.smartfinance.model.Category;
 import com.vladimircvetanov.smartfinance.model.Manager;

@@ -59,12 +59,12 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
                     public void onClick(View v) {
 
                         if(categories.size() > 1) {
-                                adapter.deleteFavCategory(categoryExpense);
-                                categories.remove(position);
-                                notifyItemRemoved(position);
+                            adapter.deleteFavCategory(categoryExpense);
+                            categories.remove(holder.getAdapterPosition());
+                            notifyItemRemoved(position);
 
                         }else{
-                                Message.message(context,"You can`t be without favourite categories!");
+                            Message.message(context,"You can`t be without favourite categories!");
                         }
                     }
                 });
