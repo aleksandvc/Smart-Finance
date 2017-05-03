@@ -49,7 +49,7 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
                 holder.image.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGrey));
                 holder.removeButton.setVisibility(View.VISIBLE);
 
-                if(categoryExpense.getIsFavourite() == false){
+                if(!categoryExpense.getIsFavourite()){
                     if(!categories.contains(categoryExpense)) {
                         notifyItemRemoved(position);
                     }
@@ -63,7 +63,7 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
                             categories.remove(holder.getAdapterPosition());
                             notifyItemRemoved(position);
 
-                        }else{
+                        } else{
                             Message.message(context,"You can`t be without favourite categories!");
                         }
                     }
@@ -77,14 +77,14 @@ public class RowDisplayableAdapter extends RecyclerView.Adapter<RowDisplayableAd
         return categories.size();
     }
 
-    public static class IconViewHolder extends RecyclerView.ViewHolder{
+    static class IconViewHolder extends RecyclerView.ViewHolder{
 
         ImageView image;
         ImageButton removeButton;
         ImageButton addButton;
         View viewGroup;
 
-        public IconViewHolder(View itemView) {
+        IconViewHolder(View itemView) {
             super(itemView);
 
             image = (ImageView) itemView.findViewById(R.id.image);

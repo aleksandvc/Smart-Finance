@@ -101,4 +101,7 @@
     <string name="end_date">End Date</string>
     <string name="back">return</string>
     <string name="select_accounts">Select Accounts</string>
+    <string name="to_favorite_btn">TO FAVORITE</string>
+    <string name="delete_btn">DELETE</string>
+    <string name="add_or_delete_category_title">Add to favorite or delete category.</string>
 </resources>

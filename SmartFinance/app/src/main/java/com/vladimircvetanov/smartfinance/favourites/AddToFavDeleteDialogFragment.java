@@ -14,7 +14,6 @@ import com.vladimircvetanov.smartfinance.R;
 import com.vladimircvetanov.smartfinance.db.DBAdapter;
 import com.vladimircvetanov.smartfinance.message.Message;
 import com.vladimircvetanov.smartfinance.model.CategoryExpense;
-import com.vladimircvetanov.smartfinance.model.Manager;
 
 /**
  * Created by vladimircvetanov on 01.05.17.
@@ -60,12 +59,11 @@ public class AddToFavDeleteDialogFragment extends DialogFragment {
                 if(!adapter.getCachedFavCategories().containsValue(cat) && adapter.getCachedFavCategories().size() < 10) {
                     if(adapter.getCachedExpenseCategories().size() > 1) {
                         adapter.moveToFav(cat);
-
                         Toast.makeText(getActivity(), "Category added to favorites!", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else{
                         Message.message(getActivity(),"You can`t be without categories!");
                     }
-                }else{
+                } else{
                     Message.message(getActivity(),"This category is already in your favorites, or there is no more place!");
                 }
                 dismiss();

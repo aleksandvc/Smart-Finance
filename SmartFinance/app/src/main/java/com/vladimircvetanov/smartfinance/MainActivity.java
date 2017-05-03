@@ -102,8 +102,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item_settings:
-                return true;
             case R.id.item_logout:
                 LogoutDialogFragment dialog = new LogoutDialogFragment();
                 dialog.show(getSupportFragmentManager(), getString(R.string.logout_button));

@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.vladimircvetanov.smartfinance.R;
-import com.vladimircvetanov.smartfinance.db.DBAdapter;
 
 import java.util.ArrayList;
 
@@ -18,16 +17,10 @@ public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHold
 
     private ArrayList<Integer> additionalIcons;
     private Activity activity;
-    private DBAdapter adapter;
-    private boolean isClicked;
-
-    public View.OnClickListener mItemClickListener;
 
     public IconsAdapter(ArrayList<Integer> allExpenseIcons, Activity activity) {
         this.activity = activity;
         additionalIcons = new ArrayList<Integer> (allExpenseIcons);
-        adapter = DBAdapter.getInstance(activity);
-        isClicked = false;
     }
 
     @Override
@@ -49,13 +42,13 @@ public class IconsAdapter extends RecyclerView.Adapter<IconsAdapter.IconViewHold
         return additionalIcons.size();
     }
 
-    public static class IconViewHolder extends RecyclerView.ViewHolder{
+    static class IconViewHolder extends RecyclerView.ViewHolder{
 
         ImageView image;
         ImageButton addButton;
         View viewGroup;
 
-        public IconViewHolder(View itemView) {
+        IconViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
             addButton = (ImageButton) itemView.findViewById(R.id.add_icon_btn);

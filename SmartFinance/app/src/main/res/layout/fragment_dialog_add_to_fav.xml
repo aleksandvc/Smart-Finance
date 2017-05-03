@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/add_to_fav_title"
-        android:text="Add to favorite or delete category."
+        android:text="@string/add_or_delete_category_title"
         android:textSize="@dimen/all_text_size_middle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,11 +19,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin">
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin">
 
         <Button
             android:id="@+id/delete_category_button"
-            android:text="DELETE"
+            android:text="@string/delete_btn"
             android:background="@drawable/balance_button"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -33,25 +35,22 @@
 
         <Button
             android:id="@+id/add_to_fav_button"
-            android:text="TO FAVORITE"
+            android:text="@string/to_favorite_btn"
             android:background="@drawable/balance_button"
             android:textColor="@color/colorWhite"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
     <Button
         android:id="@+id/cancel_category_button"
-        android:text="Cancel"
+        android:text="@string/cancel_button"
         android:background="@drawable/balance_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
-        android:layout_marginTop="-10dp"
-        android:layout_marginLeft="@dimen/all_view_spacing_large"
-        android:layout_marginRight="@dimen/all_view_spacing_large"
-        />
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
 
 </LinearLayout>
