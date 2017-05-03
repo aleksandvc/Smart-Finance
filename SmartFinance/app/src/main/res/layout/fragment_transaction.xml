@@ -95,6 +95,7 @@
         android:id="@+id/transaction_note_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:layout_below="@id/transaction_number_display"
         android:layout_marginLeft="@dimen/all_view_spacing_standard"
         android:layout_marginRight="@dimen/all_view_spacing_standard"
